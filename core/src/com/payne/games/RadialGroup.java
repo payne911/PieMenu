@@ -11,11 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
-
+// todo: override "hit"
 public class RadialGroup extends WidgetGroup {
     protected Actor attachedTo;
     protected ShapeDrawer sd;
-    protected ShapeDrawerDrawable sdd; // todo: can be used to create custom Drawable background... might not be necessary
 
     private RadialGroupStyle style;
     private static Vector2 vector2 = new Vector2();
@@ -188,22 +187,29 @@ public class RadialGroup extends WidgetGroup {
         actor.localToStageCoordinates(vector2);
     }
 
+    @Override
+    public void act(float delta) {
+        updatePosition();
+        super.act(delta);
+    }
+
     /**
      * Designates an Actor on which the RadialWidget will be centered.
-     *
+     * todo: apparently should be a Wrapper class for both the Widget and associated Button
      * @param attachedTo an Actor
      */
-    public void attachToActor(Actor attachedTo) { // todo: add boolean for "followActor" ?
+    public void attachToActor(Actor attachedTo) {
         this.attachedTo = attachedTo;
-        updatePosition(); // todo: currently doesn't work when called there..?!
     }
 
     /**
      * Positions the widget right at the middle of its attached Actor.
      */
     protected void updatePosition() { // todo: option for offsets
-        getStageMiddleCoordinates(attachedTo);
-        setPosition(vector2.x, vector2.y);
+        if(attachedTo != null) {
+            getStageMiddleCoordinates(attachedTo);
+            setPosition(vector2.x, vector2.y);
+        }
     }
 
 

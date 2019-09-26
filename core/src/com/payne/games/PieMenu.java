@@ -6,17 +6,23 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
+import com.badlogic.gdx.utils.Pools;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class PieMenu extends RadialGroup {
     public MyDragListener dragListener;
-    public int selectedIndex = -1; // index of the selected item
+    public int selectedIndex = -1; // index of the currently selected item
+    public int highlightedIndex = -1; // index of the currently highlighted item
 
     private boolean infiniteDragRange = true; // should gestures select if drag finishes outside of radius
+    private boolean hoverIsSelection = false; // if hovering an item calls ChangeListener and selects the item
+    private boolean resetSelectionOnAppear = true; // when redrawing the widget, should it still select the last selected item?
     private float mouseX, mouseY;
     private PieMenuStyle style;
+    private HoverChangeListener hoverChangeListener;
 
 
     public PieMenu(final ShapeDrawer sd, PieMenuStyle style) {
@@ -82,13 +88,64 @@ public class PieMenu extends RadialGroup {
     }
 
     private void resetSelection() {
+        highlightedIndex = -1;
         selectedIndex = -1;
     }
 
-    private void childIndexAtMouse(float angle) {
+    /**
+     * Given the angle, find the index of the child.
+     *
+     * @param angle angle in degrees relative to the origin
+     * @return the index of the child whose region encompasses the angle
+     */
+    private int findRegionAtMouse(float angle) {
         angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360;
-        selectedIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
+        return MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
     }
+
+    /**
+     * Selects the child at the given index. Triggers the ChangeListener.
+     *
+     * @param newIndex index of the child (and thus region) which was selected.
+     */
+    private void selectIndex(int newIndex) {
+        if(newIndex != selectedIndex) {
+            int oldHighlightedIndex = highlightedIndex;
+            int oldSelectedIndex = selectedIndex;
+
+            selectedIndex = newIndex;
+            highlightedIndex = newIndex;
+            if (hoverChangeListener != null && newIndex != oldHighlightedIndex)
+                hoverChangeListener.onHoverChange(); // todo: should we really call this?!
+
+            ChangeListener.ChangeEvent changeEvent = Pools.obtain(ChangeListener.ChangeEvent.class);
+            if (fire(changeEvent)) {
+                highlightedIndex = oldHighlightedIndex;
+                selectedIndex = oldSelectedIndex;
+            }
+            Pools.free(changeEvent);
+        }
+    }
+
+    /**
+     * Called to check if the hovered item should be highlighted (and possibly selected).
+     *
+     * @param newIndex index of the child (and thus region) which was hovered.
+     * @param hoverIsSelection whether or not a hover is to be considered as a selection.
+     */
+    private void hoverIndex(int newIndex, boolean hoverIsSelection) {
+        if(hoverIsSelection) {
+            selectIndex(newIndex);
+            return;
+        }
+
+        if(newIndex != highlightedIndex) {
+            highlightedIndex = newIndex;
+            if(hoverChangeListener != null)
+                hoverChangeListener.onHoverChange();
+        }
+    }
+
 
     @Override // todo: optimize by including the "vector2" attributes
     protected void drawWithShapeDrawer(Batch batch, float parentAlpha) {
@@ -104,7 +161,7 @@ public class PieMenu extends RadialGroup {
         float tmpRad = bgRadian / getChildren().size;
         for(int i=0; i<getChildren().size; i++) {
             float tmp = tmpOffset + i*tmpRad;
-            sd.setColor(i==selectedIndex ? Color.MAGENTA : i%2 == 0 ? Color.CHARTREUSE : Color.FIREBRICK);
+            sd.setColor(i== highlightedIndex ? Color.MAGENTA : i%2 == 0 ? Color.CHARTREUSE : Color.FIREBRICK);
             sd.arc(center.x, center.y, style.radius, tmp, tmpRad, style.radius-style.innerRadius);
             sd.line(pointAtAngle(center, style.innerRadius, tmp),
                     pointAtAngle(center, style.radius, tmp),
@@ -127,8 +184,12 @@ public class PieMenu extends RadialGroup {
     public void setInfiniteDragRange(boolean infiniteDragRange) {
         this.infiniteDragRange = infiniteDragRange;
     }
-
-
+    public HoverChangeListener getHoverChangeListener() {
+        return hoverChangeListener;
+    }
+    public void setHoverChangeListener(HoverChangeListener hoverChangeListener) {
+        this.hoverChangeListener = hoverChangeListener;
+    }
 
 
     public class MyDragListener extends DragListener {
@@ -146,7 +207,8 @@ public class PieMenu extends RadialGroup {
          */
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            updatePosition(); // todo: shouldn't be there
+            if(resetSelectionOnAppear)
+                resetSelection();
             setVisible(true);
             updateMousePosition(x, y);
             return super.touchDown(event, x, y, pointer, button);
@@ -154,15 +216,15 @@ public class PieMenu extends RadialGroup {
 
         @Override
         public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+            selectIndex(findRegionAtMouse(angleAtMouse())); // todo: just use highlighted instead of finding index again?
             setVisible(false);
-            resetSelection();
             super.touchUp(event, x, y, pointer, button);
         }
 
         @Override
         public void touchDragged(InputEvent event, float x, float y, int pointer) {
             updateMousePosition(x, y);
-            childIndexAtMouse(angleAtMouse());
+            hoverIndex(findRegionAtMouse(angleAtMouse()), hoverIsSelection);
             super.touchDragged(event, x, y, pointer);
         }
     }
@@ -181,5 +243,11 @@ public class PieMenu extends RadialGroup {
             super(style);
             this.selectedColor = style.selectedColor;
         }
+    }
+
+
+
+    public interface HoverChangeListener {
+        void onHoverChange();
     }
 }

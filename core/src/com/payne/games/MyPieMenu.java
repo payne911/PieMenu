@@ -83,7 +83,6 @@ public class MyPieMenu extends ApplicationAdapter {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				radial.setVisible(!radial.isVisible());
-				radial.updatePosition(); // todo: shouldn't be there
 			}
 		});
 		root.add(textButton).expand().bottom();
@@ -109,6 +108,20 @@ public class MyPieMenu extends ApplicationAdapter {
 		style.alternateChildRegionColor = new Color(1,0,0,1);
 		style.separatorColor = new Color(1,1,0,1);
 		pie = new PieMenu(shape, style);
+
+		/* Adding some listeners, just 'cuz... */
+		pie.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("ChangeListener - selected index: " + pie.selectedIndex);
+			}
+		});
+		pie.setHoverChangeListener(new PieMenu.HoverChangeListener() {
+			@Override
+			public void onHoverChange() {
+				System.out.println("HoverChangeListener - highlighted index: " + pie.highlightedIndex);
+			}
+		});
 
 		/* Populating the widget. */
 		for (int i = 0; i < 5; i++) {
@@ -151,6 +164,8 @@ public class MyPieMenu extends ApplicationAdapter {
 			create();
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
+		    if(pie.getChildren().size == 0)
+		        return;
 			pie.removeActor(pie.getChild(pie.getChildren().size-1));
 			radial.removeActor(radial.getChild(radial.getChildren().size-1));
 		}
@@ -159,7 +174,6 @@ public class MyPieMenu extends ApplicationAdapter {
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);
-		// todo: should update the Radial's position if it is visible during resize
 	}
 
 	@Override

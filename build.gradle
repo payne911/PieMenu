@@ -104,6 +104,6 @@ project(":core") {
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        implementation 'space.earlygrey:shapedrawer:master-SNAPSHOT'
+        implementation 'space.earlygrey:shapedrawer:2.0.0'
     }
 }
