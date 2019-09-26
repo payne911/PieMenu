@@ -24,7 +24,7 @@ public class MyPieMenu extends ApplicationAdapter {
 	private PolygonSpriteBatch batch;
 	private ShapeDrawer shape;
 	private PieMenu pie;
-	private RadialWidget radial;
+	private RadialGroup radial;
 	private int pieAmount = 0;
 	private int radialAmount = 0;
 
@@ -59,7 +59,7 @@ public class MyPieMenu extends ApplicationAdapter {
 	private void setUpRadialWidget(Table root) {
 
 		/* Setting up and creating the widget. */
-		RadialWidget.RadialWidgetStyle style = new RadialWidget.RadialWidgetStyle();
+		RadialGroup.RadialGroupStyle style = new RadialGroup.RadialGroupStyle();
 		style.radius = 100;
 		style.innerRadius = 20;
 		style.startDegreesOffset = 0;
@@ -68,7 +68,7 @@ public class MyPieMenu extends ApplicationAdapter {
 		style.childRegionColor = new Color(.4f,.4f,.4f,1);
 		style.alternateChildRegionColor = new Color(1,0,0,1);
 		style.separatorColor = new Color(1,1,0,1);
-		radial = new RadialWidget(shape, style);
+		radial = new RadialGroup(shape, style);
 		radial.setVisible(false);
 
 		/* Populating the widget. */
@@ -149,6 +149,10 @@ public class MyPieMenu extends ApplicationAdapter {
 			radialAmount = 0;
 			dispose();
 			create();
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
+			pie.removeActor(pie.getChild(pie.getChildren().size-1));
+			radial.removeActor(radial.getChild(radial.getChildren().size-1));
 		}
 	}
 

@@ -12,60 +12,67 @@ import com.badlogic.gdx.utils.Align;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
-public class RadialWidget extends WidgetGroup {
+public class RadialGroup extends WidgetGroup {
     protected Actor attachedTo;
     protected ShapeDrawer sd;
     protected ShapeDrawerDrawable sdd; // todo: can be used to create custom Drawable background... might not be necessary
 
-    private RadialWidget.RadialWidgetStyle style;
+    private RadialGroupStyle style;
     private static Vector2 vector2 = new Vector2();
     private static Vector2 vector22 = new Vector2();
 
 
 
-    public RadialWidget(){
+    public RadialGroup(){
     }
 
-    public RadialWidget(final ShapeDrawer sd, RadialWidget.RadialWidgetStyle style) {
+    public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style) {
         setStyle(style);
         this.sd = sd;
     }
 
-    public RadialWidget(final ShapeDrawer sd, Skin skin) {
-        setStyle(skin.get(RadialWidget.RadialWidgetStyle.class));
+    public RadialGroup(final ShapeDrawer sd, Skin skin) {
+        setStyle(skin.get(RadialGroupStyle.class));
         this.sd = sd;
     }
 
-    public RadialWidget(final ShapeDrawer sd, Skin skin,  String style) {
-        setStyle(skin.get(style, RadialWidget.RadialWidgetStyle.class));
+    public RadialGroup(final ShapeDrawer sd, Skin skin, String style) {
+        setStyle(skin.get(style, RadialGroupStyle.class));
         this.sd = sd;
     }
 
-    public RadialWidget.RadialWidgetStyle getStyle() {
+    public RadialGroupStyle getStyle() {
         return style;
     }
 
 
 
-    public void setStyle(RadialWidget.RadialWidgetStyle style) {
+    public void setStyle(RadialGroupStyle style) {
         checkStyle(style);
         this.style = style;
         invalidate();
     }
 
-    protected void checkStyle(RadialWidget.RadialWidgetStyle style) {
+    protected void checkStyle(RadialGroupStyle style) {
         if(style.startDegreesOffset < 0)
             throw new IllegalArgumentException("startDegreesOffset cannot be negative.");
         if(style.startDegreesOffset == 360)
             style.startDegreesOffset = 0;
+
         if(style.radius < 0)
             throw new IllegalArgumentException("radius cannot be negative.");
+
         if(style.totalDegreesDrawn < 0)
             throw new IllegalArgumentException("totalDegreesDrawn cannot be negative.");
         if(style.totalDegreesDrawn > 360)
             throw new IllegalArgumentException("totalDegreesDrawn must be lower or equal to 360.");
-        if(style.startDegreesOffset == 0)
-            style.startDegreesOffset = 360;
+        if(style.totalDegreesDrawn == 0)
+            style.totalDegreesDrawn = 360;
+
+        if(style.innerRadius < 0)
+            throw new IllegalArgumentException("innerRadius cannot be negative.");
+        if(style.innerRadius >= style.radius)
+            throw new IllegalArgumentException("innerRadius must be smaller than the radius.");
     }
 
     @Override
@@ -127,27 +134,38 @@ public class RadialWidget extends WidgetGroup {
             style.background.draw(batch, getX(), getY(), getWidth(), getHeight());
 
         /* Rest of background */
-        sd.setColor(style.backgroundColor);
         float bgRadian = MathUtils.degreesToRadians*style.totalDegreesDrawn;
         float tmpOffset = MathUtils.degreesToRadians*style.startDegreesOffset;
-        sd.sector(getX(), getY(), style.radius, tmpOffset, bgRadian);
+        if(style.backgroundColor != null) {
+            sd.setColor(style.backgroundColor);
+            sd.sector(getX(), getY(), style.radius, tmpOffset, bgRadian);
+        }
 
         /* Children */
         vector2.set(getX(), getY());
         float tmpRad = bgRadian / getChildren().size;
         for(int i=0; i<getChildren().size; i++) {
             float tmp = tmpOffset + i*tmpRad;
-            sd.setColor(i%2 == 0 ? Color.CHARTREUSE : Color.FIREBRICK);
-            sd.arc(vector2.x, vector2.y, style.radius, tmp, tmpRad, style.radius-style.innerRadius);
-            sd.line(pointAtAngle(vector2, style.innerRadius, tmp),
-                    pointAtAngle(vector2, style.radius, tmp),
-                    Color.PINK, 3);
+            if(style.childRegionColor != null) {
+                if(style.alternateChildRegionColor != null) {
+                    sd.setColor(i%2 == 0 ? style.childRegionColor : style.alternateChildRegionColor);
+                    sd.arc(vector2.x, vector2.y, style.radius, tmp, tmpRad, style.radius-style.innerRadius);
+                } else {
+                    sd.setColor(style.childRegionColor);
+                    sd.arc(vector2.x, vector2.y, style.radius, tmp, tmpRad, style.radius-style.innerRadius);
+                }
+            }
+            if(getChildren().size > 1 && style.separatorColor != null)
+                sd.line(pointAtAngle(vector2, style.innerRadius, tmp),
+                        pointAtAngle(vector2, style.radius, tmp),
+                        style.separatorColor, 3);
         }
 
         /* The remaining last line to be drawn */
-        sd.line(pointAtAngle(vector2, style.innerRadius, tmpOffset + getChildren().size*tmpRad),
-                pointAtAngle(vector2, style.radius, tmpOffset + getChildren().size*tmpRad),
-                Color.PINK, 3);
+        if(getChildren().size > 1 && style.separatorColor != null)
+            sd.line(pointAtAngle(vector2, style.innerRadius, tmpOffset + getChildren().size*tmpRad),
+                    pointAtAngle(vector2, style.radius, tmpOffset + getChildren().size*tmpRad),
+                    style.separatorColor, 3);
     }
 
 
@@ -189,15 +207,15 @@ public class RadialWidget extends WidgetGroup {
     }
 
 
-    public static class RadialWidgetStyle {
+    public static class RadialGroupStyle {
         public Drawable background;
         public Color backgroundColor, separatorColor, childRegionColor, alternateChildRegionColor;
         public float radius, innerRadius, startDegreesOffset, totalDegreesDrawn;
 
-        public RadialWidgetStyle() {
+        public RadialGroupStyle() {
         }
 
-        public RadialWidgetStyle(RadialWidget.RadialWidgetStyle style) {
+        public RadialGroupStyle(RadialGroupStyle style) {
             this.background = style.background;
             this.radius = style.radius;
             this.innerRadius = style.innerRadius;

@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
-public class PieMenu extends RadialWidget {
+public class PieMenu extends RadialGroup {
     public MyDragListener dragListener;
     public int selectedIndex = -1; // index of the selected item
 
@@ -41,10 +41,7 @@ public class PieMenu extends RadialWidget {
     }
 
     protected void checkStyle(PieMenuStyle style) {
-        if(style.innerRadius < 0)
-            throw new IllegalArgumentException("innerRadius cannot be negative.");
-        if(style.innerRadius >= style.radius)
-            throw new IllegalArgumentException("innerRadius must be smaller than the radius.");
+
 
         super.checkStyle(style);
     }
@@ -90,7 +87,7 @@ public class PieMenu extends RadialWidget {
 
     private void childIndexAtMouse(float angle) {
         angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360;
-        selectedIndex = (int)Math.floor(angle / style.totalDegreesDrawn * getChildren().size);
+        selectedIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
     }
 
     @Override // todo: optimize by including the "vector2" attributes
@@ -174,7 +171,7 @@ public class PieMenu extends RadialWidget {
 
 
 
-    public static class PieMenuStyle extends RadialWidgetStyle {
+    public static class PieMenuStyle extends RadialGroupStyle {
         public Color selectedColor;
 
         public PieMenuStyle() {
