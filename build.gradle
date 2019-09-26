@@ -104,7 +104,6 @@ project(":core") {
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        implementation 'com.github.tommyettinger.gdx-utils:libgdx-utils:0ee77bb883'
         implementation 'space.earlygrey:shapedrawer:master-SNAPSHOT'
     }
 }

@@ -9,15 +9,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
-import space.earlygrey.shapedrawer.PolygonShapeDrawer;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
-/**
- * @author Raymond "Raeleus" Buckley
- */
 public class RadialWidget extends WidgetGroup {
     protected Actor attachedTo;
-    protected PolygonShapeDrawer sd;
+    protected ShapeDrawer sd;
     protected ShapeDrawerDrawable sdd; // todo: can be used to create custom Drawable background... might not be necessary
 
     private RadialWidget.RadialWidgetStyle style;
@@ -29,17 +26,17 @@ public class RadialWidget extends WidgetGroup {
     public RadialWidget(){
     }
 
-    public RadialWidget(final PolygonShapeDrawer sd, RadialWidget.RadialWidgetStyle style) {
+    public RadialWidget(final ShapeDrawer sd, RadialWidget.RadialWidgetStyle style) {
         setStyle(style);
         this.sd = sd;
     }
 
-    public RadialWidget(final PolygonShapeDrawer sd, Skin skin) {
+    public RadialWidget(final ShapeDrawer sd, Skin skin) {
         setStyle(skin.get(RadialWidget.RadialWidgetStyle.class));
         this.sd = sd;
     }
 
-    public RadialWidget(final PolygonShapeDrawer sd, Skin skin,  String style) {
+    public RadialWidget(final ShapeDrawer sd, Skin skin,  String style) {
         setStyle(skin.get(style, RadialWidget.RadialWidgetStyle.class));
         this.sd = sd;
     }
@@ -112,7 +109,7 @@ public class RadialWidget extends WidgetGroup {
         for (int i = 0; i < getChildren().size; i++) {
             Actor actor = getChildren().get(i);
             vector2.set(style.radius, 0);
-            vector2.rotate(tmp * (i + half));
+            vector2.rotate(tmp*(i + half) + style.startDegreesOffset);
             actor.setPosition(vector2.x, vector2.y, Align.center);
         }
     }
@@ -178,7 +175,7 @@ public class RadialWidget extends WidgetGroup {
      *
      * @param attachedTo an Actor
      */
-    public void attachToActor(Actor attachedTo) {
+    public void attachToActor(Actor attachedTo) { // todo: add boolean for "followActor" ?
         this.attachedTo = attachedTo;
         updatePosition(); // todo: currently doesn't work when called there..?!
     }

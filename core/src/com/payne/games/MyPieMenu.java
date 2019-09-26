@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import space.earlygrey.shapedrawer.PolygonShapeDrawer;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class MyPieMenu extends ApplicationAdapter {
@@ -22,7 +22,7 @@ public class MyPieMenu extends ApplicationAdapter {
 	private Stage stage;
 	private Texture tmpTex;
 	private PolygonSpriteBatch batch;
-	private PolygonShapeDrawer shape;
+	private ShapeDrawer shape;
 	private PieMenu pie;
 	private RadialWidget radial;
 	private int pieAmount = 0;
@@ -48,7 +48,7 @@ public class MyPieMenu extends ApplicationAdapter {
 		pixmap.fill();
 		tmpTex = new Texture(pixmap);
 		pixmap.dispose();
-		shape = new PolygonShapeDrawer(batch, new TextureRegion(tmpTex));
+		shape = new ShapeDrawer(batch, new TextureRegion(tmpTex));
 
 		/* Adding the demo buttons. */
 		setUpPieMenu(root);
@@ -101,8 +101,8 @@ public class MyPieMenu extends ApplicationAdapter {
 		PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
 		style.radius = 130;
 		style.innerRadius = 50;
-		style.startDegreesOffset = 0;
-		style.totalDegreesDrawn = 240;
+		style.startDegreesOffset = 180;
+		style.totalDegreesDrawn = 320;
 		style.backgroundColor = new Color(1,1,1,1);
 		style.selectedColor = new Color(.5f,.5f,.5f,1);
 		style.childRegionColor = new Color(0,1,0,1);

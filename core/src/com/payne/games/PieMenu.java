@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
-import space.earlygrey.shapedrawer.PolygonShapeDrawer;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class PieMenu extends RadialWidget {
@@ -19,7 +19,7 @@ public class PieMenu extends RadialWidget {
     private PieMenuStyle style;
 
 
-    public PieMenu(final PolygonShapeDrawer sd, PieMenuStyle style) {
+    public PieMenu(final ShapeDrawer sd, PieMenuStyle style) {
         super(sd, style);
         setStyle(style);
 
@@ -49,9 +49,9 @@ public class PieMenu extends RadialWidget {
         super.checkStyle(style);
     }
 
-    public void setFullRadius(float fullRadius) { // todo: add restrictions (range [0,360])
-        style.radius = fullRadius;
-        dragListener.maxRange = fullRadius;
+    public void setRadius(float radius) { // todo: add restrictions (range [0,360])
+        style.radius = radius;
+        dragListener.maxRange = radius;
     }
 
 
@@ -77,32 +77,20 @@ public class PieMenu extends RadialWidget {
         mouseY = y + pos.y;
     }
 
-    private double angleAtMouse() {
-        double angle = MathUtils.radiansToDegrees * MathUtils.atan2(mouseY - getY(), mouseX - getX());
-        return (angle + 360) % 360;
+    /**
+     * @return a non-normalized angle of the position of the cursor relative to the origin of the widget
+     */
+    private float angleAtMouse() {
+        return MathUtils.radiansToDegrees * MathUtils.atan2(mouseY - getY(), mouseX - getX());
     }
 
     private void resetSelection() {
         selectedIndex = -1;
     }
 
-    private void childIndexAtMouse(double angle) { // todo: adjust for offset angles!
-        float totalDegrees = style.totalDegreesDrawn - style.startDegreesOffset;
-        float sliceAngle = style.totalDegreesDrawn / getChildren().size;
-        System.out.println("total: " + totalDegrees + " | size: " + getChildren().size + " | degrees per slice: " + sliceAngle);
-
-        int tmpIndex = 0;
-        while(angle > sliceAngle) {
-            angle -= sliceAngle;
-            tmpIndex++;
-        }
-
-        if(tmpIndex > getChildren().size-1)
-            selectedIndex = -1;
-        else
-            selectedIndex = tmpIndex;
-
-        System.out.println(selectedIndex);
+    private void childIndexAtMouse(float angle) {
+        angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360;
+        selectedIndex = (int)Math.floor(angle / style.totalDegreesDrawn * getChildren().size);
     }
 
     @Override // todo: optimize by including the "vector2" attributes
@@ -177,8 +165,7 @@ public class PieMenu extends RadialWidget {
         @Override
         public void touchDragged(InputEvent event, float x, float y, int pointer) {
             updateMousePosition(x, y);
-            double angle = angleAtMouse();
-            childIndexAtMouse(angle);
+            childIndexAtMouse(angleAtMouse());
             super.touchDragged(event, x, y, pointer);
         }
     }
