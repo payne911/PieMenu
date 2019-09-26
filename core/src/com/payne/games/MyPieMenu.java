@@ -3,13 +3,16 @@ package com.payne.games;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import space.earlygrey.shapedrawer.PolygonShapeDrawer;
 
@@ -21,7 +24,9 @@ public class MyPieMenu extends ApplicationAdapter {
 	private PolygonSpriteBatch batch;
 	private PolygonShapeDrawer shape;
 	private PieMenu pie;
-	private int amount = 0;
+	private RadialWidget radial;
+	private int pieAmount = 0;
+	private int radialAmount = 0;
 
 
 	@Override
@@ -34,37 +39,91 @@ public class MyPieMenu extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(stage);
 		Table root = new Table();
 		root.setFillParent(true);
+		root.defaults().padBottom(150);
 		stage.addActor(root);
 
 		/* Setting up the ShapeDrawer. */
-		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888); // todo: extract from Atlas instead?
 		pixmap.setColor(1,1,1,1);
 		pixmap.fill();
 		tmpTex = new Texture(pixmap);
 		pixmap.dispose();
 		shape = new PolygonShapeDrawer(batch, new TextureRegion(tmpTex));
 
-		/* Creating and setting up the widget. */
-		pie = new PieMenu(shape);
-		pie.angleDrawn = 180;
-		pie.angleOffset = 0;
-		pie.setInnerRadius(30);
-		pie.setFullRadius(100);
+		/* Adding the demo buttons. */
+		setUpPieMenu(root);
+		setUpRadialWidget(root);
+	}
+
+
+	private void setUpRadialWidget(Table root) {
+
+		/* Setting up and creating the widget. */
+		RadialWidget.RadialWidgetStyle style = new RadialWidget.RadialWidgetStyle();
+		style.radius = 100;
+		style.innerRadius = 20;
+		style.startDegreesOffset = 0;
+		style.totalDegreesDrawn = 180;
+		style.backgroundColor = new Color(1,1,1,1);
+		style.childRegionColor = new Color(.4f,.4f,.4f,1);
+		style.alternateChildRegionColor = new Color(1,0,0,1);
+		style.separatorColor = new Color(1,1,0,1);
+		radial = new RadialWidget(shape, style);
+		radial.setVisible(false);
 
 		/* Populating the widget. */
 		for (int i = 0; i < 5; i++) {
-			Label label = new Label(Integer.toString(i), skin);
-			pie.addItem(label);
+			Label label = new Label(Integer.toString(radialAmount++), skin);
+			radial.addActor(label);
 		}
 
 		/* Setting up the demo-button. */
-		final TextButton textButton = new TextButton("Test",  skin);
-		root.defaults().padBottom(150);
+		final TextButton textButton = new TextButton("Radial",  skin);
+		textButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				radial.setVisible(!radial.isVisible());
+				radial.updatePosition(); // todo: shouldn't be there
+			}
+		});
 		root.add(textButton).expand().bottom();
 
 		/* Including the Widget in the Stage. */
-		pie.attachToActor(textButton); // assigns the listener to the Actor
+		radial.attachToActor(textButton); // positions the widget
+		stage.addActor(radial);
+		radial.pack();
+	}
+
+
+	private void setUpPieMenu(Table root) {
+
+		/* Setting up and creating the widget. */
+		PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
+		style.radius = 130;
+		style.innerRadius = 50;
+		style.startDegreesOffset = 0;
+		style.totalDegreesDrawn = 240;
+		style.backgroundColor = new Color(1,1,1,1);
+		style.selectedColor = new Color(.5f,.5f,.5f,1);
+		style.childRegionColor = new Color(0,1,0,1);
+		style.alternateChildRegionColor = new Color(1,0,0,1);
+		style.separatorColor = new Color(1,1,0,1);
+		pie = new PieMenu(shape, style);
+
+		/* Populating the widget. */
+		for (int i = 0; i < 5; i++) {
+			Label label = new Label(Integer.toString(pieAmount++), skin);
+			pie.addActor(label);
+		}
+
+		/* Setting up the demo-button. */
+		final TextButton textButton = new TextButton("Pie",  skin);
+		root.add(textButton).expand().bottom();
+
+		/* Including the Widget in the Stage. */
+		pie.attachToActor(textButton); // assigns the listener to the Actor and positions the menu
 		stage.addActor(pie);
+		pie.pack();
 	}
 
 
@@ -82,9 +141,12 @@ public class MyPieMenu extends ApplicationAdapter {
 
 		/* Debugging. */
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-			pie.addItem(new Label(Integer.toString(amount++), skin));
+			pie.addActor(new Label(Integer.toString(pieAmount++), skin));
+			radial.addActor(new Label(Integer.toString(radialAmount++), skin));
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
+			pieAmount = 0;
+			radialAmount = 0;
 			dispose();
 			create();
 		}
@@ -93,6 +155,7 @@ public class MyPieMenu extends ApplicationAdapter {
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);
+		// todo: should update the Radial's position if it is visible during resize
 	}
 
 	@Override
