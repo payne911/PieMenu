@@ -18,9 +18,10 @@ public class PieMenu extends RadialGroup {
     private int selectedIndex = -1; // index of the currently selected item
     private int highlightedIndex = -1; // index of the currently highlighted item
 
-    private boolean infiniteDragRange = true; // should gestures select if drag finishes outside of radius
     private boolean hoverIsSelection = false; // if hovering an item calls ChangeListener and selects the item
     private boolean resetSelectionOnAppear = true; // when redrawing the widget, should it still select the last selected item?
+    private boolean remainDisplayed = false; // the widget should remain visible. The "visible-flow" becomes the responsibility of the user
+    private boolean infiniteSelectionRange = true; // should selection only happen if mouse is within the radius of the widget?
 
     private PieMenuStyle style;
     private HoverChangeListener hoverChangeListener;
@@ -29,6 +30,8 @@ public class PieMenu extends RadialGroup {
     private float mouseX, mouseY;
     private static Vector2 vector2 = new Vector2();
     private Color transparent = new Color(0,0,0,0);
+
+
 
 
     public PieMenu(final ShapeDrawer sd, PieMenuStyle style) {
@@ -73,37 +76,21 @@ public class PieMenu extends RadialGroup {
         attachedTo.addListener(dragListener);
     }
 
-    private Vector2 getStageBottomLeftCoordinates(Actor actor) {
-        return actor.localToStageCoordinates(new Vector2());
+    private void getStageBottomLeftCoordinates(Actor actor) {
+        actor.localToStageCoordinates(vector2.set(0,0));
     }
 
     private void updateMousePosition(float x, float y) {
-        vector2 = getStageBottomLeftCoordinates(attachedTo);
+        getStageBottomLeftCoordinates(attachedTo);
+        System.out.println("bottom left of " + attachedTo.getName() + " is at " + vector2.x + " | " + vector2.y);
+        System.out.println("input vector was: " + x + " " + y);
         mouseX = x + vector2.x;
         mouseY = y + vector2.y;
-    }
-
-    /**
-     * @return a non-normalized angle of the position of the cursor relative to the origin of the widget
-     */
-    private float angleAtMouse() {
-        return MathUtils.radiansToDegrees * MathUtils.atan2(mouseY - getY(), mouseX - getX());
     }
 
     private void resetSelection() {
         highlightedIndex = -1;
         selectedIndex = -1;
-    }
-
-    /**
-     * Given the angle, find the index of the child.
-     *
-     * @param angle angle in degrees relative to the origin
-     * @return the index of the child whose region encompasses the angle
-     */
-    private int findRegionAtMouse(float angle) {
-        angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360;
-        return MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
     }
 
     /**
@@ -149,6 +136,26 @@ public class PieMenu extends RadialGroup {
         }
     }
 
+    @Override
+    protected int findRegionAtRelative(float x, float y) {
+        float angle = angleAt(x,y);
+        angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
+        int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
+        if(infiniteSelectionRange)
+            return childIndex;
+        return isWithinRadius(x,y) ? childIndex : getChildren().size; // size is equivalent to "invalid"
+    }
+
+    @Override
+    protected int findRegionAtAbsolute(float x, float y) {
+        stageToLocalCoordinates(vector2.set(x,y));
+        float angle = angleAt(x,y);
+        angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
+        int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
+        if(infiniteSelectionRange)
+            return childIndex;
+        return isWithinRadius(vector2.x, vector2.y) ? childIndex : getChildren().size; // size is equivalent to "invalid"
+    }
 
     @Override
     protected void drawWithShapeDrawer(Batch batch, float parentAlpha) {
@@ -238,8 +245,9 @@ public class PieMenu extends RadialGroup {
             if(button != 0) // only-left clicks should activate that   todo: let user decide which buttons
                 return;
 
-            selectIndex(findRegionAtMouse(angleAtMouse())); // todo: just use highlighted instead of finding index again?
-            setVisible(false);
+            selectIndex(findRegionAtRelative(mouseX, mouseY)); // todo: just use highlighted instead of finding index again?
+            if(!remainDisplayed)
+                setVisible(false);
             super.touchUp(event, x, y, pointer, button);
         }
 
@@ -249,7 +257,7 @@ public class PieMenu extends RadialGroup {
                 return;
 
             updateMousePosition(x, y);
-            hoverIndex(findRegionAtMouse(angleAtMouse()), hoverIsSelection);
+            hoverIndex(findRegionAtRelative(mouseX, mouseY), hoverIsSelection);
             super.touchDragged(event, x, y, pointer);
         }
     }
@@ -287,11 +295,11 @@ public class PieMenu extends RadialGroup {
      */
 
 
-    public boolean isInfiniteDragRange() {
-        return infiniteDragRange;
+    public boolean isInfiniteSelectionRange() {
+        return infiniteSelectionRange;
     }
-    public void setInfiniteDragRange(boolean infiniteDragRange) {
-        this.infiniteDragRange = infiniteDragRange;
+    public void setInfiniteSelectionRange(boolean infiniteSelectionRange) {
+        this.infiniteSelectionRange = infiniteSelectionRange;
     }
     public HoverChangeListener getHoverChangeListener() {
         return hoverChangeListener;
@@ -325,5 +333,11 @@ public class PieMenu extends RadialGroup {
     }
     public PieMenuStyle getStyle() {
         return style;
+    }
+    public boolean isRemainDisplayed() {
+        return remainDisplayed;
+    }
+    public void setRemainDisplayed(boolean remainDisplayed) {
+        this.remainDisplayed = remainDisplayed;
     }
 }

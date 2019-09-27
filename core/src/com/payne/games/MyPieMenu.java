@@ -24,9 +24,14 @@ public class MyPieMenu extends ApplicationAdapter {
 	private PolygonSpriteBatch batch;
 	private ShapeDrawer shape;
 	private PieMenu pie;
+	private PieMenu mousePie;
+	private PieMenu permaPie;
 	private RadialGroup radial;
 	private int pieAmount = 0;
+	private int mousePieAmount = 0;
+	private int permaPieAmount = 0;
 	private int radialAmount = 0;
+	private final int INITIAL_CHILDREN_AMOUNT = 5;
 
 
 	@Override
@@ -50,8 +55,10 @@ public class MyPieMenu extends ApplicationAdapter {
 		pixmap.dispose();
 		shape = new ShapeDrawer(batch, new TextureRegion(tmpTex));
 
-		/* Adding the demo buttons. */
+		/* Adding the demo widgets. */
 		setUpPieMenu(root);
+		setUpMousePieMenu();
+		setUpPermaPieMenu();
 		setUpRadialWidget(root);
 	}
 
@@ -72,7 +79,7 @@ public class MyPieMenu extends ApplicationAdapter {
 		radial.setVisible(false);
 
 		/* Populating the widget. */
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
 			Label label = new Label(Integer.toString(radialAmount++), skin);
 			radial.addActor(label);
 		}
@@ -90,7 +97,7 @@ public class MyPieMenu extends ApplicationAdapter {
 		/* Including the Widget in the Stage. */
 		radial.attachToActor(textButton); // positions the widget
 		stage.addActor(radial);
-		radial.pack();
+		radial.setName("radial");
 	}
 
 
@@ -106,13 +113,13 @@ public class MyPieMenu extends ApplicationAdapter {
 		style.selectedColor = new Color(.7f,.3f,.5f,1);
 		style.childRegionColor = new Color(0,.7f,0,1);
 		style.alternateChildRegionColor = new Color(.7f,0,0,1);
-		style.separatorColor = new Color(1,1,0,1);
 		pie = new PieMenu(shape, style);
 
 		/* Customizing the behavior. */
 		pie.setHoverIsSelection(false);
-		pie.setInfiniteDragRange(true);
+		pie.setInfiniteSelectionRange(true);
 		pie.setResetSelectionOnAppear(true);
+        pie.setRemainDisplayed(false);
 
 		/* Adding some listeners, just 'cuz... */
 		pie.addListener(new ChangeListener() {
@@ -129,7 +136,7 @@ public class MyPieMenu extends ApplicationAdapter {
 		});
 
 		/* Populating the widget. */
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
 			Label label = new Label(Integer.toString(pieAmount++), skin);
 			pie.addActor(label);
 		}
@@ -141,10 +148,101 @@ public class MyPieMenu extends ApplicationAdapter {
 		/* Including the Widget in the Stage. */
 		pie.attachToActor(textButton); // assigns the listener to the Actor and positions the menu
 		stage.addActor(pie);
-		pie.pack();
+		pie.setName("pie");
 	}
 
+	private void setUpMousePieMenu() {
 
+		/* Setting up and creating the widget. */
+		PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
+		style.radius = 200;
+		style.innerRadius = 20;
+		style.backgroundColor = new Color(1,1,1,.1f);
+		style.selectedColor = new Color(.5f,.5f,.5f,1);
+		style.childRegionColor = new Color(.33f,.33f,.33f,1);
+		style.alternateChildRegionColor = new Color(.25f,.25f,.25f,1);
+		mousePie = new PieMenu(shape, style);
+
+		/* Customizing the behavior. */
+		mousePie.setHoverIsSelection(false);
+		mousePie.setInfiniteSelectionRange(true);
+		mousePie.setResetSelectionOnAppear(false);
+        mousePie.setRemainDisplayed(false);
+
+		/* Adding some listeners, just 'cuz... */
+		mousePie.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("ChangeListener - selected index: " + mousePie.getSelectedIndex());
+			}
+		});
+		mousePie.setHoverChangeListener(new PieMenu.HoverChangeListener() {
+			@Override
+			public void onHoverChange() {
+				System.out.println("HoverChangeListener - highlighted index: " + mousePie.getHighlightedIndex());
+			}
+		});
+
+		/* Populating the widget. */
+		for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
+			Label label = new Label(Integer.toString(mousePieAmount++), skin);
+			mousePie.addActor(label);
+		}
+
+		/* Including the Widget in the Stage. */
+		stage.addActor(mousePie);
+		mousePie.setName("mousePie");
+	}
+
+	private void setUpPermaPieMenu() {
+
+		/* Setting up and creating the widget. */
+		PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
+		style.radius = 50;
+		style.innerRadius = 10;
+		style.totalDegreesDrawn = 180;
+		style.backgroundColor = new Color(1,1,1,.2f);
+		style.selectedColor = new Color(.5f,.5f,.5f,1);
+		style.childRegionColor = new Color(.33f,.33f,.33f,1);
+		style.alternateChildRegionColor = new Color(.25f,.25f,.25f,1);
+        style.separatorColor = new Color(.5f,1,.3f,1);
+		permaPie = new PieMenu(shape, style);
+
+		/* Customizing the behavior. */
+		permaPie.setHoverIsSelection(false);
+		permaPie.setInfiniteSelectionRange(false);
+		permaPie.setResetSelectionOnAppear(false);
+		permaPie.setRemainDisplayed(true);
+
+		/* Adding some listeners, just 'cuz... */
+		permaPie.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("ChangeListener - selected index: " + permaPie.getSelectedIndex());
+			}
+		});
+		permaPie.setHoverChangeListener(new PieMenu.HoverChangeListener() {
+			@Override
+			public void onHoverChange() {
+				System.out.println("HoverChangeListener - highlighted index: " + permaPie.getHighlightedIndex());
+			}
+		});
+
+		/* Populating the widget. */
+		for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
+			Label label = new Label(Integer.toString(permaPieAmount++), skin);
+			permaPie.addActor(label);
+		}
+//		permaPie.debug();
+
+		/* Including the Widget at some absolute coordinate in the World. */
+		permaPie.setPosition(Gdx.graphics.getWidth()/2, 0); // (320,0)
+		stage.addActor(permaPie);
+		permaPie.attachToActor(permaPie);
+//		permaPie.addListener(permaPie.dragListener);
+		permaPie.setVisible(true);
+		permaPie.setName("permaPie");
+	}
 
 
 
@@ -160,10 +258,14 @@ public class MyPieMenu extends ApplicationAdapter {
 		/* Debugging. */
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			pie.addActor(new Label(Integer.toString(pieAmount++), skin));
+			mousePie.addActor(new Label(Integer.toString(mousePieAmount++), skin));
+			permaPie.addActor(new Label(Integer.toString(permaPieAmount++), skin));
 			radial.addActor(new Label(Integer.toString(radialAmount++), skin));
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
 			pieAmount = 0;
+			mousePieAmount = 0;
+			permaPieAmount = 0;
 			radialAmount = 0;
 			dispose();
 			create();
@@ -172,7 +274,12 @@ public class MyPieMenu extends ApplicationAdapter {
 		    if(pie.getChildren().size == 0)
 		        return;
 			pie.removeActor(pie.getChild(pie.getChildren().size-1));
+			mousePie.removeActor(mousePie.getChild(mousePie.getChildren().size-1));
+			permaPie.removeActor(permaPie.getChild(permaPie.getChildren().size-1));
 			radial.removeActor(radial.getChild(radial.getChildren().size-1));
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
+			permaPie.setVisible(!permaPie.isVisible());
 		}
 	}
 

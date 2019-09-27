@@ -5,13 +5,14 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
-// todo: override "hit"
+
 public class RadialGroup extends WidgetGroup {
     protected Actor attachedTo;
     protected ShapeDrawer sd;
@@ -52,6 +53,8 @@ public class RadialGroup extends WidgetGroup {
     public void setStyle(RadialGroupStyle style) {
         checkStyle(style);
         this.style = style;
+        setWidth(getPrefWidth());
+        setHeight(getPrefHeight());
         invalidate();
     }
 
@@ -222,11 +225,101 @@ public class RadialGroup extends WidgetGroup {
      * Positions the widget right at the middle of its attached Actor.
      */
     protected void updatePosition() { // todo: option for offsets
-        if(attachedTo != null) {
+        if(attachedTo != null && !(attachedTo instanceof RadialGroup)) {
             getStageMiddleCoordinates(attachedTo);
             setPosition(vector2.x, vector2.y);
         }
     }
+
+    /**
+     * @param x x-coordinate relative to the origin of the widget
+     * @param y y-coordinate relative to the origin of the widget
+     * @return deepest child's hit at (x,y). Else, the widget itself if it's
+     *         the background. Else null.
+     */
+    @Override
+    public Actor hit(float x, float y, boolean touchable) {
+        if (touchable && getTouchable() == Touchable.disabled) return null;
+        if (!isVisible()) return null;
+
+        localToStageCoordinates(vector2.set(x,y));
+        int childIndex = findRegionAtAbsolute(vector2.x,vector2.y);
+        if (childIndex < getChildren().size) return getChild(childIndex).hit(x, y, touchable);
+
+        // todo: if hitting background but not regions, return the widget itself
+
+        return null;
+    }
+
+    /**
+     * Given a coordinate, find the index of the child (if any).
+     *
+     * @param x x-coordinate relative to the widget's origin.
+     * @param y y-coordinate relative to the widget's origin.
+     * @return The index of the child at that coordinate.
+     *         If there are no child there, the amount of children is returned.
+     */
+    protected int findRegionAtRelative(float x, float y) {
+        float angle = angleAt(x,y);
+        angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
+        int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
+        return isWithinRadius(x,y) ? childIndex : getChildren().size; // size is equivalent to "invalid"
+    }
+
+    /**
+     * Given a coordinate, find the index of the child (if any).
+     *
+     * @param x x-coordinate in the Stage.
+     * @param y y-coordinate in the Stage.
+     * @return The index of the child at that coordinate.
+     *         If there are no child there, the amount of children is returned.
+     */
+    protected int findRegionAtAbsolute(float x, float y) {
+        float angle = angleAt(x,y);
+        angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
+        int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
+        stageToLocalCoordinates(vector2);
+        return isWithinRadius(vector2.x, vector2.y) ? childIndex : getChildren().size; // size is equivalent to "invalid"
+    }
+
+    /**
+     * Finding the angle, in degrees, compared to the origin (i.e. center) of the Widget.
+     *
+     * @param x x-coordinate relative to actor (?)
+     * @param y y-coordinate relative to actor (?)
+     * @return a non-normalized angle of the position of the cursor
+     *         relative to the origin (i.e. middle) of the widget
+     */
+    protected float angleAt(float x, float y) {
+        return MathUtils.radiansToDegrees * MathUtils.atan2(y - getY(), x - getX());
+    }
+
+    /**
+     * Checks whether or not the input coordinate is in between (inclusively)
+     * the innerRadius and the radius of the widget.
+     *
+     * @param x x-coordinate relative to the center of the widget's internal origin
+     *          (its center, in our case)
+     * @param y y-coordinate relative to the center of the widget's internal origin
+     *          (its center, in our case)
+     * @return 'true' only if the coordinates fall within the widget's radius.
+     */
+    protected boolean isWithinRadius(float x, float y) {
+        float distance = pow2(x) + pow2(y);
+        float innerRadSquared = pow2(style.innerRadius);
+        float radSquared = pow2(style.radius);
+        return distance >= innerRadSquared && distance <= radSquared;
+    }
+
+    /**
+     * @return in * in
+     */
+    protected float pow2(float in) {
+        return in*in;
+    }
+
+
+
 
 
     public static class RadialGroupStyle {
