@@ -14,15 +14,21 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class PieMenu extends RadialGroup {
     public MyDragListener dragListener;
-    public int selectedIndex = -1; // index of the currently selected item
-    public int highlightedIndex = -1; // index of the currently highlighted item
+
+    private int selectedIndex = -1; // index of the currently selected item
+    private int highlightedIndex = -1; // index of the currently highlighted item
 
     private boolean infiniteDragRange = true; // should gestures select if drag finishes outside of radius
     private boolean hoverIsSelection = false; // if hovering an item calls ChangeListener and selects the item
     private boolean resetSelectionOnAppear = true; // when redrawing the widget, should it still select the last selected item?
-    private float mouseX, mouseY;
+
     private PieMenuStyle style;
     private HoverChangeListener hoverChangeListener;
+
+    /* For internal use. */
+    private float mouseX, mouseY;
+    private static Vector2 vector2 = new Vector2();
+    private Color transparent = new Color(0,0,0,0);
 
 
     public PieMenu(final ShapeDrawer sd, PieMenuStyle style) {
@@ -36,9 +42,6 @@ public class PieMenu extends RadialGroup {
     }
 
 
-    public PieMenuStyle getStyle() {
-        return style;
-    }
 
     public void setStyle(PieMenuStyle style) {
         checkStyle(style);
@@ -47,7 +50,7 @@ public class PieMenu extends RadialGroup {
     }
 
     protected void checkStyle(PieMenuStyle style) {
-
+        // todo: is there really something to check for PieMenu?
 
         super.checkStyle(style);
     }
@@ -75,9 +78,9 @@ public class PieMenu extends RadialGroup {
     }
 
     private void updateMousePosition(float x, float y) {
-        Vector2 pos = getStageBottomLeftCoordinates(attachedTo);
-        mouseX = x + pos.x;
-        mouseY = y + pos.y;
+        vector2 = getStageBottomLeftCoordinates(attachedTo);
+        mouseX = x + vector2.x;
+        mouseY = y + vector2.y;
     }
 
     /**
@@ -147,49 +150,62 @@ public class PieMenu extends RadialGroup {
     }
 
 
-    @Override // todo: optimize by including the "vector2" attributes
+    @Override
     protected void drawWithShapeDrawer(Batch batch, float parentAlpha) {
 
-        /* Background */
-        sd.setColor(style.backgroundColor);
+        /* Pre-calculating */
         float bgRadian = MathUtils.degreesToRadians*style.totalDegreesDrawn;
         float tmpOffset = MathUtils.degreesToRadians*style.startDegreesOffset;
-        sd.sector(getX(), getY(), style.radius, tmpOffset, bgRadian);
+        int size = getChildren().size;
+        float tmpRad = bgRadian / size;
 
-        /* Children */
-        Vector2 center = new Vector2(getX(), getY());
-        float tmpRad = bgRadian / getChildren().size;
-        for(int i=0; i<getChildren().size; i++) {
-            float tmp = tmpOffset + i*tmpRad;
-            sd.setColor(i== highlightedIndex ? Color.MAGENTA : i%2 == 0 ? Color.CHARTREUSE : Color.FIREBRICK);
-            sd.arc(center.x, center.y, style.radius, tmp, tmpRad, style.radius-style.innerRadius);
-            sd.line(pointAtAngle(center, style.innerRadius, tmp),
-                    pointAtAngle(center, style.radius, tmp),
-                    Color.PINK, 3);
+        /* Background image */
+        if(style.background != null)
+            style.background.draw(batch, getX(), getY(), getWidth(), getHeight());
+
+        /* Rest of background */
+        if(style.backgroundColor != null) {
+            sd.setColor(style.backgroundColor);
+            sd.sector(getX(), getY(), style.radius, tmpOffset, bgRadian);
         }
 
-        /* The remaining last line to be drawn */
-        sd.line(pointAtAngle(center, style.innerRadius, tmpOffset + getChildren().size*tmpRad),
-                pointAtAngle(center, style.radius, tmpOffset + getChildren().size*tmpRad),
-                Color.PINK, 3);
+        /* Children */
+        vector2.set(getX(), getY());
+        for(int i=0; i<size; i++) {
+            float tmp = tmpOffset + i*tmpRad;
+            if(style.selectedColor != null) {
+                drawChildWithSelection(vector2, i, tmp, tmpRad);
+            } else {
+                drawChildWithoutSelection(vector2, i, tmp, tmpRad);
+            }
 
-        /* DEBUG */
-        sd.setColor(Color.BLACK);
-        sd.circle(mouseX, mouseY, 7, 3);
+            /* Separator */
+            drawChildSeparator(vector2, tmp);
+        }
+
+        /* The remaining last separator to be drawn */
+        drawChildSeparator(vector2, tmpOffset + size*tmpRad);
     }
 
-    public boolean isInfiniteDragRange() {
-        return infiniteDragRange;
+    protected void drawChildWithSelection(Vector2 vector2, int index, float startAngle, float radian) {
+        if(style.childRegionColor != null) {
+            if(style.alternateChildRegionColor != null) {
+                sd.setColor(index == highlightedIndex ? style.selectedColor
+                        : index%2 == 0 ? style.childRegionColor
+                        : style.alternateChildRegionColor);
+                sd.arc(vector2.x, vector2.y, style.radius, startAngle, radian, style.radius-style.innerRadius);
+            } else {
+                sd.setColor(index == highlightedIndex ? style.selectedColor : style.childRegionColor);
+                sd.arc(vector2.x, vector2.y, style.radius, startAngle, radian, style.radius-style.innerRadius);
+            }
+        } else {
+            sd.setColor(index == highlightedIndex ? style.selectedColor
+                    : transparent);
+            sd.arc(vector2.x, vector2.y, style.radius, startAngle, radian, style.radius-style.innerRadius);
+        }
     }
-    public void setInfiniteDragRange(boolean infiniteDragRange) {
-        this.infiniteDragRange = infiniteDragRange;
-    }
-    public HoverChangeListener getHoverChangeListener() {
-        return hoverChangeListener;
-    }
-    public void setHoverChangeListener(HoverChangeListener hoverChangeListener) {
-        this.hoverChangeListener = hoverChangeListener;
-    }
+
+
 
 
     public class MyDragListener extends DragListener {
@@ -207,6 +223,9 @@ public class PieMenu extends RadialGroup {
          */
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            if(button != 0) // only-left clicks should activate that   todo: let user decide which buttons
+                return true;
+
             if(resetSelectionOnAppear)
                 resetSelection();
             setVisible(true);
@@ -216,6 +235,9 @@ public class PieMenu extends RadialGroup {
 
         @Override
         public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+            if(button != 0) // only-left clicks should activate that   todo: let user decide which buttons
+                return;
+
             selectIndex(findRegionAtMouse(angleAtMouse())); // todo: just use highlighted instead of finding index again?
             setVisible(false);
             super.touchUp(event, x, y, pointer, button);
@@ -223,6 +245,9 @@ public class PieMenu extends RadialGroup {
 
         @Override
         public void touchDragged(InputEvent event, float x, float y, int pointer) {
+            if(!isVisible())
+                return;
+
             updateMousePosition(x, y);
             hoverIndex(findRegionAtMouse(angleAtMouse()), hoverIsSelection);
             super.touchDragged(event, x, y, pointer);
@@ -235,6 +260,7 @@ public class PieMenu extends RadialGroup {
 
     public static class PieMenuStyle extends RadialGroupStyle {
         public Color selectedColor;
+        public float selectedRadius; // todo: integrate into drawing so that selected region is smaller or bigger than others
 
         public PieMenuStyle() {
         }
@@ -242,6 +268,7 @@ public class PieMenu extends RadialGroup {
         public PieMenuStyle(PieMenu.PieMenuStyle style) {
             super(style);
             this.selectedColor = style.selectedColor;
+            this.selectedRadius = style.selectedRadius;
         }
     }
 
@@ -249,5 +276,54 @@ public class PieMenu extends RadialGroup {
 
     public interface HoverChangeListener {
         void onHoverChange();
+    }
+
+
+
+
+
+    /*
+    =============================== GETTERS/SETTERS ============================
+     */
+
+
+    public boolean isInfiniteDragRange() {
+        return infiniteDragRange;
+    }
+    public void setInfiniteDragRange(boolean infiniteDragRange) {
+        this.infiniteDragRange = infiniteDragRange;
+    }
+    public HoverChangeListener getHoverChangeListener() {
+        return hoverChangeListener;
+    }
+    public void setHoverChangeListener(HoverChangeListener hoverChangeListener) {
+        this.hoverChangeListener = hoverChangeListener;
+    }
+    public int getSelectedIndex() {
+        return selectedIndex;
+    }
+    public void setSelectedIndex(int selectedIndex) {
+        this.selectedIndex = selectedIndex;
+    }
+    public int getHighlightedIndex() {
+        return highlightedIndex;
+    }
+    public void setHighlightedIndex(int highlightedIndex) {
+        this.highlightedIndex = highlightedIndex;
+    }
+    public boolean isHoverIsSelection() {
+        return hoverIsSelection;
+    }
+    public void setHoverIsSelection(boolean hoverIsSelection) {
+        this.hoverIsSelection = hoverIsSelection;
+    }
+    public boolean isResetSelectionOnAppear() {
+        return resetSelectionOnAppear;
+    }
+    public void setResetSelectionOnAppear(boolean resetSelectionOnAppear) {
+        this.resetSelectionOnAppear = resetSelectionOnAppear;
+    }
+    public PieMenuStyle getStyle() {
+        return style;
     }
 }

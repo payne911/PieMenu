@@ -66,8 +66,8 @@ public class MyPieMenu extends ApplicationAdapter {
 		style.totalDegreesDrawn = 180;
 		style.backgroundColor = new Color(1,1,1,1);
 		style.childRegionColor = new Color(.4f,.4f,.4f,1);
-		style.alternateChildRegionColor = new Color(1,0,0,1);
-		style.separatorColor = new Color(1,1,0,1);
+		style.alternateChildRegionColor = new Color(.6f,0,0,1);
+		style.separatorColor = new Color(.5f,1,.3f,1);
 		radial = new RadialGroup(shape, style);
 		radial.setVisible(false);
 
@@ -103,23 +103,28 @@ public class MyPieMenu extends ApplicationAdapter {
 		style.startDegreesOffset = 180;
 		style.totalDegreesDrawn = 320;
 		style.backgroundColor = new Color(1,1,1,1);
-		style.selectedColor = new Color(.5f,.5f,.5f,1);
-		style.childRegionColor = new Color(0,1,0,1);
-		style.alternateChildRegionColor = new Color(1,0,0,1);
+		style.selectedColor = new Color(.7f,.3f,.5f,1);
+		style.childRegionColor = new Color(0,.7f,0,1);
+		style.alternateChildRegionColor = new Color(.7f,0,0,1);
 		style.separatorColor = new Color(1,1,0,1);
 		pie = new PieMenu(shape, style);
+
+		/* Customizing the behavior. */
+		pie.setHoverIsSelection(false);
+		pie.setInfiniteDragRange(true);
+		pie.setResetSelectionOnAppear(true);
 
 		/* Adding some listeners, just 'cuz... */
 		pie.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println("ChangeListener - selected index: " + pie.selectedIndex);
+				System.out.println("ChangeListener - selected index: " + pie.getSelectedIndex());
 			}
 		});
 		pie.setHoverChangeListener(new PieMenu.HoverChangeListener() {
 			@Override
 			public void onHoverChange() {
-				System.out.println("HoverChangeListener - highlighted index: " + pie.highlightedIndex);
+				System.out.println("HoverChangeListener - highlighted index: " + pie.getHighlightedIndex());
 			}
 		});
 

@@ -17,8 +17,11 @@ public class RadialGroup extends WidgetGroup {
     protected ShapeDrawer sd;
 
     private RadialGroupStyle style;
+
+    /* For internal use (optimization). */
     private static Vector2 vector2 = new Vector2();
     private static Vector2 vector22 = new Vector2();
+    private static Vector2 vector23 = new Vector2();
 
 
 
@@ -72,6 +75,9 @@ public class RadialGroup extends WidgetGroup {
             throw new IllegalArgumentException("innerRadius cannot be negative.");
         if(style.innerRadius >= style.radius)
             throw new IllegalArgumentException("innerRadius must be smaller than the radius.");
+
+        if(style.childRegionColor == null && style.alternateChildRegionColor != null)
+            throw new IllegalArgumentException("childRegionColor must also be specified if you are defining alternateChildRegionColor.");
     }
 
     @Override
@@ -128,13 +134,17 @@ public class RadialGroup extends WidgetGroup {
 
     protected void drawWithShapeDrawer(Batch batch, float parentAlpha) {
 
+        /* Pre-calculating */
+        float bgRadian = MathUtils.degreesToRadians*style.totalDegreesDrawn;
+        float tmpOffset = MathUtils.degreesToRadians*style.startDegreesOffset;
+        int size = getChildren().size;
+        float tmpRad = bgRadian / size;
+
         /* Background image */
         if(style.background != null)
             style.background.draw(batch, getX(), getY(), getWidth(), getHeight());
 
         /* Rest of background */
-        float bgRadian = MathUtils.degreesToRadians*style.totalDegreesDrawn;
-        float tmpOffset = MathUtils.degreesToRadians*style.startDegreesOffset;
         if(style.backgroundColor != null) {
             sd.setColor(style.backgroundColor);
             sd.sector(getX(), getY(), style.radius, tmpOffset, bgRadian);
@@ -142,29 +152,35 @@ public class RadialGroup extends WidgetGroup {
 
         /* Children */
         vector2.set(getX(), getY());
-        float tmpRad = bgRadian / getChildren().size;
-        for(int i=0; i<getChildren().size; i++) {
+        for(int i=0; i<size; i++) {
             float tmp = tmpOffset + i*tmpRad;
-            if(style.childRegionColor != null) {
-                if(style.alternateChildRegionColor != null) {
-                    sd.setColor(i%2 == 0 ? style.childRegionColor : style.alternateChildRegionColor);
-                    sd.arc(vector2.x, vector2.y, style.radius, tmp, tmpRad, style.radius-style.innerRadius);
-                } else {
-                    sd.setColor(style.childRegionColor);
-                    sd.arc(vector2.x, vector2.y, style.radius, tmp, tmpRad, style.radius-style.innerRadius);
-                }
-            }
-            if(getChildren().size > 1 && style.separatorColor != null)
-                sd.line(pointAtAngle(vector2, style.innerRadius, tmp),
-                        pointAtAngle(vector2, style.radius, tmp),
-                        style.separatorColor, 3);
+            drawChildWithoutSelection(vector2, i, tmp, tmpRad);
+
+            /* Separator */
+            drawChildSeparator(vector2, tmp);
         }
 
-        /* The remaining last line to be drawn */
+        /* The remaining last separator to be drawn */
+        drawChildSeparator(vector2, tmpOffset + size*tmpRad);
+    }
+
+    protected void drawChildSeparator(Vector2 vector2, float drawnRadianAngle) {
         if(getChildren().size > 1 && style.separatorColor != null)
-            sd.line(pointAtAngle(vector2, style.innerRadius, tmpOffset + getChildren().size*tmpRad),
-                    pointAtAngle(vector2, style.radius, tmpOffset + getChildren().size*tmpRad),
+            sd.line(pointAtAngle(vector22, vector2, style.innerRadius, drawnRadianAngle),
+                    pointAtAngle(vector23, vector2, style.radius, drawnRadianAngle),
                     style.separatorColor, 3);
+    }
+
+    protected void drawChildWithoutSelection(Vector2 vector2, int index, float startAngle, float radian) {
+        if(style.childRegionColor != null) {
+            if(style.alternateChildRegionColor != null) {
+                sd.setColor(index%2 == 0 ? style.childRegionColor : style.alternateChildRegionColor);
+                sd.arc(vector2.x, vector2.y, style.radius, startAngle, radian, style.radius-style.innerRadius);
+            } else {
+                sd.setColor(style.childRegionColor);
+                sd.arc(vector2.x, vector2.y, style.radius, startAngle, radian, style.radius-style.innerRadius);
+            }
+        }
     }
 
 
@@ -177,9 +193,9 @@ public class RadialGroup extends WidgetGroup {
      * @param radian the angle along which the line is calculated
      * @return the point associated with those parameters
      */
-    protected Vector2 pointAtAngle(Vector2 center, float radius, float radian) {
-        vector22.set(center.x + radius * MathUtils.cos(radian), center.y + radius * MathUtils.sin(radian));
-        return vector22;
+    protected Vector2 pointAtAngle(Vector2 output, Vector2 center, float radius, float radian) {
+        output.set(center.x + radius * MathUtils.cos(radian), center.y + radius * MathUtils.sin(radian));
+        return output;
     }
 
     protected void getStageMiddleCoordinates(Actor actor) {

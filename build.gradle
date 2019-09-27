@@ -25,6 +25,7 @@ allprojects {
         appName = "my-pie-menu"
         gdxVersion = '1.9.10'
         roboVMVersion = '2.3.7'
+        shapedrawerVersion = '2.0.0'
     }
 
     repositories {
@@ -104,6 +105,6 @@ project(":core") {
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        implementation 'space.earlygrey:shapedrawer:2.0.0'
+        implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
     }
 }
