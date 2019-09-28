@@ -20,7 +20,6 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
  * @author Jérémi Grenier-Berthiaume (aka "payne")
  */
 public class RadialGroup extends WidgetGroup {
-    @Deprecated protected Actor attachedTo;
 
     /**
      * Used to draw on the screen many elements of the style.
@@ -43,16 +42,22 @@ public class RadialGroup extends WidgetGroup {
     public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style) {
         setStyle(style);
         this.sd = sd;
+        setVisible(false);
+        setTouchable(Touchable.childrenOnly);
     }
 
     public RadialGroup(final ShapeDrawer sd, Skin skin) {
         setStyle(skin.get(RadialGroupStyle.class));
         this.sd = sd;
+        setVisible(false);
+        setTouchable(Touchable.childrenOnly);
     }
 
     public RadialGroup(final ShapeDrawer sd, Skin skin, String style) {
         setStyle(skin.get(style, RadialGroupStyle.class));
         this.sd = sd;
+        setVisible(false);
+        setTouchable(Touchable.childrenOnly);
     }
 
     public RadialGroupStyle getStyle() {
@@ -220,8 +225,8 @@ public class RadialGroup extends WidgetGroup {
 
 
     /**
-     * @param x x-coordinate relative to the origin of the widget
-     * @param y y-coordinate relative to the origin of the widget
+     * @param x x-coordinate relative to the origin (bottom left) of the widget
+     * @param y y-coordinate relative to the origin (bottom left) of the widget
      * @return deepest child's hit at (x,y). Else, the widget itself if it's
      *         the background. Else null.
      */
@@ -231,10 +236,18 @@ public class RadialGroup extends WidgetGroup {
         if (!isVisible()) return null;
 
         localToStageCoordinates(vector2.set(x,y));
-        int childIndex = findRegionAtAbsolute(vector2.x,vector2.y);
-        if (childIndex < getChildren().size) return getChildren().get(childIndex).hit(x, y, touchable);
-
-        // todo: if hitting background but not regions, return the widget itself
+        int childIndex = findChildSectorAtAbsolute(vector2.x,vector2.y);
+        if (childIndex < getChildren().size) {
+            Actor child = getChildren().get(childIndex);
+            if(child.getTouchable() == Touchable.disabled)
+                return this;
+            child.parentToLocalCoordinates(vector2.set(x, y));
+            Actor hit = child.hit(vector2.x, vector2.y, touchable);
+            if(hit != null)
+                return hit;
+            else
+                return this;
+        }
 
         return null;
     }
@@ -247,12 +260,12 @@ public class RadialGroup extends WidgetGroup {
      * @return The index of the child at that coordinate.
      *         If there are no child there, the amount of children is returned.
      */
-    public int findRegionAtAbsolute(float x, float y) {
+    public int findChildSectorAtAbsolute(float x, float y) {
         float angle = angleAtAbsolute(x,y);
         angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
         int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
         stageToLocalCoordinates(vector2.set(x,y));
-        return isWithinRadius(vector2.x - style.radius, vector2.y - style.radius) ? childIndex : getChildren().size; // size is equivalent to "invalid"
+        return isWithinRadii(vector2.x - style.radius, vector2.y - style.radius) ? childIndex : getChildren().size; // size is equivalent to "invalid"
     }
 
     /**
@@ -282,7 +295,7 @@ public class RadialGroup extends WidgetGroup {
      * @param y y-coordinate relative to the center of the widget's
      * @return 'true' only if the coordinates fall within the widget's radii.
      */
-    public boolean isWithinRadius(float x, float y) {
+    public boolean isWithinRadii(float x, float y) {
         float distance = pow2(x) + pow2(y);
         float innerRadSquared = pow2(style.innerRadius);
         float radSquared = pow2(style.radius);

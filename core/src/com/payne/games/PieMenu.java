@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
@@ -21,7 +21,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
  * @author Jérémi Grenier-Berthiaume (aka "payne")
  */
 public class PieMenu extends RadialGroup {
-    @Deprecated public MyDragListener dragListener; // todo: uncertain if appropriate
+    @Deprecated private DefaultDragListener defaultDragListener; // todo: uncertain if appropriate
 
     /**
      * Index of the currently selected item.
@@ -37,11 +37,6 @@ public class PieMenu extends RadialGroup {
      * If hovering an item calls ChangeListener and selects the item.
      */
     private boolean hoverIsSelection = false;
-
-    /**
-     * When redrawing the widget, should it still select the last selected item?
-     */
-    private boolean resetSelectionOnAppear = true;
 
     /**
      * The widget should remain visible. The "visible-flow" becomes the responsibility of the user.
@@ -65,6 +60,11 @@ public class PieMenu extends RadialGroup {
      */
     private HoverChangeListener hoverChangeListener;
 
+    /**
+     * Determines which button must be used to interact with the Widget.
+     */
+    private int selectionButton = Input.Buttons.LEFT;
+
     /* For internal use. */
     private static Vector2 vector2 = new Vector2();
     private static final Color TRANSPARENT = new Color(0,0,0,0);
@@ -75,22 +75,22 @@ public class PieMenu extends RadialGroup {
     public PieMenu(final ShapeDrawer sd, PieMenuStyle style) {
         super(sd, style);
         setStyle(style);
-        setVisible(false);
+        setTouchable(Touchable.enabled);
 
-        dragListener = new MyDragListener(style.radius);
-        dragListener.setTapSquareSize(0);
+        defaultDragListener = new DefaultDragListener(); // todo: if keeping this, copy in other constructors
+        defaultDragListener.setTapSquareSize(0);
     }
 
     public PieMenu(final ShapeDrawer sd, Skin skin) {
         super(sd, skin);
         setStyle(skin.get(PieMenuStyle.class));
-        setVisible(false);
+        setTouchable(Touchable.enabled);
     }
 
     public PieMenu(final ShapeDrawer sd, Skin skin, String style) {
         super(sd, skin, style);
         setStyle(skin.get(style, PieMenuStyle.class));
-        setVisible(false);
+        setTouchable(Touchable.enabled);
     }
 
 
@@ -107,23 +107,6 @@ public class PieMenu extends RadialGroup {
         super.checkStyle(style);
     }
 
-    public void setRadius(float radius) { // todo: add restrictions (range [0,360])
-        style.radius = radius;
-        dragListener.maxRange = radius;
-    }
-
-
-    /**
-     * Designates an Actor on which the PieMenu will be centered.
-     * Also takes care of attaching the DragListener to that Actor.
-     *
-     * @param attachedTo an Actor
-     */
-    @Deprecated
-    public void attachToActor(Actor attachedTo) {
-        this.attachedTo = attachedTo;
-        attachedTo.addListener(dragListener);
-    }
 
     /**
      * Resets selected and highlighted child.
@@ -179,14 +162,14 @@ public class PieMenu extends RadialGroup {
     }
 
     @Override
-    public int findRegionAtAbsolute(float x, float y) {
+    public int findChildSectorAtAbsolute(float x, float y) {
         float angle = angleAtAbsolute(x,y);
         angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
         int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
         if(infiniteSelectionRange)
             return childIndex;
         stageToLocalCoordinates(vector2.set(x,y));
-        return isWithinRadius(vector2.x - style.radius, vector2.y - style.radius) ? childIndex : getChildren().size; // size is equivalent to "invalid"
+        return isWithinRadii(vector2.x - style.radius, vector2.y - style.radius) ? childIndex : getChildren().size; // size is equivalent to "invalid"
     }
 
     @Override
@@ -247,14 +230,7 @@ public class PieMenu extends RadialGroup {
 
 
 
-    public class MyDragListener extends DragListener {
-        public float maxRange; // todo: this can be removed since it's an inner-class
-
-
-        public MyDragListener(float maxRange) {
-            this.maxRange = maxRange;
-        }
-
+    public class DefaultDragListener extends DragListener {
 
         /**
          * @param x x-coordinate in pixels, relative to the bottom left of the attached actor
@@ -262,21 +238,20 @@ public class PieMenu extends RadialGroup {
          */
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            if(button != Input.Buttons.LEFT) // only-left clicks should activate that   todo: let user decide which buttons
-                return true;
+            if(button != selectionButton)
+                return false;
 
-            if(resetSelectionOnAppear)
-                resetSelection();
             setVisible(true);
-            return super.touchDown(event, x, y, pointer, button);
+//            return super.touchDown(event, x, y, pointer, button);
+            return true;
         }
 
         @Override
         public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-            if(button != Input.Buttons.LEFT) // only-left clicks should activate that   todo: let user decide which buttons
+            if(button != selectionButton)
                 return;
 
-            selectIndex(findRegionAtAbsolute(event.getStageX(), event.getStageY())); // todo: just use highlighted instead of finding index again?
+            selectIndex(findChildSectorAtAbsolute(event.getStageX(), event.getStageY())); // todo: just use highlighted instead of finding index again?
             if(!remainDisplayed)
                 setVisible(false);
             super.touchUp(event, x, y, pointer, button);
@@ -284,10 +259,7 @@ public class PieMenu extends RadialGroup {
 
         @Override
         public void touchDragged(InputEvent event, float x, float y, int pointer) {
-            if(!isVisible())
-                return;
-
-            hoverIndex(findRegionAtAbsolute(event.getStageX(), event.getStageY()), hoverIsSelection);
+            hoverIndex(findChildSectorAtAbsolute(event.getStageX(), event.getStageY()), hoverIsSelection);
             super.touchDragged(event, x, y, pointer);
         }
     }
@@ -325,6 +297,18 @@ public class PieMenu extends RadialGroup {
      */ // todo: JavaDoc
 
 
+    public int getSelectionButton() {
+        return selectionButton;
+    }
+    public void setSelectionButton(int selectionButton) {
+        this.selectionButton = selectionButton;
+    }
+    public void setDefaultDragListener(DefaultDragListener defaultDragListener) {
+        this.defaultDragListener = defaultDragListener;
+    }
+    public DefaultDragListener getDefaultDragListener() {
+        return defaultDragListener;
+    }
     public boolean isInfiniteSelectionRange() {
         return infiniteSelectionRange;
     }
@@ -354,12 +338,6 @@ public class PieMenu extends RadialGroup {
     }
     public void setHoverIsSelection(boolean hoverIsSelection) {
         this.hoverIsSelection = hoverIsSelection;
-    }
-    public boolean isResetSelectionOnAppear() {
-        return resetSelectionOnAppear;
-    }
-    public void setResetSelectionOnAppear(boolean resetSelectionOnAppear) {
-        this.resetSelectionOnAppear = resetSelectionOnAppear;
     }
     public PieMenuStyle getStyle() {
         return style;
