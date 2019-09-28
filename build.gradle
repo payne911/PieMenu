@@ -25,7 +25,7 @@ allprojects {
         appName = "my-pie-menu"
         gdxVersion = '1.9.10'
         roboVMVersion = '2.3.7'
-        shapedrawerVersion = '2.0.0'
+        shapedrawerVersion = '2.0.1'
     }
 
     repositories {

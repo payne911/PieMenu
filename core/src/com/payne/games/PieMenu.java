@@ -1,5 +1,6 @@
 package com.payne.games;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
@@ -27,7 +28,6 @@ public class PieMenu extends RadialGroup {
     private HoverChangeListener hoverChangeListener;
 
     /* For internal use. */
-    private float mouseX, mouseY;
     private static Vector2 vector2 = new Vector2();
     private Color transparent = new Color(0,0,0,0);
 
@@ -70,35 +70,28 @@ public class PieMenu extends RadialGroup {
      *
      * @param attachedTo an Actor
      */
-    @Override
+    @Deprecated
     public void attachToActor(Actor attachedTo) {
         this.attachedTo = attachedTo;
         attachedTo.addListener(dragListener);
     }
 
-    private void getStageBottomLeftCoordinates(Actor actor) {
-        actor.localToStageCoordinates(vector2.set(0,0));
-    }
-
-    private void updateMousePosition(float x, float y) {
-        getStageBottomLeftCoordinates(attachedTo);
-        System.out.println("bottom left of " + attachedTo.getName() + " is at " + vector2.x + " | " + vector2.y);
-        System.out.println("input vector was: " + x + " " + y);
-        mouseX = x + vector2.x;
-        mouseY = y + vector2.y;
-    }
-
-    private void resetSelection() {
+    /**
+     * Resets selected and highlighted child.
+     */
+    public void resetSelection() {
         highlightedIndex = -1;
         selectedIndex = -1;
     }
 
     /**
-     * Selects the child at the given index. Triggers the ChangeListener.
+     * Selects the child at the given index. Triggers the ChangeListener.<br>
+     * Indices are based on the order which was used to add child Actors to the
+     * RadialWidget. First one added is at index 0, of course, and so on.
      *
      * @param newIndex index of the child (and thus region) which was selected.
      */
-    private void selectIndex(int newIndex) {
+    public void selectIndex(int newIndex) {
         if(newIndex != selectedIndex) {
             int oldHighlightedIndex = highlightedIndex;
             int oldSelectedIndex = selectedIndex;
@@ -123,7 +116,7 @@ public class PieMenu extends RadialGroup {
      * @param newIndex index of the child (and thus region) which was hovered.
      * @param hoverIsSelection whether or not a hover is to be considered as a selection.
      */
-    private void hoverIndex(int newIndex, boolean hoverIsSelection) {
+    public void hoverIndex(int newIndex, boolean hoverIsSelection) {
         if(hoverIsSelection) {
             selectIndex(newIndex);
             return;
@@ -137,24 +130,14 @@ public class PieMenu extends RadialGroup {
     }
 
     @Override
-    protected int findRegionAtRelative(float x, float y) {
-        float angle = angleAt(x,y);
+    public int findRegionAtAbsolute(float x, float y) {
+        float angle = angleAtAbsolute(x,y);
         angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
         int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
         if(infiniteSelectionRange)
             return childIndex;
-        return isWithinRadius(x,y) ? childIndex : getChildren().size; // size is equivalent to "invalid"
-    }
-
-    @Override
-    protected int findRegionAtAbsolute(float x, float y) {
         stageToLocalCoordinates(vector2.set(x,y));
-        float angle = angleAt(x,y);
-        angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
-        int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
-        if(infiniteSelectionRange)
-            return childIndex;
-        return isWithinRadius(vector2.x, vector2.y) ? childIndex : getChildren().size; // size is equivalent to "invalid"
+        return isWithinRadius(vector2.x - style.radius, vector2.y - style.radius) ? childIndex : getChildren().size; // size is equivalent to "invalid"
     }
 
     @Override
@@ -173,11 +156,11 @@ public class PieMenu extends RadialGroup {
         /* Rest of background */
         if(style.backgroundColor != null) {
             sd.setColor(style.backgroundColor);
-            sd.sector(getX(), getY(), style.radius, tmpOffset, bgRadian);
+            sd.sector(getX()+style.radius, getY()+style.radius, style.radius, tmpOffset, bgRadian);
         }
 
         /* Children */
-        vector2.set(getX(), getY());
+        vector2.set(getX()+style.radius, getY()+style.radius);
         for(int i=0; i<size; i++) {
             float tmp = tmpOffset + i*tmpRad;
             if(style.selectedColor != null) {
@@ -230,22 +213,21 @@ public class PieMenu extends RadialGroup {
          */
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            if(button != 0) // only-left clicks should activate that   todo: let user decide which buttons
+            if(button != Input.Buttons.LEFT) // only-left clicks should activate that   todo: let user decide which buttons
                 return true;
 
             if(resetSelectionOnAppear)
                 resetSelection();
             setVisible(true);
-            updateMousePosition(x, y);
             return super.touchDown(event, x, y, pointer, button);
         }
 
         @Override
         public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-            if(button != 0) // only-left clicks should activate that   todo: let user decide which buttons
+            if(button != Input.Buttons.LEFT) // only-left clicks should activate that   todo: let user decide which buttons
                 return;
 
-            selectIndex(findRegionAtRelative(mouseX, mouseY)); // todo: just use highlighted instead of finding index again?
+            selectIndex(findRegionAtAbsolute(event.getStageX(), event.getStageY())); // todo: just use highlighted instead of finding index again?
             if(!remainDisplayed)
                 setVisible(false);
             super.touchUp(event, x, y, pointer, button);
@@ -256,8 +238,7 @@ public class PieMenu extends RadialGroup {
             if(!isVisible())
                 return;
 
-            updateMousePosition(x, y);
-            hoverIndex(findRegionAtRelative(mouseX, mouseY), hoverIsSelection);
+            hoverIndex(findRegionAtAbsolute(event.getStageX(), event.getStageY()), hoverIsSelection);
             super.touchDragged(event, x, y, pointer);
         }
     }
@@ -292,7 +273,7 @@ public class PieMenu extends RadialGroup {
 
     /*
     =============================== GETTERS/SETTERS ============================
-     */
+     */ // todo: JavaDoc
 
 
     public boolean isInfiniteSelectionRange() {

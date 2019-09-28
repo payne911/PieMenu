@@ -14,7 +14,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class RadialGroup extends WidgetGroup {
-    protected Actor attachedTo;
+    @Deprecated protected Actor attachedTo;
     protected ShapeDrawer sd;
 
     private RadialGroupStyle style;
@@ -90,7 +90,7 @@ public class RadialGroup extends WidgetGroup {
 
     @Override
     public float getPrefHeight() {
-        return style.radius;
+        return style.radius * 2;
     }
 
     @Override
@@ -100,7 +100,7 @@ public class RadialGroup extends WidgetGroup {
 
     @Override
     public float getMinHeight() {
-        return style.radius;
+        return style.radius * 2;
     }
 
     @Override
@@ -125,7 +125,7 @@ public class RadialGroup extends WidgetGroup {
             Actor actor = getChildren().get(i);
             vector2.set(style.radius, 0);
             vector2.rotate(tmp*(i + half) + style.startDegreesOffset);
-            actor.setPosition(vector2.x, vector2.y, Align.center);
+            actor.setPosition(vector2.x+style.radius, vector2.y+style.radius, Align.center);
         }
     }
 
@@ -150,11 +150,11 @@ public class RadialGroup extends WidgetGroup {
         /* Rest of background */
         if(style.backgroundColor != null) {
             sd.setColor(style.backgroundColor);
-            sd.sector(getX(), getY(), style.radius, tmpOffset, bgRadian);
+            sd.sector(getX()+style.radius, getY()+style.radius, style.radius, tmpOffset, bgRadian);
         }
 
         /* Children */
-        vector2.set(getX(), getY());
+        vector2.set(getX()+style.radius, getY()+style.radius);
         for(int i=0; i<size; i++) {
             float tmp = tmpOffset + i*tmpRad;
             drawChildWithoutSelection(vector2, i, tmp, tmpRad);
@@ -201,35 +201,12 @@ public class RadialGroup extends WidgetGroup {
         return output;
     }
 
-    protected void getStageMiddleCoordinates(Actor actor) {
-        vector2.set(actor.getWidth()/2, actor.getHeight()/2);
-        actor.localToStageCoordinates(vector2);
-    }
-
     @Override
     public void act(float delta) {
-        updatePosition();
+        // todo: animate here?!
         super.act(delta);
     }
 
-    /**
-     * Designates an Actor on which the RadialWidget will be centered.
-     * todo: apparently should be a Wrapper class for both the Widget and associated Button
-     * @param attachedTo an Actor
-     */
-    public void attachToActor(Actor attachedTo) {
-        this.attachedTo = attachedTo;
-    }
-
-    /**
-     * Positions the widget right at the middle of its attached Actor.
-     */
-    protected void updatePosition() { // todo: option for offsets
-        if(attachedTo != null && !(attachedTo instanceof RadialGroup)) {
-            getStageMiddleCoordinates(attachedTo);
-            setPosition(vector2.x, vector2.y);
-        }
-    }
 
     /**
      * @param x x-coordinate relative to the origin of the widget
@@ -244,26 +221,11 @@ public class RadialGroup extends WidgetGroup {
 
         localToStageCoordinates(vector2.set(x,y));
         int childIndex = findRegionAtAbsolute(vector2.x,vector2.y);
-        if (childIndex < getChildren().size) return getChild(childIndex).hit(x, y, touchable);
+        if (childIndex < getChildren().size) return getChildren().get(childIndex).hit(x, y, touchable);
 
         // todo: if hitting background but not regions, return the widget itself
 
         return null;
-    }
-
-    /**
-     * Given a coordinate, find the index of the child (if any).
-     *
-     * @param x x-coordinate relative to the widget's origin.
-     * @param y y-coordinate relative to the widget's origin.
-     * @return The index of the child at that coordinate.
-     *         If there are no child there, the amount of children is returned.
-     */
-    protected int findRegionAtRelative(float x, float y) {
-        float angle = angleAt(x,y);
-        angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
-        int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
-        return isWithinRadius(x,y) ? childIndex : getChildren().size; // size is equivalent to "invalid"
     }
 
     /**
@@ -274,37 +236,42 @@ public class RadialGroup extends WidgetGroup {
      * @return The index of the child at that coordinate.
      *         If there are no child there, the amount of children is returned.
      */
-    protected int findRegionAtAbsolute(float x, float y) {
-        float angle = angleAt(x,y);
+    public int findRegionAtAbsolute(float x, float y) {
+        float angle = angleAtAbsolute(x,y);
         angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
         int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
-        stageToLocalCoordinates(vector2);
-        return isWithinRadius(vector2.x, vector2.y) ? childIndex : getChildren().size; // size is equivalent to "invalid"
+        stageToLocalCoordinates(vector2.set(x,y));
+        return isWithinRadius(vector2.x - style.radius, vector2.y - style.radius) ? childIndex : getChildren().size; // size is equivalent to "invalid"
     }
 
     /**
-     * Finding the angle, in degrees, compared to the origin (i.e. center) of the Widget.
+     * Finding the angle, in degrees, compared to the origin (i.e. center) of the Widget.<br>
+     * The output is non-normalized. To get a normalized angle, do:
+     * <pre>
+     * {@code
+     * float angle = angleAtAbsolute(x,y);
+     * angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360;
+     * }
+     * </pre>
      *
-     * @param x x-coordinate relative to actor (?)
-     * @param y y-coordinate relative to actor (?)
+     * @param x x-coordinate in the Stage.
+     * @param y y-coordinate in the Stage.
      * @return a non-normalized angle of the position of the cursor
      *         relative to the origin (i.e. middle) of the widget
      */
-    protected float angleAt(float x, float y) {
-        return MathUtils.radiansToDegrees * MathUtils.atan2(y - getY(), x - getX());
+    public float angleAtAbsolute(float x, float y) {
+        return MathUtils.radiansToDegrees * MathUtils.atan2(y - (getY() + style.radius), x - (getX() + style.radius));
     }
 
     /**
      * Checks whether or not the input coordinate is in between (inclusively)
      * the innerRadius and the radius of the widget.
      *
-     * @param x x-coordinate relative to the center of the widget's internal origin
-     *          (its center, in our case)
-     * @param y y-coordinate relative to the center of the widget's internal origin
-     *          (its center, in our case)
-     * @return 'true' only if the coordinates fall within the widget's radius.
+     * @param x x-coordinate relative to the center of the widget's
+     * @param y y-coordinate relative to the center of the widget's
+     * @return 'true' only if the coordinates fall within the widget's radii.
      */
-    protected boolean isWithinRadius(float x, float y) {
+    public boolean isWithinRadius(float x, float y) {
         float distance = pow2(x) + pow2(y);
         float innerRadSquared = pow2(style.innerRadius);
         float radSquared = pow2(style.radius);
