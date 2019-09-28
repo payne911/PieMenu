@@ -67,7 +67,7 @@ public class PieMenu extends RadialGroup {
 
     /* For internal use. */
     private static Vector2 vector2 = new Vector2();
-    private Color transparent = new Color(0,0,0,0);
+    private static final Color TRANSPARENT = new Color(0,0,0,0);
 
 
 
@@ -205,7 +205,7 @@ public class PieMenu extends RadialGroup {
         /* Rest of background */
         if(style.backgroundColor != null) {
             sd.setColor(style.backgroundColor);
-            sd.sector(getX()+style.radius, getY()+style.radius, style.radius, tmpOffset, bgRadian);
+            sd.sector(getX()+style.radius, getY()+style.radius, style.radius-BG_BUFFER, tmpOffset, bgRadian);
         }
 
         /* Children */
@@ -232,15 +232,15 @@ public class PieMenu extends RadialGroup {
                 sd.setColor(index == highlightedIndex ? style.selectedColor
                         : index%2 == 0 ? style.childRegionColor
                         : style.alternateChildRegionColor);
-                sd.arc(vector2.x, vector2.y, style.radius, startAngle, radian, style.radius-style.innerRadius);
+                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2, startAngle, radian, style.radius-style.innerRadius);
             } else {
                 sd.setColor(index == highlightedIndex ? style.selectedColor : style.childRegionColor);
-                sd.arc(vector2.x, vector2.y, style.radius, startAngle, radian, style.radius-style.innerRadius);
+                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2, startAngle, radian, style.radius-style.innerRadius);
             }
         } else {
             sd.setColor(index == highlightedIndex ? style.selectedColor
-                    : transparent);
-            sd.arc(vector2.x, vector2.y, style.radius, startAngle, radian, style.radius-style.innerRadius);
+                    : TRANSPARENT); // for when the user only specified a "selectedColor"
+            sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2, startAngle, radian, style.radius-style.innerRadius);
         }
     }
 

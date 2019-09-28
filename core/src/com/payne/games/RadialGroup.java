@@ -33,6 +33,7 @@ public class RadialGroup extends WidgetGroup {
     private RadialGroupStyle style;
 
     /* For internal use (optimization). */
+    protected static final float BG_BUFFER = 1;
     private static Vector2 vector2 = new Vector2();
     private static Vector2 vector22 = new Vector2();
     private static Vector2 vector23 = new Vector2();
@@ -74,8 +75,8 @@ public class RadialGroup extends WidgetGroup {
         if(style.startDegreesOffset == 360)
             style.startDegreesOffset = 0;
 
-        if(style.radius < 0)
-            throw new IllegalArgumentException("radius cannot be negative.");
+        if(style.radius < BG_BUFFER)
+            throw new IllegalArgumentException("radius cannot be smaller than " + BG_BUFFER + ".");
 
         if(style.totalDegreesDrawn < 0)
             throw new IllegalArgumentException("totalDegreesDrawn cannot be negative.");
@@ -133,7 +134,7 @@ public class RadialGroup extends WidgetGroup {
         float half = (float)1 / 2;
         for (int i = 0; i < getChildren().size; i++) {
             Actor actor = getChildren().get(i);
-            vector2.set(style.radius, 0);
+            vector2.set((style.radius+style.innerRadius)/2, 0);
             vector2.rotate(tmp*(i + half) + style.startDegreesOffset);
             actor.setPosition(vector2.x+style.radius, vector2.y+style.radius, Align.center);
         }
@@ -160,7 +161,7 @@ public class RadialGroup extends WidgetGroup {
         /* Rest of background */
         if(style.backgroundColor != null) {
             sd.setColor(style.backgroundColor);
-            sd.sector(getX()+style.radius, getY()+style.radius, style.radius, tmpOffset, bgRadian);
+            sd.sector(getX()+style.radius, getY()+style.radius, style.radius-BG_BUFFER, tmpOffset, bgRadian);
         }
 
         /* Children */
@@ -188,10 +189,10 @@ public class RadialGroup extends WidgetGroup {
         if(style.childRegionColor != null) {
             if(style.alternateChildRegionColor != null) {
                 sd.setColor(index%2 == 0 ? style.childRegionColor : style.alternateChildRegionColor);
-                sd.arc(vector2.x, vector2.y, style.radius, startAngle, radian, style.radius-style.innerRadius);
+                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2, startAngle, radian, style.radius-style.innerRadius);
             } else {
                 sd.setColor(style.childRegionColor);
-                sd.arc(vector2.x, vector2.y, style.radius, startAngle, radian, style.radius-style.innerRadius);
+                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2, startAngle, radian, style.radius-style.innerRadius);
             }
         }
     }
