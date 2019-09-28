@@ -7,24 +7,62 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Pools;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
+/**
+ * A PieMenu reuses the RadialGroup's functionalities to provide a way to
+ * interact with the contained Actors through the "hit-box" of the regions.
+ *
+ * @author Jérémi Grenier-Berthiaume (aka "payne")
+ */
 public class PieMenu extends RadialGroup {
-    public MyDragListener dragListener;
+    @Deprecated public MyDragListener dragListener; // todo: uncertain if appropriate
 
-    private int selectedIndex = -1; // index of the currently selected item
-    private int highlightedIndex = -1; // index of the currently highlighted item
+    /**
+     * Index of the currently selected item.
+     */
+    private int selectedIndex = -1;
 
-    private boolean hoverIsSelection = false; // if hovering an item calls ChangeListener and selects the item
-    private boolean resetSelectionOnAppear = true; // when redrawing the widget, should it still select the last selected item?
-    private boolean remainDisplayed = false; // the widget should remain visible. The "visible-flow" becomes the responsibility of the user
-    private boolean infiniteSelectionRange = true; // should selection only happen if mouse is within the radius of the widget?
+    /**
+     * Index of the currently highlighted item.
+     */
+    private int highlightedIndex = -1;
 
+    /**
+     * If hovering an item calls ChangeListener and selects the item.
+     */
+    private boolean hoverIsSelection = false;
+
+    /**
+     * When redrawing the widget, should it still select the last selected item?
+     */
+    private boolean resetSelectionOnAppear = true;
+
+    /**
+     * The widget should remain visible. The "visible-flow" becomes the responsibility of the user.
+     */
+    private boolean remainDisplayed = false;
+
+    /**
+     * Should selection only happen if mouse is within the radius of the widget?
+     */
+    private boolean infiniteSelectionRange = true;
+
+    /**
+     * Defines the way the Widget looks.
+     */
     private PieMenuStyle style;
+
+    /**
+     * If the "ChangeListener" wasn't enough, you can add a "HoverChangeListener"
+     * to be able to execute code every time the "currently highlighted" value
+     * changes.
+     */
     private HoverChangeListener hoverChangeListener;
 
     /* For internal use. */
@@ -37,10 +75,21 @@ public class PieMenu extends RadialGroup {
     public PieMenu(final ShapeDrawer sd, PieMenuStyle style) {
         super(sd, style);
         setStyle(style);
+        setVisible(false);
 
         dragListener = new MyDragListener(style.radius);
         dragListener.setTapSquareSize(0);
+    }
 
+    public PieMenu(final ShapeDrawer sd, Skin skin) {
+        super(sd, skin);
+        setStyle(skin.get(PieMenuStyle.class));
+        setVisible(false);
+    }
+
+    public PieMenu(final ShapeDrawer sd, Skin skin, String style) {
+        super(sd, skin, style);
+        setStyle(skin.get(style, PieMenuStyle.class));
         setVisible(false);
     }
 

@@ -13,10 +13,23 @@ import com.badlogic.gdx.utils.Align;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
+/**
+ * A RadialGroup is a container of Actors which will be laid out in a circular
+ * fashion.
+ *
+ * @author Jérémi Grenier-Berthiaume (aka "payne")
+ */
 public class RadialGroup extends WidgetGroup {
     @Deprecated protected Actor attachedTo;
+
+    /**
+     * Used to draw on the screen many elements of the style.
+     */
     protected ShapeDrawer sd;
 
+    /**
+     * Defines the way the widget looks.
+     */
     private RadialGroupStyle style;
 
     /* For internal use (optimization). */
@@ -25,9 +38,6 @@ public class RadialGroup extends WidgetGroup {
     private static Vector2 vector23 = new Vector2();
 
 
-
-    public RadialGroup(){
-    }
 
     public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style) {
         setStyle(style);
