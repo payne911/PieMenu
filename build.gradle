@@ -95,6 +95,7 @@ project(":html") {
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
         api "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
+        implementation "space.earlygrey:shapedrawer:$shapedrawerVersion:sources"
         
     }
 }
