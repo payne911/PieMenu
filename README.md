@@ -18,6 +18,8 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 * [Wiki](#wiki)
 * [Thanks to](#thanks-to)
 
+---
+
 ## Demo
 ![early_demo](https://raw.githubusercontent.com/payne911/PieMenu/master/android/assets/early_demo.gif)
 
