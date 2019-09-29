@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
@@ -33,7 +34,6 @@ public class MyPieMenu extends ApplicationAdapter {
 	private RadialGroup radial;
 	private int dragPieAmount = 0;
 	private int permaPieAmount = 0;
-	private int middleMousePieAmount = 0;
 	private int radialAmount = 0;
 	private float red = .25f;
 	private float blue = .75f;
@@ -119,7 +119,7 @@ public class MyPieMenu extends ApplicationAdapter {
 		style.startDegreesOffset = 180;
 		style.totalDegreesDrawn = 320;
 		style.backgroundColor = new Color(1,1,1,.3f);
-		style.selectedColor = new Color(.7f,.3f,.5f,1);
+		style.selectedChildRegionColor = new Color(.7f,.3f,.5f,1);
 		style.childRegionColor = new Color(0,.7f,0,1);
 		style.alternateChildRegionColor = new Color(.7f,0,0,1);
 		dragPie = new PieMenu(shape, style);
@@ -136,10 +136,10 @@ public class MyPieMenu extends ApplicationAdapter {
 				System.out.println("ChangeListener - selected index: " + dragPie.getSelectedIndex());
 			}
 		});
-		dragPie.setHoverChangeListener(new PieMenu.HoverChangeListener() {
+		dragPie.setHighlightChangeListener(new PieMenu.HighlightChangeListener() {
 			@Override
-			public void onHoverChange() {
-				System.out.println("HoverChangeListener - highlighted index: " + dragPie.getHighlightedIndex());
+			public void onHighlightChange() {
+				System.out.println("HighlightChangeListener - highlighted index: " + dragPie.getHighlightedIndex());
 			}
 		});
 
@@ -172,18 +172,17 @@ public class MyPieMenu extends ApplicationAdapter {
 		/* Setting up and creating the widget. */
 		PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
 		style.radius = 80;
-		style.innerRadius = 20;
+        style.separatorWidth = 2;
 		style.backgroundColor = new Color(1,1,1,.1f);
 		style.separatorColor = new Color(.1f,.1f,.1f,1);
-		style.selectedColor = new Color(.5f,.5f,.5f,1);
+		style.selectedChildRegionColor = new Color(.5f,.5f,.5f,1);
 		style.childRegionColor = new Color(.33f,.33f,.33f,1);
 		rightMousePie = new PieMenu(shape, style);
 
 		/* Customizing the behavior. */
 		rightMousePie.setHoverIsSelection(true);
 		rightMousePie.setInfiniteSelectionRange(true);
-        rightMousePie.setRemainDisplayed(false);
-		rightMousePie.selectIndex(0);
+		rightMousePie.setRemainDisplayed(false);
 		rightMousePie.setSelectionButton(Input.Buttons.RIGHT);
 
 		/* Setting up listeners */
@@ -225,6 +224,7 @@ public class MyPieMenu extends ApplicationAdapter {
 		rightMousePie.addActor(green);
 
 		/* Including the Widget in the Stage. */
+		rightMousePie.selectIndex(0);
 		stage.addActor(rightMousePie);
 		rightMousePie.setName("rightMousePie");
 	}
@@ -240,15 +240,17 @@ public class MyPieMenu extends ApplicationAdapter {
 	}
 
 	private void setUpMiddleMousePieMenu() {
+	    // todo: eventually should look similar to   https://dribbble.com/shots/647272-Circle-Menu-PSD
 
 		/* Setting up and creating the widget. */
 		PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
 		style.radius = 80;
-		style.innerRadius = 20;
-		style.backgroundColor = new Color(1,1,1,.1f);
-		style.separatorColor = new Color(.5f,.1f,.1f,1);
-		style.selectedColor = new Color(.9f,.5f,.5f,1);
-		style.childRegionColor = new Color(.73f,.33f,.33f,1);
+		style.innerRadius = 27;
+		style.separatorWidth = 2;
+		style.selectedChildRegionColor = new Color(1,.5f,.5f,.5f);
+		style.separatorColor = new Color(.1f,.1f,.1f,.5f);
+		style.childRegionColor = new Color(.73f,.33f,.33f,.1f);
+		style.background = new Image(new Texture(Gdx.files.internal("disc.png"))).getDrawable();
 		middleMousePie = new PieMenu(shape, style);
 
 		/* Customizing the behavior. */
@@ -264,18 +266,22 @@ public class MyPieMenu extends ApplicationAdapter {
 				System.out.println("ChangeListener - selected index: " + middleMousePie.getSelectedIndex());
 			}
 		});
-		middleMousePie.setHoverChangeListener(new PieMenu.HoverChangeListener() {
+		middleMousePie.setHighlightChangeListener(new PieMenu.HighlightChangeListener() {
 			@Override
-			public void onHoverChange() {
-				System.out.println("HoverChangeListener - highlighted index: " + middleMousePie.getHighlightedIndex());
+			public void onHighlightChange() {
+				System.out.println("HighlightChangeListener - highlighted index: " + middleMousePie.getHighlightedIndex());
 			}
 		});
 
 		/* Populating the widget. */
-		for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
-			Label label = new Label(Integer.toString(middleMousePieAmount++), skin);
-			middleMousePie.addActor(label);
-		}
+		Array<Image> imgs = new Array<>();
+		imgs.add(new Image(new Texture(Gdx.files.internal("heart-drop.png"))));
+		imgs.add(new Image(new Texture(Gdx.files.internal("beer-stein.png"))));
+		imgs.add(new Image(new Texture(Gdx.files.internal("coffee-mug.png"))));
+		imgs.add(new Image(new Texture(Gdx.files.internal("gooey-daemon.png"))));
+		imgs.add(new Image(new Texture(Gdx.files.internal("jeweled-chalice.png"))));
+		for (int i = 0; i < imgs.size; i++)
+			middleMousePie.addActor(imgs.get(i));
 
 		/* Including the Widget in the Stage. */
 		stage.addActor(middleMousePie);
@@ -295,17 +301,18 @@ public class MyPieMenu extends ApplicationAdapter {
 		style.radius = 80;
 		style.innerRadius = 20;
 		style.totalDegreesDrawn = 180;
+		style.circumferenceWidth = 1;
 		style.backgroundColor = new Color(1,1,1,.2f);
-		style.selectedColor = new Color(.5f,.5f,.5f,1);
+		style.selectedChildRegionColor = new Color(.5f,.5f,.5f,1);
 		style.childRegionColor = new Color(.33f,.33f,.33f,1);
 		style.alternateChildRegionColor = new Color(.25f,.25f,.25f,1);
+		style.circumferenceColor = new Color(0,0,0,1);
 		permaPie = new PieMenu(shape, style);
 
 		/* Customizing the behavior. */
 		permaPie.setHoverIsSelection(false);
 		permaPie.setInfiniteSelectionRange(false);
 		permaPie.setRemainDisplayed(true);
-		permaPie.selectIndex(permaPie.getChildren().size-1);
 
 		/* Setting up listeners */
 		permaPie.addListener(permaPie.getDefaultDragListener());
@@ -326,6 +333,7 @@ public class MyPieMenu extends ApplicationAdapter {
 
 		/* Including the Widget at some absolute coordinate in the World. */
 		permaPie.setPosition(Gdx.graphics.getWidth()/2,0, Align.center); // (320,0)
+		permaPie.selectIndex(permaPie.getChildren().size-1);
 		stage.addActor(permaPie);
 		permaPie.setVisible(true);
 	}
@@ -346,13 +354,11 @@ public class MyPieMenu extends ApplicationAdapter {
 			dragPie.addActor(new Label(Integer.toString(dragPieAmount++), skin));
 			permaPie.addActor(new Label(Integer.toString(permaPieAmount++), skin));
 			radial.addActor(new Label(Integer.toString(radialAmount++), skin));
-			middleMousePie.addActor(new Label(Integer.toString(middleMousePieAmount++), skin));
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
 			dragPieAmount = 0;
 			permaPieAmount = 0;
 			radialAmount = 0;
-			middleMousePieAmount = 0;
 			dispose();
 			create();
 		}
@@ -362,7 +368,6 @@ public class MyPieMenu extends ApplicationAdapter {
 			dragPie.removeActor(dragPie.getChild(dragPie.getChildren().size-1));
 			permaPie.removeActor(permaPie.getChild(permaPie.getChildren().size-1));
 			radial.removeActor(radial.getChild(radial.getChildren().size-1));
-			middleMousePie.removeActor(middleMousePie.getChild(middleMousePie.getChildren().size-1));
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
 			permaPie.setVisible(!permaPie.isVisible());

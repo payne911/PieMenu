@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -38,25 +39,29 @@ public class RadialGroup extends WidgetGroup {
     private static Vector2 vector23 = new Vector2();
 
 
-
-    public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style) {
-        setStyle(style);
+    /**
+     * Used internally for the shared properties among constructors of RadialWidgets.
+     */
+    protected RadialGroup(final ShapeDrawer sd) {
         this.sd = sd;
         setVisible(false);
+    }
+
+    public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style) {
+        this(sd);
+        setStyle(style);
         setTouchable(Touchable.childrenOnly);
     }
 
     public RadialGroup(final ShapeDrawer sd, Skin skin) {
+        this(sd);
         setStyle(skin.get(RadialGroupStyle.class));
-        this.sd = sd;
-        setVisible(false);
         setTouchable(Touchable.childrenOnly);
     }
 
     public RadialGroup(final ShapeDrawer sd, Skin skin, String style) {
+        this(sd);
         setStyle(skin.get(style, RadialGroupStyle.class));
-        this.sd = sd;
-        setVisible(false);
         setTouchable(Touchable.childrenOnly);
     }
 
@@ -75,10 +80,16 @@ public class RadialGroup extends WidgetGroup {
     }
 
     protected void checkStyle(RadialGroupStyle style) {
+        if(style.separatorWidth < 0)
+            throw new IllegalArgumentException("separatorWidth cannot be negative.");
+
+        if(style.circumferenceWidth < 0)
+            throw new IllegalArgumentException("circumferenceWidth cannot be negative.");
+
         if(style.startDegreesOffset < 0)
             throw new IllegalArgumentException("startDegreesOffset cannot be negative.");
-        if(style.startDegreesOffset == 360)
-            style.startDegreesOffset = 0;
+        if(style.startDegreesOffset >= 360)
+            throw new IllegalArgumentException("startDegreesOffset must be lower than 360.");
 
         if(style.radius < BG_BUFFER)
             throw new IllegalArgumentException("radius cannot be smaller than " + BG_BUFFER + ".");
@@ -96,7 +107,8 @@ public class RadialGroup extends WidgetGroup {
             throw new IllegalArgumentException("innerRadius must be smaller than the radius.");
 
         if(style.childRegionColor == null && style.alternateChildRegionColor != null)
-            throw new IllegalArgumentException("childRegionColor must also be specified if you are defining alternateChildRegionColor.");
+            throw new IllegalArgumentException("childRegionColor must also be specified if you are defining alternateChildRegionColor. " +
+                    "You can however only specify the childRegionColor, if you want.");
     }
 
     @Override
@@ -135,12 +147,16 @@ public class RadialGroup extends WidgetGroup {
 
     @Override
     public void layout() {
-        float tmp = style.totalDegreesDrawn / getChildren().size;
+        float degreesPerChild = style.totalDegreesDrawn / getChildren().size;
         float half = (float)1 / 2;
         for (int i = 0; i < getChildren().size; i++) {
             Actor actor = getChildren().get(i);
             vector2.set((style.radius+style.innerRadius)/2, 0);
-            vector2.rotate(tmp*(i + half) + style.startDegreesOffset);
+            vector2.rotate(degreesPerChild*(i + half) + style.startDegreesOffset);
+
+            if(actor instanceof Image) { // todo: do this properly !
+                actor.setSize(37, 37);
+            }
             actor.setPosition(vector2.x+style.radius, vector2.y+style.radius, Align.center);
         }
     }
@@ -187,7 +203,7 @@ public class RadialGroup extends WidgetGroup {
         if(getChildren().size > 1 && style.separatorColor != null)
             sd.line(pointAtAngle(vector22, vector2, style.innerRadius, drawnRadianAngle),
                     pointAtAngle(vector23, vector2, style.radius, drawnRadianAngle),
-                    style.separatorColor, 3);
+                    style.separatorColor, style.separatorWidth);
     }
 
     protected void drawChildWithoutSelection(Vector2 vector2, int index, float startAngle, float radian) {
@@ -199,6 +215,14 @@ public class RadialGroup extends WidgetGroup {
                 sd.setColor(style.childRegionColor);
                 sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2, startAngle, radian, style.radius-style.innerRadius);
             }
+        }
+        drawChildCircumference(vector2, startAngle, radian, style.radius - style.circumferenceWidth/2);
+    }
+
+    protected void drawChildCircumference(Vector2 vector2, float startAngle, float radian, float radius) {
+        if(style.circumferenceColor != null && style.circumferenceWidth > 0) {
+            sd.setColor(style.circumferenceColor);
+            sd.arc(vector2.x, vector2.y, radius, startAngle, radian, style.circumferenceWidth);
         }
     }
 
@@ -314,9 +338,114 @@ public class RadialGroup extends WidgetGroup {
 
 
     public static class RadialGroupStyle {
+
+        /**
+         * <i>Recommended. Optional.</i><br>
+         * A background that will be drawn behind everything else within the Widget.
+         */
         public Drawable background;
-        public Color backgroundColor, separatorColor, childRegionColor, alternateChildRegionColor;
-        public float radius, innerRadius, startDegreesOffset, totalDegreesDrawn;
+
+        /**
+         * <i>Optional.</i><br>
+         * A background color that, if provided, will be drawn over the
+         * background image and below everything else.<br>
+         * It mostly acts as a quick set up option if you do not have an image
+         * for you background.
+         */
+        public Color backgroundColor;
+
+        /**
+         * <i>Recommended. Optional.</i><br>
+         * The color used by the separating lines between each item.<br>
+         * If you do not define a {@link #separatorWidth} along with this value,
+         * no lines will be visible.
+         */
+        public Color separatorColor;
+
+        /**
+         * <i>Recommended. Optional.</i><br>
+         * The color used to fill the "pie sectors" of each item.<br>
+         * Consider using a fairly high alpha value if you are providing a
+         * {@link #background} drawable.
+         */
+        public Color childRegionColor;
+
+        /**
+         * <i>Optional.</i><br>
+         * If this color is set, the "pie sectors" will alternate between the
+         * {@link #childRegionColor} and this one so that their defining region
+         * is more easily distinguished.
+         */
+        public Color alternateChildRegionColor;
+
+        /**
+         * <i>Optional.</i><br>
+         * The color used for the line that defines the circumference of the
+         * Widget. If the Widget is not a complete a circle, this will only be
+         * applied along the partial circumference.<br>
+         * If you do not define a {@link #circumferenceWidth} along with this
+         * value, no circumference will be visible.
+         */
+        public Color circumferenceColor;
+
+        /**
+         * <i>Required.</i><br>
+         * The radius that defines how big the Widget will be.<br>
+         * It must be bigger than {@value #BG_BUFFER}.
+         */
+        public float radius;
+
+        /**
+         * <i>Optional.</i><br>
+         * If provided, the {@link #childRegionColor} will only fill the region
+         * defined between the {@link #radius} and this value. A hole will be
+         * left into the middle of the Widget, like a doughnut, and if a
+         * {@link #background} or a {@link #backgroundColor} was provided, it
+         * will be visible in the middle.<br>
+         * Actors inserted into the Widget are placed in the middle between the
+         * innerRadius and the {@link #radius}.
+         */
+        public float innerRadius;
+
+        /**
+         * <i>Optional.</i><br>
+         * Considers that angles start at 0 along the x-axis and increment up
+         * to 360 in a counter-clockwise fashion.<br>
+         * Defines how far from that origin the {@link #totalDegreesDrawn} will
+         * be drawn.<br>
+         * For example, if {@code startDegreesOffset = 90} and
+         * {@code totalDegreesDrawn = 180}, you would obtain the left half of a
+         * circle. All the children would be spread within that half-circle evenly.
+         */
+        public float startDegreesOffset;
+
+        /**
+         * <i>Required.</i><br>
+         * If not defined, will be initialized to 360 by default.<br>
+         * Determines the total amount of degrees into which the contained
+         * Actors will be spread.<br>
+         * For example, if {@code startDegreesOffset = 0} and
+         * {@code totalDegreesDrawn = 180}, you would obtain the top half of a
+         * circle.
+         */
+        public float totalDegreesDrawn;
+
+        /**
+         * <i>Recommended. Optional.</i><br>
+         * Determines how wide the lines that separate each region will be.<br>
+         * If no {@link #separatorColor} was provided along with this value,
+         * no lines will be drawn.
+         */
+        public float separatorWidth;
+
+        /**
+         * <i>Optional.</i><br>
+         * Determines how wide the circumference line will be.<br>
+         * If no {@link #circumferenceColor} was provided along with this value,
+         * no circumference will be drawn.
+         */
+        public float circumferenceWidth;
+
 
         public RadialGroupStyle() {
         }
