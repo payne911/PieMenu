@@ -258,7 +258,7 @@ public class MyPieMenu extends ApplicationAdapter {
         middleMousePie.setInfiniteSelectionRange(true);
         middleMousePie.setManualControlOfVisibility(false);
 
-        /* Adding some listeners, just 'cuz... */
+        /* Adding some listeners. */
         middleMousePie.addListener(middleMousePie.getSuggestedClickListener());
         middleMousePie.addListener(new ChangeListener() {
             @Override
