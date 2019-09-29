@@ -8,7 +8,15 @@ A library for [LibGDX](https://libgdx.badlogicgames.com/), an open-source game d
 Aims at providing users with `WidgetGroup` called `RadialGroup`: it is a simple container that places its children `Actors` in a circular fashion.
 
 The more interesting feature might be the `PieMenu` class : it wraps the `RadialGroup` with a bunch of functionalities that allow highlight and selection of items within the Group.
-In terms of User Interface, 
+
+In terms of User Interface, circular context menu "are faster and more reliable to select from than linear menus, because selection depends on direction instead of distance." ([Wikipedia source](https://en.wikipedia.org/wiki/Pie_menu#Comparison_with_other_interaction_techniques)). That is the whole motivation behind this library.
+
+## Table of Content
+* [Demo](#demo)
+* [Including in Project](#including-in-project)
+* [Usage](#usage)
+* [Wiki](#wiki)
+* [Thanks to](#thanks-to)
 
 ## Demo
 ![early_demo](https://raw.githubusercontent.com/payne911/PieMenu/master/android/assets/early_demo.gif)
@@ -109,7 +117,10 @@ if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
 }
 ```
 
-That would give you a PieMenu with a behavior similar to the ones that contained images in the demo GIF. However, this library offers you many more types of behaviors. They will all be documented in [the Wiki](https://github.com/payne911/PieMenu/wiki).
+That would give you a PieMenu with a behavior similar to the ones that contained images in the demo GIF.
+
+### Wiki
+However, this library offers you many more types of behaviors. They will all be documented in [the Wiki](https://github.com/payne911/PieMenu/wiki).
 
 ---
 
