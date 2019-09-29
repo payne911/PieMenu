@@ -17,6 +17,7 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 * [Usage](#usage)
 * [Wiki](#wiki)
 * [Thanks to](#thanks-to)
+* [Credits](#credits)
 
 ---
 
@@ -106,7 +107,7 @@ for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
 }
 
 /* Including the Widget in the Stage. */
-stage.addActor(middleMousePie);
+stage.addActor(dragPie);
 ```
 
 And then in the `render()` method:
