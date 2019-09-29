@@ -101,6 +101,7 @@ dragPie.addListener(new ChangeListener() {
 
 /* Populating the widget with labels. */
 int dragPieAmount = 0;
+final int INITIAL_CHILDREN_AMOUNT = 5;
 for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
     Label label = new Label(Integer.toString(dragPieAmount++), skin);
     dragPie.addActor(label);
@@ -121,6 +122,25 @@ if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
 ```
 
 That would give you a PieMenu with a behavior similar to the ones that contained images in the demo GIF.
+
+Of course, since this is dependent on `scene2d` and `ShapeDrawer`, you also need to set up the whole thing properly. The following piece of code goes in the `create()` method of your application:
+
+```java
+/* Setting up the Stage. */
+Skin skin = new Skin(Gdx.files.internal("skin.json")); // use SkinComposer for an easy set up
+PolygonSpriteBatch batch = new PolygonSpriteBatch();
+Stage stage = new Stage(new ScreenViewport(), batch);
+Gdx.input.setInputProcessor(stage);
+
+/* Setting up the ShapeDrawer. */
+Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+pixmap.setColor(1,1,1,1);
+pixmap.fill();
+Texture tmpTex = new Texture(pixmap); // dispose this eventually
+pixmap.dispose();
+// ideally, you would extract such a pixel from your Atlas instead
+ShapeDrawer shape = new ShapeDrawer(batch, new TextureRegion(tmpTex));
+```
 
 ### Wiki
 However, this library offers you many more types of behaviors. They will all be documented in [the Wiki](https://github.com/payne911/PieMenu/wiki).
