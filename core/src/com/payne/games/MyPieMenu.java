@@ -28,9 +28,11 @@ public class MyPieMenu extends ApplicationAdapter {
     private PolygonSpriteBatch batch;
     private ShapeDrawer shape;
     private PieMenu dragPie;
+    private PieMenu permaPie;
     private PieMenu rightMousePie;
     private PieMenu middleMousePie;
-    private PieMenu permaPie;
+    private PieMenu.PieMenuStyle midStyle1;
+    private PieMenu.PieMenuStyle midStyle2;
     private RadialGroup radial;
     private int dragPieAmount = 0;
     private int permaPieAmount = 0;
@@ -232,26 +234,29 @@ public class MyPieMenu extends ApplicationAdapter {
     private void onRightClick() {
         float x = Gdx.input.getX();
         float y = Gdx.input.getY();
+        rightMousePie.setPosition(x, Gdx.graphics.getHeight() - y, Align.center);
+
+        /* Triggers programmatically a `touchDown` Event */
         InputEvent event = new InputEvent();
         event.setType(InputEvent.Type.touchDown);
-        rightMousePie.setPosition(x, Gdx.graphics.getHeight() - y, Align.center);
-        rightMousePie.getDefaultDragListener().setButton(Input.Buttons.RIGHT);
-        rightMousePie.getDefaultDragListener().touchDown(event, x, y, 0, Input.Buttons.RIGHT);
+        event.setButton(rightMousePie.getSelectionButton());
+        event.setStageX(x);
+        event.setStageY(y);
+        rightMousePie.fire(event);
     }
 
     private void setUpMiddleMousePieMenu() {
         // todo: eventually should look similar to   https://dribbble.com/shots/647272-Circle-Menu-PSD
 
         /* Setting up and creating the widget. */
-        PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.radius = 80;
-        style.innerRadius = 27;
-        style.separatorWidth = 2;
-        style.selectedChildRegionColor = new Color(1,.5f,.5f,.5f);
-        style.separatorColor = new Color(.1f,.1f,.1f,.5f);
-        style.childRegionColor = new Color(.73f,.33f,.33f,.1f);
-        style.background = new Image(new Texture(Gdx.files.internal("disc.png"))).getDrawable();
-        middleMousePie = new PieMenu(shape, style);
+        midStyle1 = new PieMenu.PieMenuStyle();
+        midStyle1.radius = 80;
+        midStyle1.innerRadius = 24;
+        midStyle1.startDegreesOffset = 30;
+        midStyle1.selectedChildRegionColor = new Color(1,.5f,.5f,.5f);
+        midStyle1.childRegionColor = new Color(.73f,.33f,.33f,.1f);
+        midStyle1.background = new Image(new Texture(Gdx.files.internal("rael_pie.png"))).getDrawable();
+        middleMousePie = new PieMenu(shape, midStyle1);
 
         /* Customizing the behavior. */
         middleMousePie.setHoverIsSelection(false);
@@ -280,12 +285,23 @@ public class MyPieMenu extends ApplicationAdapter {
         imgs.add(new Image(new Texture(Gdx.files.internal("coffee-mug.png"))));
         imgs.add(new Image(new Texture(Gdx.files.internal("gooey-daemon.png"))));
         imgs.add(new Image(new Texture(Gdx.files.internal("jeweled-chalice.png"))));
+        imgs.add(new Image(new Texture(Gdx.files.internal("coffee-mug.png"))));
         for (int i = 0; i < imgs.size; i++)
             middleMousePie.addActor(imgs.get(i));
 
         /* Including the Widget in the Stage. */
         stage.addActor(middleMousePie);
         middleMousePie.setName("middleMousePie");
+
+        /* Creating an alternate skin, just for showing off */
+        midStyle2 = new PieMenu.PieMenuStyle();
+        midStyle2.radius = 80;
+        midStyle2.innerRadius = 27;
+        midStyle2.separatorWidth = 2;
+        midStyle2.selectedChildRegionColor = new Color(1,.5f,.5f,.5f);
+        midStyle2.separatorColor = new Color(.1f,.1f,.1f,.5f);
+        midStyle2.childRegionColor = new Color(.73f,.33f,.33f,.1f);
+        midStyle2.background = new Image(new Texture(Gdx.files.internal("disc.png"))).getDrawable();
     }
 
     private void onMiddleClick() {
@@ -349,7 +365,7 @@ public class MyPieMenu extends ApplicationAdapter {
         stage.act();
         stage.draw();
 
-        /* Debugging. */
+        /* Debugging and interactions. */
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             dragPie.addActor(new Label(Integer.toString(dragPieAmount++), skin));
             permaPie.addActor(new Label(Integer.toString(permaPieAmount++), skin));
@@ -377,6 +393,9 @@ public class MyPieMenu extends ApplicationAdapter {
         }
         if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
             onMiddleClick();
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+            middleMousePie.setStyle(middleMousePie.getStyle() == midStyle1 ? midStyle2 : midStyle1);
         }
     }
 

@@ -155,7 +155,7 @@ public class RadialGroup extends WidgetGroup {
             vector2.rotate(degreesPerChild*(i + half) + style.startDegreesOffset);
 
             if(actor instanceof Image) { // todo: do this properly !
-                actor.setSize(37, 37);
+                actor.setSize(30, 30);
             }
             actor.setPosition(vector2.x+style.radius, vector2.y+style.radius, Align.center);
         }

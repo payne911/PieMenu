@@ -78,7 +78,6 @@ public class PieMenu extends RadialGroup {
         setTouchable(Touchable.enabled);
 
         defaultDragListener = new DefaultDragListener(); // todo: if keeping this, copy in other constructors
-        defaultDragListener.setTapSquareSize(0);
     }
 
     public PieMenu(final ShapeDrawer sd, Skin skin) {
@@ -111,7 +110,9 @@ public class PieMenu extends RadialGroup {
 
 
     /**
-     * Resets selected and highlighted child.
+     * Resets selected and highlighted child.<br>
+     * Does <i>not</i> trigger the ChangeListener, nor the HighlightChangeListener
+     * (if you had set one up).
      */
     public void resetSelection() {
         highlightedIndex = -1;
@@ -236,6 +237,10 @@ public class PieMenu extends RadialGroup {
 
     public class DefaultDragListener extends DragListener {
 
+        public DefaultDragListener() {
+            setTapSquareSize(Integer.MAX_VALUE);
+        }
+
         /**
          * @param x x-coordinate in pixels, relative to the bottom left of the attached actor
          * @param y y-coordinate in pixels, relative to the bottom left of the attached actor
@@ -246,7 +251,6 @@ public class PieMenu extends RadialGroup {
                 return false;
 
             setVisible(true);
-//            return super.touchDown(event, x, y, pointer, button);
             return true;
         }
 
@@ -316,7 +320,7 @@ public class PieMenu extends RadialGroup {
     public void setDefaultDragListener(DefaultDragListener defaultDragListener) {
         this.defaultDragListener = defaultDragListener;
     }
-    public DefaultDragListener getDefaultDragListener() {
+    @Deprecated public DefaultDragListener getDefaultDragListener() {
         return defaultDragListener;
     }
     public boolean isInfiniteSelectionRange() {
