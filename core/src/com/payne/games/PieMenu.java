@@ -205,11 +205,13 @@ public class PieMenu extends RadialGroup {
      * Indices are based on the order which was used to add child Actors to the
      * Widget. First one added is at index 0, of course, and so on.
      *
-     * @param newIndex index of the child (and thus region) which was hovered.
-     * @param hoverIsSelection whether or not a hover is to be considered as a selection.
+     * @param newIndex index of the child (and thus region) which was highlighted.
+     * @param highlightIsSelection whether or not a highlight is to be
+     *                             considered as a selection. Basically
+     *                             corresponds to {@link #highlightIsSelection}.
      */
-    public void hoverIndex(int newIndex, boolean hoverIsSelection) {
-        if(hoverIsSelection) {
+    public void highlightIndex(int newIndex, boolean highlightIsSelection) {
+        if(highlightIsSelection) {
             selectIndex(newIndex);
             return;
         }
@@ -223,15 +225,15 @@ public class PieMenu extends RadialGroup {
 
     /**
      * Called to find the child region that is to be interacted with at the
-     * given coordinate. If there is one, checks if the hovered item should be
+     * given coordinate. If there is one, checks if the highlighted item should be
      * highlighted (and possibly selected). If it is the case, will apply
      * the appropriate action.
      *
      * @param x x-coordinate in the stage.
      * @param y y-coordinate in the stage.
      */
-    public void hoverChildRegionAtStage(float x, float y) {
-        hoverIndex(findChildSectorAtStage(x, y), highlightIsSelection);
+    public void highlightChildRegionAtStage(float x, float y) {
+        highlightIndex(findChildSectorAtStage(x, y), highlightIsSelection);
     }
 
     @Override
@@ -344,7 +346,7 @@ public class PieMenu extends RadialGroup {
 
         @Override
         public void touchDragged(InputEvent event, float x, float y, int pointer) {
-            hoverChildRegionAtStage(event.getStageX(), event.getStageY());
+            highlightChildRegionAtStage(event.getStageX(), event.getStageY());
             super.touchDragged(event, x, y, pointer);
         }
     }
