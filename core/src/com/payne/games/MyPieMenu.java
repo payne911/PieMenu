@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -127,9 +128,9 @@ public class MyPieMenu extends ApplicationAdapter {
         dragPie = new PieMenu(shape, style);
 
         /* Customizing the behavior. */
-        dragPie.setHoverIsSelection(false);
+        dragPie.setHighlightIsSelection(false);
         dragPie.setInfiniteSelectionRange(true);
-        dragPie.setRemainDisplayed(false);
+        dragPie.setManualControlOfVisibility(false);
 
         /* Adding some listeners, just 'cuz... */
         dragPie.addListener(new ChangeListener() {
@@ -153,15 +154,23 @@ public class MyPieMenu extends ApplicationAdapter {
 
         /* Setting up the demo-button. */
         final TextButton textButton = new TextButton("Drag Pie",  skin);
-        textButton.addListener(new ChangeListener() {
+        textButton.addListener(new ClickListener() {
+            /*
+            If this was a ChangeListener, the `dragPit.suggestedClickListener`
+            would get called before the `changed` method would get called.
+            `changed` only gets called after the user releases the click
+            directly within the boundaries of the Button, whereas the
+            SuggestedClickListener is summoned as soon as the click happens.
+            */
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 dragPie.resetSelection();
                 dragPie.setPosition(textButton.getX() + textButton.getWidth()/2,
                         textButton.getY() + textButton.getHeight()/2, Align.center);
+                return true;
             }
         });
-        textButton.addListener(dragPie.getDefaultDragListener()); // this is important
+        textButton.addListener(dragPie.getSuggestedClickListener());
         root.add(textButton).expand().bottom();
 
         /* Including the Widget in the Stage. */
@@ -182,13 +191,13 @@ public class MyPieMenu extends ApplicationAdapter {
         rightMousePie = new PieMenu(shape, style);
 
         /* Customizing the behavior. */
-        rightMousePie.setHoverIsSelection(true);
+        rightMousePie.setHighlightIsSelection(true);
         rightMousePie.setInfiniteSelectionRange(true);
-        rightMousePie.setRemainDisplayed(false);
+        rightMousePie.setManualControlOfVisibility(false);
         rightMousePie.setSelectionButton(Input.Buttons.RIGHT);
 
         /* Setting up listeners */
-        rightMousePie.addListener(rightMousePie.getDefaultDragListener());
+        rightMousePie.addListener(rightMousePie.getSuggestedClickListener());
         rightMousePie.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -231,20 +240,6 @@ public class MyPieMenu extends ApplicationAdapter {
         rightMousePie.setName("rightMousePie");
     }
 
-    private void onRightClick() {
-        float x = Gdx.input.getX();
-        float y = Gdx.input.getY();
-        rightMousePie.setPosition(x, Gdx.graphics.getHeight() - y, Align.center);
-
-        /* Triggers programmatically a `touchDown` Event */
-        InputEvent event = new InputEvent();
-        event.setType(InputEvent.Type.touchDown);
-        event.setButton(rightMousePie.getSelectionButton());
-        event.setStageX(x);
-        event.setStageY(y);
-        rightMousePie.fire(event);
-    }
-
     private void setUpMiddleMousePieMenu() {
         // todo: eventually should look similar to   https://dribbble.com/shots/647272-Circle-Menu-PSD
 
@@ -259,12 +254,12 @@ public class MyPieMenu extends ApplicationAdapter {
         middleMousePie = new PieMenu(shape, midStyle1);
 
         /* Customizing the behavior. */
-        middleMousePie.setHoverIsSelection(false);
+        middleMousePie.setHighlightIsSelection(false);
         middleMousePie.setInfiniteSelectionRange(true);
-        middleMousePie.setRemainDisplayed(false);
+        middleMousePie.setManualControlOfVisibility(false);
 
         /* Adding some listeners, just 'cuz... */
-        middleMousePie.addListener(middleMousePie.getDefaultDragListener());
+        middleMousePie.addListener(middleMousePie.getSuggestedClickListener());
         middleMousePie.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -304,12 +299,6 @@ public class MyPieMenu extends ApplicationAdapter {
         midStyle2.background = new Image(new Texture(Gdx.files.internal("disc.png"))).getDrawable();
     }
 
-    private void onMiddleClick() {
-        middleMousePie.resetSelection();
-        middleMousePie.setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), Align.center);
-        middleMousePie.setVisible(true);
-    }
-
     private void setUpPermaPieMenu() {
 
         /* Setting up and creating the widget. */
@@ -326,12 +315,12 @@ public class MyPieMenu extends ApplicationAdapter {
         permaPie = new PieMenu(shape, style);
 
         /* Customizing the behavior. */
-        permaPie.setHoverIsSelection(false);
+        permaPie.setHighlightIsSelection(false);
         permaPie.setInfiniteSelectionRange(false);
-        permaPie.setRemainDisplayed(true);
+        permaPie.setManualControlOfVisibility(true);
 
         /* Setting up listeners */
-        permaPie.addListener(permaPie.getDefaultDragListener());
+        permaPie.addListener(permaPie.getSuggestedClickListener());
         permaPie.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -388,11 +377,14 @@ public class MyPieMenu extends ApplicationAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
             permaPie.setVisible(!permaPie.isVisible());
         }
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
-            onRightClick();
+        if (Gdx.input.isButtonJustPressed(rightMousePie.getSelectionButton())) {
+            rightMousePie.centerOnMouse();
+            rightMousePie.triggerDefaultListenerTouchDown(); // Programmatically sends the user into the `touchDragged` Event
         }
         if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
-            onMiddleClick();
+            middleMousePie.centerOnMouse();
+            middleMousePie.resetSelection();
+            middleMousePie.setVisible(true);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
             middleMousePie.setStyle(middleMousePie.getStyle() == midStyle1 ? midStyle2 : midStyle1);

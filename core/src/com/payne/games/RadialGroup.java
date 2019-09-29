@@ -1,5 +1,6 @@
 package com.payne.games;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
@@ -70,7 +71,12 @@ public class RadialGroup extends WidgetGroup {
     }
 
 
-
+    /**
+     * Runs checks before assigning the style to the Widget. Only a valid style
+     * will pass the test.
+     *
+     * @param style the style that will be checked before being assigned.
+     */
     public void setStyle(RadialGroupStyle style) {
         checkStyle(style);
         this.style = style;
@@ -79,6 +85,11 @@ public class RadialGroup extends WidgetGroup {
         invalidate();
     }
 
+    /**
+     * Ensures the input values for the given style are valid.
+     *
+     * @param style a style class you want to check properties of.
+     */
     protected void checkStyle(RadialGroupStyle style) {
         if(style.separatorWidth < 0)
             throw new IllegalArgumentException("separatorWidth cannot be negative.");
@@ -167,6 +178,14 @@ public class RadialGroup extends WidgetGroup {
         super.draw(batch, parentAlpha);
     }
 
+    /**
+     * Takes care of drawing everything that {@link #layout()} didn't.
+     * (Basically everything but the children Actors.)
+     *
+     * @param batch a Batch used to draw Drawables. The {@link #sd} is used to
+     *              draw everything else.
+     * @param parentAlpha
+     */
     protected void drawWithShapeDrawer(Batch batch, float parentAlpha) {
 
         /* Pre-calculating */
@@ -260,7 +279,7 @@ public class RadialGroup extends WidgetGroup {
         if (!isVisible()) return null;
 
         localToStageCoordinates(vector2.set(x,y));
-        int childIndex = findChildSectorAtAbsolute(vector2.x,vector2.y);
+        int childIndex = findChildSectorAtStage(vector2.x,vector2.y);
         if (childIndex < getChildren().size) {
             Actor child = getChildren().get(childIndex);
             if(child.getTouchable() == Touchable.disabled)
@@ -284,8 +303,8 @@ public class RadialGroup extends WidgetGroup {
      * @return The index of the child at that coordinate.
      *         If there are no child there, the amount of children is returned.
      */
-    public int findChildSectorAtAbsolute(float x, float y) {
-        float angle = angleAtAbsolute(x,y);
+    public int findChildSectorAtStage(float x, float y) {
+        float angle = angleAtStage(x,y);
         angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
         int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
         stageToLocalCoordinates(vector2.set(x,y));
@@ -307,7 +326,7 @@ public class RadialGroup extends WidgetGroup {
      * @return a non-normalized angle of the position of the cursor
      *         relative to the origin (i.e. middle) of the widget
      */
-    public float angleAtAbsolute(float x, float y) {
+    public float angleAtStage(float x, float y) {
         return MathUtils.radiansToDegrees * MathUtils.atan2(y - (getY() + style.radius), x - (getX() + style.radius));
     }
 
@@ -327,16 +346,25 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
+     * Returns the input to the power of 2.
+     *
      * @return in * in
      */
     protected float pow2(float in) {
         return in*in;
     }
 
+    /**
+     * Centers the Widget on the current position of the mouse.
+     */
+    protected void centerOnMouse() {
+        setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), Align.center);
+    }
 
 
-
-
+    /**
+     * Encompasses all the characteristics that define the way the Widget will be drawn.
+     */
     public static class RadialGroupStyle {
 
         /**
@@ -447,6 +475,9 @@ public class RadialGroup extends WidgetGroup {
         public float circumferenceWidth;
 
 
+        /**
+         * Encompasses all the characteristics that define the way the Widget will be drawn.
+         */
         public RadialGroupStyle() {
         }
 

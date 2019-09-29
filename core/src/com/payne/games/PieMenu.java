@@ -5,11 +5,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Pools;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
@@ -21,7 +22,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
  * @author Jérémi Grenier-Berthiaume (aka "payne")
  */
 public class PieMenu extends RadialGroup {
-    @Deprecated private DefaultDragListener defaultDragListener; // todo: uncertain if appropriate
+    private SuggestedClickListener suggestedClickListener;
 
     /**
      * Index of the currently selected item.
@@ -34,14 +35,22 @@ public class PieMenu extends RadialGroup {
     private int highlightedIndex = -1;
 
     /**
-     * If hovering an item calls ChangeListener and selects the item.
+     * Set to {@code true} if you want the
+     * {@link ChangeListener#changed(ChangeListener.ChangeEvent, Actor)}
+     * to be called every time the currently highlighted value changes. This
+     * will also cause the automatic selection of the item that was highlighted.<br>
+     * {@link HighlightChangeListener#onHighlightChange()} is also provided as
+     * a "convenience interface" if you would prefer to keep selection separated
+     * from highlights in the callbacks.
      */
-    private boolean hoverIsSelection = false;
+    private boolean highlightIsSelection = false;
 
     /**
-     * The widget should remain visible. The "visible-flow" becomes the responsibility of the user.
+     * Set to {@code true} if you want the Widget to stop controlling its visibility.
+     * You will be in charge of calling {@link #setVisible(boolean)} whenever
+     * you want to influence its visibility.
      */
-    private boolean remainDisplayed = false;
+    private boolean manualControlOfVisibility = false;
 
     /**
      * Should selection only happen if mouse is within the radius of the widget?
@@ -77,7 +86,7 @@ public class PieMenu extends RadialGroup {
         setStyle(style);
         setTouchable(Touchable.enabled);
 
-        defaultDragListener = new DefaultDragListener(); // todo: if keeping this, copy in other constructors
+        suggestedClickListener = new SuggestedClickListener(); // todo: if keeping this, copy in other constructors
     }
 
     public PieMenu(final ShapeDrawer sd, Skin skin) {
@@ -93,7 +102,12 @@ public class PieMenu extends RadialGroup {
     }
 
 
-
+    /**
+     * Runs checks before assigning the style to the Widget. Only a valid style
+     * will pass the test.
+     *
+     * @param style the style that will be checked before being assigned.
+     */
     public void setStyle(PieMenuStyle style) {
         super.setStyle(style);
         checkStyle(style);
@@ -101,6 +115,16 @@ public class PieMenu extends RadialGroup {
         invalidate();
     }
 
+    /**
+     * Ensures the input values for the given style are valid.<br>
+     * Only looks at the properties related to the current class, and doesn't
+     * look back at parent's properties.<br>
+     * Generally shouldn't be called, aside from within the
+     * {@link #setStyle(PieMenuStyle)} method which itself takes care of calling
+     * the parent's method.
+     *
+     * @param style a style class you want to check properties of.
+     */
     protected void checkStyle(PieMenuStyle style) {
         if(style.selectedRadius < 0)
             throw new IllegalArgumentException("selectedRadius cannot be negative.");
@@ -111,8 +135,10 @@ public class PieMenu extends RadialGroup {
 
     /**
      * Resets selected and highlighted child.<br>
-     * Does <i>not</i> trigger the ChangeListener, nor the HighlightChangeListener
-     * (if you had set one up).
+     * Does <i>not</i> trigger the
+     * {@link ChangeListener#changed(ChangeListener.ChangeEvent, Actor)},
+     * nor the {@link HighlightChangeListener#onHighlightChange()}
+     * (if you had set it up).
      */
     public void resetSelection() {
         highlightedIndex = -1;
@@ -120,9 +146,25 @@ public class PieMenu extends RadialGroup {
     }
 
     /**
-     * Selects the child at the given index. Triggers the ChangeListener.<br>
+     * Used to trigger programmatically a {@code touchDown} event in such a way
+     * that will allow the user to directly be interacting with the
+     * {@code touchDragged} event.<br>
+     * This bypasses the {@link #selectionButton} filter that is inside the
+     * {@link SuggestedClickListener}
+     */
+    @Deprecated
+    public void triggerDefaultListenerTouchDown() {
+        InputEvent event = new InputEvent();
+        event.setType(InputEvent.Type.touchDown);
+        event.setButton(getSelectionButton());
+        fire(event);
+    }
+
+    /**
+     * Selects the child at the given index. Triggers the
+     * {{@link ChangeListener#changed(ChangeListener.ChangeEvent, Actor)}}.<br>
      * Indices are based on the order which was used to add child Actors to the
-     * RadialWidget. First one added is at index 0, of course, and so on.
+     * Widget. First one added is at index 0, of course, and so on.
      *
      * @param newIndex index of the child (and thus region) which was selected.
      */
@@ -146,7 +188,22 @@ public class PieMenu extends RadialGroup {
     }
 
     /**
-     * Called to check if the hovered item should be highlighted (and possibly selected).
+     * Checks the input coordinate for a candidate child region. Will take the
+     * appropriate action to select it or not based on the configuration of the
+     * Widget.
+     *
+     * @param x x-coordinate in the Stage.
+     * @param y y-coordinate in the Stage.
+     */
+    public void selectChildRegionAtStage(float x, float y) {
+        selectIndex(findChildSectorAtStage(x, y));
+    }
+
+    /**
+     * Called to check if the candidate region should be highlighted (and possibly
+     * selected). If it is the case, will apply the appropriate action.<br>
+     * Indices are based on the order which was used to add child Actors to the
+     * Widget. First one added is at index 0, of course, and so on.
      *
      * @param newIndex index of the child (and thus region) which was hovered.
      * @param hoverIsSelection whether or not a hover is to be considered as a selection.
@@ -164,9 +221,22 @@ public class PieMenu extends RadialGroup {
         }
     }
 
+    /**
+     * Called to find the child region that is to be interacted with at the
+     * given coordinate. If there is one, checks if the hovered item should be
+     * highlighted (and possibly selected). If it is the case, will apply
+     * the appropriate action.
+     *
+     * @param x x-coordinate in the stage.
+     * @param y y-coordinate in the stage.
+     */
+    public void hoverChildRegionAtStage(float x, float y) {
+        hoverIndex(findChildSectorAtStage(x, y), highlightIsSelection);
+    }
+
     @Override
-    public int findChildSectorAtAbsolute(float x, float y) {
-        float angle = angleAtAbsolute(x,y);
+    public int findChildSectorAtStage(float x, float y) {
+        float angle = angleAtStage(x,y);
         angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
         int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
         if(infiniteSelectionRange)
@@ -233,11 +303,19 @@ public class PieMenu extends RadialGroup {
     }
 
 
+    /**
+     * The suggested ClickListener that comes with the PieMenu. You are not
+     * obligated to use it, but this one has been designed to work as in, for
+     * the most part.
+     */
+    public class SuggestedClickListener extends ClickListener {
 
-
-    public class DefaultDragListener extends DragListener {
-
-        public DefaultDragListener() {
+        /**
+         * The suggested ClickListener that comes with the PieMenu. You are not
+         * obligated to use it, but this one has been designed to work as in, for
+         * the most part.
+         */
+        public SuggestedClickListener() {
             setTapSquareSize(Integer.MAX_VALUE);
         }
 
@@ -249,8 +327,8 @@ public class PieMenu extends RadialGroup {
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             if(button != selectionButton)
                 return false;
-
-            setVisible(true);
+            if(!manualControlOfVisibility)
+                setVisible(true);
             return true;
         }
 
@@ -258,16 +336,15 @@ public class PieMenu extends RadialGroup {
         public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
             if(button != selectionButton)
                 return;
-
-            selectIndex(findChildSectorAtAbsolute(event.getStageX(), event.getStageY())); // todo: just use highlighted instead of finding index again?
-            if(!remainDisplayed)
+            selectChildRegionAtStage(event.getStageX(), event.getStageY()); // todo: just use highlighted instead of finding index again?
+            if(!manualControlOfVisibility)
                 setVisible(false);
             super.touchUp(event, x, y, pointer, button);
         }
 
         @Override
         public void touchDragged(InputEvent event, float x, float y, int pointer) {
-            hoverIndex(findChildSectorAtAbsolute(event.getStageX(), event.getStageY()), hoverIsSelection);
+            hoverChildRegionAtStage(event.getStageX(), event.getStageY());
             super.touchDragged(event, x, y, pointer);
         }
     }
@@ -275,7 +352,9 @@ public class PieMenu extends RadialGroup {
 
 
 
-
+    /**
+     * Encompasses all the characteristics that define the way the PieMenu will be drawn.
+     */
     public static class PieMenuStyle extends RadialGroupStyle {
 
         /**
@@ -286,6 +365,10 @@ public class PieMenu extends RadialGroup {
         public Color hoveredColor; // todo: integrate hoveredColor?
         public float selectedRadius; // todo: integrate into drawing so that selected region is bigger than others
 
+        /**
+         * Encompasses all the characteristics that define the way the
+         * PieMenu will be drawn.
+         */
         public PieMenuStyle() {
         }
 
@@ -297,8 +380,19 @@ public class PieMenu extends RadialGroup {
     }
 
 
-
+    /**
+     * A "convenience interface" that allows users to execute code whenever
+     * the "currently highlighted" value changes.
+     */
     public interface HighlightChangeListener {
+
+        /**
+         * Called every time the "currently highlighted" value changes.<br>
+         * It is possible to achieve somewhat the same goal by calling
+         * {@code setHighlightIsSelection(true)} on the PieMenu: that will
+         * trigger the {@link ChangeListener} every time the currently
+         * highlighted value changes.
+         */
         void onHighlightChange();
     }
 
@@ -317,11 +411,11 @@ public class PieMenu extends RadialGroup {
     public void setSelectionButton(int selectionButton) {
         this.selectionButton = selectionButton;
     }
-    public void setDefaultDragListener(DefaultDragListener defaultDragListener) {
-        this.defaultDragListener = defaultDragListener;
+    public void setSuggestedClickListener(SuggestedClickListener suggestedClickListener) {
+        this.suggestedClickListener = suggestedClickListener;
     }
-    @Deprecated public DefaultDragListener getDefaultDragListener() {
-        return defaultDragListener;
+    public SuggestedClickListener getSuggestedClickListener() {
+        return suggestedClickListener;
     }
     public boolean isInfiniteSelectionRange() {
         return infiniteSelectionRange;
@@ -347,19 +441,19 @@ public class PieMenu extends RadialGroup {
     public void setHighlightedIndex(int highlightedIndex) {
         this.highlightedIndex = highlightedIndex;
     }
-    public boolean isHoverIsSelection() {
-        return hoverIsSelection;
+    public boolean isHighlightIsSelection() {
+        return highlightIsSelection;
     }
-    public void setHoverIsSelection(boolean hoverIsSelection) {
-        this.hoverIsSelection = hoverIsSelection;
+    public void setHighlightIsSelection(boolean highlightIsSelection) {
+        this.highlightIsSelection = highlightIsSelection;
     }
     public PieMenuStyle getStyle() {
         return style;
     }
-    public boolean isRemainDisplayed() {
-        return remainDisplayed;
+    public boolean isManualControlOfVisibility() {
+        return manualControlOfVisibility;
     }
-    public void setRemainDisplayed(boolean remainDisplayed) {
-        this.remainDisplayed = remainDisplayed;
+    public void setManualControlOfVisibility(boolean manualControlOfVisibility) {
+        this.manualControlOfVisibility = manualControlOfVisibility;
     }
 }
