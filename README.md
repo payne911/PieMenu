@@ -2,7 +2,7 @@
 A library to obtain a PieMenu functionality within LibGDX.
 
 ### Demo
-Soon, a gif and a link to an HTML page will be here!
+![early_demo](https://raw.githubusercontent.com/payne911/PieMenu/master/android/assets/early_demo.gif)
 
 Generally, the controls are:
 * ``RIGHT-CLICK`` : opens a PieMenu meant for selection through dragging (don't release the right-click until you want to select the highlighted item).
