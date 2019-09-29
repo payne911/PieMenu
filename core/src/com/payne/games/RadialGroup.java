@@ -255,7 +255,7 @@ public class RadialGroup extends WidgetGroup {
      * @param radian the angle along which the line is calculated
      * @return the point associated with those parameters
      */
-    protected Vector2 pointAtAngle(Vector2 output, Vector2 center, float radius, float radian) {
+    public Vector2 pointAtAngle(Vector2 output, Vector2 center, float radius, float radian) {
         output.set(center.x + radius * MathUtils.cos(radian), center.y + radius * MathUtils.sin(radian));
         return output;
     }
@@ -357,9 +357,18 @@ public class RadialGroup extends WidgetGroup {
     /**
      * Centers the Widget on the current position of the mouse.
      */
-    protected void centerOnMouse() {
+    public void centerOnMouse() {
         setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), Align.center);
     }
+
+
+    public ShapeDrawer getShapeDrawer() {
+        return sd;
+    }
+
+
+
+
 
 
     /**
@@ -369,7 +378,10 @@ public class RadialGroup extends WidgetGroup {
 
         /**
          * <i>Recommended. Optional.</i><br>
-         * A background that will be drawn behind everything else within the Widget.
+         * A background that will be drawn behind everything else within the Widget.<br>
+         * Be mindful of the fact that this is unaffected by any of the other
+         * variables: it will be resized to fit in the whole region that
+         * represents the position, width and height of the widget.
          */
         public Drawable background;
 
