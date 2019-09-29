@@ -17,6 +17,9 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 * [Usage](#usage)
 * [Wiki](#wiki)
 * [Thanks to](#thanks-to)
+* [Credits](#credits)
+
+---
 
 ## Demo
 ![early_demo](https://raw.githubusercontent.com/payne911/PieMenu/master/android/assets/early_demo.gif)
@@ -42,7 +45,7 @@ allprojects {
 
     ext {
     	...
-        pieMenuVersion = '0.1.0-alpha'
+        radialGroupVersion = '0.1.0-alpha'
     }
     
     repositories {
@@ -52,7 +55,7 @@ allprojects {
 }
 ```
 
-And  in your `core` project add the dependency:
+And  in your `core` project (still inside the root `build.gradle`) add the dependency:
 
 ```groovy
 project(":core") {
@@ -61,7 +64,7 @@ project(":core") {
 
     dependencies {
         ...
-        implementation 'com.github.payne911:PieMenu:$radialGroupVersion'
+        implementation "com.github.payne911:PieMenu:core:$radialGroupVersion"
     }
 }
 ```
@@ -71,56 +74,29 @@ See the [jitpack website](https://jitpack.io/#payne911/PieMenu) for more info.
 ---
 
 ## Usage
-A decently basic set up you could do would look like this:
+The basic idea looks like this:
 
 ```java
 /* Setting up and creating the widget. */
 PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-style.radius = 80;
-style.selectedChildRegionColor = new Color(.7f,.3f,.5f,1);
-style.childRegionColor = new Color(0,.7f,0,1);
-style.alternateChildRegionColor = new Color(.7f,0,0,1);
-PieMenu dragPie = new PieMenu(shape, style);
-
-/* Customizing the behavior. */
-dragPie.setHighlightIsSelection(false);
-dragPie.setInfiniteSelectionRange(true);
-dragPie.setManualControlOfVisibility(false);
+style.radius = 80; // you set up the way the widget looks by modifying the "style" variable
+dragPie = new PieMenu(shape, style); // "shape" is an instance of a ShapeDrawer
 
 /* Adding the listeners. */
 dragPie.addListener(dragPie.getSuggestedClickListener());
 dragPie.addListener(new ChangeListener() {
     @Override
     public void changed(ChangeEvent event, Actor actor) {
-        System.out.println("ChangeListener - selected index: " + dragPie.getSelectedIndex());
+        System.out.println("The selected index is: " + dragPie.getSelectedIndex());
     }
 });
 
-/* Populating the widget with labels. */
-int dragPieAmount = 0;
-for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
-    Label label = new Label(Integer.toString(dragPieAmount++), skin);
-    dragPie.addActor(label);
-}
-
 /* Including the Widget in the Stage. */
-stage.addActor(middleMousePie);
+stage.addActor(dragPie);
 ```
-
-And then in the `render()` method:
-
-```java
-if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
-    dragPie.centerOnMouse();
-    dragPie.resetSelection();
-    dragPie.setVisible(true);
-}
-```
-
-That would give you a PieMenu with a behavior similar to the ones that contained images in the demo GIF.
 
 ### Wiki
-However, this library offers you many more types of behaviors. They will all be documented in [the Wiki](https://github.com/payne911/PieMenu/wiki).
+This library offers you many types of behaviors related to pie menus. They will all be documented in [the Wiki](https://github.com/payne911/PieMenu/wiki), so make sure to check it out.
 
 ---
 
@@ -128,8 +104,9 @@ However, this library offers you many more types of behaviors. They will all be 
 * EarlyGrey (I'm actually entirely dependent on his library: [ShapeDrawer](https://github.com/earlygrey/shapedrawer))
 * raelus
 * mgsx
+* TEttinger
 
-For their sustained help through the LibGDX `#scene2d` discord channel. Their extensive knowledge of the scene2d API was greatly appreciated.
+For their sustained help through the LibGDX discord channel. Their extensive knowledge was greatly appreciated.
 
 ### Credits
 I used some images from [Game-Icons.net](https://game-icons.net/), more specifically the 5 icons displayed when clicking the "Toggle Radial" button. To be even more specific, the credits go to [Lorc](http://lorcblog.blogspot.com/). Those are under the [CC BY 3.0 license](https://creativecommons.org/licenses/by/3.0/) license.
