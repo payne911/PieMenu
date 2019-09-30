@@ -153,8 +153,7 @@ public class Demonstration extends ApplicationAdapter {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 dragPie.resetSelection();
-                dragPie.setPosition(textButton.getX() + textButton.getWidth()/2,
-                        textButton.getY() + textButton.getHeight()/2, Align.center);
+                dragPie.centerOnActor(textButton);
                 return true;
             }
         });
@@ -166,11 +165,11 @@ public class Demonstration extends ApplicationAdapter {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 int index = dragPie.getSelectedIndex();
-                if(index == dragPie.getAmountOfChildren() || index == -1) {
+                if(!dragPie.isValidIndex(index)) {
                     textButton.setText("Drag Pie");
                     return;
                 }
-                Actor child = dragPie.getChild(dragPie.getSelectedIndex());
+                Actor child = dragPie.getChild(index);
                 textButton.setText(((Label)child).getText().toString());
             }
         });

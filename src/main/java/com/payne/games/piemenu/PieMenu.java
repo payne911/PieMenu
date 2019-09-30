@@ -434,7 +434,9 @@ public class PieMenu extends RadialGroup {
 
     /**
      * Returns the currently selected  item's index. A highlighted item can be
-     * considered selected, depending on the customized behavior of the Widget.
+     * considered selected, depending on the customized behavior of the Widget.<br>
+     * The {@link #isValidIndex(int)} method is provided to easily check if the
+     * returned value can be mapped to a child or not.
      *
      * @return -1 after a "reset" or if no item were ever selected on this Widget.<br>
      *         Else, return the index of the currently selected item.<br>

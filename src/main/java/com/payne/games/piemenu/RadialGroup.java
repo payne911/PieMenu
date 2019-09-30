@@ -159,7 +159,7 @@ public class RadialGroup extends WidgetGroup {
     @Override
     public void layout() {
         float degreesPerChild = style.totalDegreesDrawn / getAmountOfChildren();
-        float half = (float)1 / 2;
+        float half = 1f / 2;
         for (int i = 0; i < getAmountOfChildren(); i++) {
             Actor actor = getChildren().get(i);
             vector2.set((style.radius+style.innerRadius)/2, 0);
@@ -359,6 +359,28 @@ public class RadialGroup extends WidgetGroup {
      */
     public void centerOnMouse() {
         setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), Align.center);
+    }
+
+    /**
+     * Will center the Widget on the center point of the provided Actor.
+     *
+     * @param actor the Actor to center on.
+     */
+    public void centerOnActor(Actor actor) {
+        setPosition(actor.getX() + actor.getWidth()/2,
+                actor.getY() + actor.getHeight()/2, Align.center);
+    }
+
+    /**
+     * Given a child index, find whether or not it would be a valid candidate to
+     * highlight or select.
+     *
+     * @param index an integer that would usually be the output of
+     *              {@link #findChildSectorAtStage(float, float)}.
+     * @return {@code true} only if the index is linked to a valid child sector.
+     */
+    public boolean isValidIndex(int index) {
+        return !(index == -1 || index >= getAmountOfChildren());
     }
 
     /**

@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -93,8 +92,7 @@ public class ButtonBound extends ApplicationAdapter {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 menu.resetSelection();
-                menu.setPosition(textButton.getX() + textButton.getWidth()/2,
-                        textButton.getY() + textButton.getHeight()/2, Align.center);
+                menu.centerOnActor(textButton);
                 return true;
             }
         });
@@ -106,11 +104,11 @@ public class ButtonBound extends ApplicationAdapter {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 int index = menu.getSelectedIndex();
-                if(index == menu.getAmountOfChildren() || index == -1) {
+                if(menu.isValidIndex(index)) {
                     textButton.setText("Drag Pie");
                     return;
                 }
-                Actor child = menu.getChild(menu.getSelectedIndex());
+                Actor child = menu.getChild(index);
                 textButton.setText(((Label)child).getText().toString());
             }
         });

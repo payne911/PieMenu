@@ -11,9 +11,10 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -55,9 +56,11 @@ public class ClickToggle extends ApplicationAdapter {
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.radius = 80;
-        style.selectedChildRegionColor = new Color(.7f,.1f,.7f,1);
-        style.childRegionColor = new Color(0,.7f,0,1);
-        style.alternateChildRegionColor = new Color(.7f,0,0,1);
+        style.background = new Image(new Texture(Gdx.files.internal("rael_pie.png"))).getDrawable(); // image background!
+        style.innerRadius = 24;
+        style.startDegreesOffset = 30;
+        style.selectedChildRegionColor = new Color(1,.5f,.5f,.5f);
+        style.childRegionColor = new Color(.73f,.33f,.33f,.1f);
         menu = new PieMenu(shape, style);
 
         /* Adding the listeners. */
@@ -70,10 +73,15 @@ public class ClickToggle extends ApplicationAdapter {
         });
 
         /* Populating the widget. */
-        for (int i = 0; i < 4; i++) {
-            Label label = new Label(Integer.toString(i), skin);
-            menu.addActor(label);
-        }
+        Array<Image> imgs = new Array<>();
+        imgs.add(new Image(new Texture(Gdx.files.internal("heart-drop.png"))));
+        imgs.add(new Image(new Texture(Gdx.files.internal("beer-stein.png"))));
+        imgs.add(new Image(new Texture(Gdx.files.internal("coffee-mug.png"))));
+        imgs.add(new Image(new Texture(Gdx.files.internal("gooey-daemon.png"))));
+        imgs.add(new Image(new Texture(Gdx.files.internal("jeweled-chalice.png"))));
+        imgs.add(new Image(new Texture(Gdx.files.internal("coffee-mug.png"))));
+        for (int i = 0; i < imgs.size; i++)
+            menu.addActor(imgs.get(i));
 
         /* Including the Widget in the Stage. */
         stage.addActor(menu);
@@ -97,7 +105,7 @@ public class ClickToggle extends ApplicationAdapter {
         |                  HERE BEGINS THE MORE SPECIFIC CODE                  |
         \==================================================================== */
 
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
             menu.centerOnMouse();
             menu.resetSelection();
             menu.setVisible(true);
