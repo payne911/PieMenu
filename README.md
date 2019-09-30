@@ -96,8 +96,13 @@ stage.addActor(dragPie);
 
 And *voilà*!
 
-### Wiki
-This library offers you many types of behaviors related to pie menus. They will all be documented in [the Wiki](https://github.com/payne911/PieMenu/wiki), so make sure to check it out.
+### [Wiki](https://github.com/payne911/PieMenu/wiki)
+This library offers you many types of behaviors related to pie menus. They will all be documented in the Wiki, so make sure to check it out.
+
+More specifically, you might be interested in:
+* [Complete examples of code](https://github.com/payne911/PieMenu/wiki/Examples), along with textual descriptions of the expected behavior
+* [Understanding the different behaviors](https://github.com/payne911/PieMenu/wiki/Customizing-the-behavior) you can apply to your`PieMenu`
+* [Seeing how to customize the look](https://github.com/payne911/PieMenu/wiki/Style-customization) of your Widget.
 
 ---
 
