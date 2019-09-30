@@ -431,6 +431,18 @@ public class PieMenu extends RadialGroup {
     public void setHighlightChangeListener(HighlightChangeListener highlightChangeListener) {
         this.highlightChangeListener = highlightChangeListener;
     }
+
+    /**
+     * Returns the currently selected  item's index. A highlighted item can be
+     * considered selected, depending on the customized behavior of the Widget.
+     *
+     * @return -1 after a "reset" or if no item were ever selected on this Widget.<br>
+     *         Else, return the index of the currently selected item.<br>
+     *         Returns the amount of children when the selection happened outside
+     *         of the boundaries (this boundary depends on the customized behaviors
+     *         such as the radius, the inner radius, or whether or not the
+     *         selection has an infinite range).
+     */
     public int getSelectedIndex() {
         return selectedIndex;
     }

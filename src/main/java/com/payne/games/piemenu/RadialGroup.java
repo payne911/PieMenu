@@ -361,6 +361,13 @@ public class RadialGroup extends WidgetGroup {
         setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), Align.center);
     }
 
+    /**
+     * @return The amount of Actors that are currently contained in the Widget.
+     */
+    public int getAmountOfChildren() {
+        return getChildren().size;
+    }
+
 
     public ShapeDrawer getShapeDrawer() {
         return sd;

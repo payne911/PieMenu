@@ -1,4 +1,4 @@
 package com.payne.games.piemenu.individuals;
 
-public class ClickBound {
+public class ClickDrag {
 }

@@ -132,20 +132,6 @@ public class MyPieMenu extends ApplicationAdapter {
         dragPie.setInfiniteSelectionRange(true);
         dragPie.setManualControlOfVisibility(false);
 
-        /* Adding some listeners, just 'cuz... */
-        dragPie.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("ChangeListener - selected index: " + dragPie.getSelectedIndex());
-            }
-        });
-        dragPie.setHighlightChangeListener(new PieMenu.HighlightChangeListener() {
-            @Override
-            public void onHighlightChange() {
-                System.out.println("HighlightChangeListener - highlighted index: " + dragPie.getHighlightedIndex());
-            }
-        });
-
         /* Populating the widget. */
         for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
             Label label = new Label(Integer.toString(dragPieAmount++), skin);
@@ -172,6 +158,20 @@ public class MyPieMenu extends ApplicationAdapter {
         });
         textButton.addListener(dragPie.getSuggestedClickListener());
         root.add(textButton).expand().bottom();
+
+        /* Adding the listener. */
+        dragPie.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                int index = dragPie.getSelectedIndex();
+                if(index == dragPie.getAmountOfChildren() || index == -1) {
+                    textButton.setText("Drag Pie");
+                    return;
+                }
+                Actor child = dragPie.getChild(dragPie.getSelectedIndex());
+                textButton.setText(((Label)child).getText().toString());
+            }
+        });
 
         /* Including the Widget in the Stage. */
         stage.addActor(dragPie);
