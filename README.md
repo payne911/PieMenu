@@ -13,6 +13,7 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 
 ## Table of Content
 * [Demo](#demo)
+* [Controls](#controls)
 * [Including in Project](#including-in-project)
 * [Usage](#usage)
 * [Wiki](#wiki)
@@ -24,9 +25,11 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 ## Demo
 ![early_demo](https://raw.githubusercontent.com/payne911/PieMenu/master/media/early_demo.gif)
 
+
+### Controls
 An [online demo](https://payne911.github.io/PieMenu/) is available, but very buggy for now. The actual Java code works fine, though!
 
-Generally, the controls are:
+If you want to check out the same demo, but within the `desktop` setup, check out [the Demonstration class](https://github.com/payne911/PieMenu/blob/master/src/test/java/com/payne/games/piemenu/Demonstration.java). The controls are:
 * ``RIGHT-CLICK`` : opens a PieMenu meant for selection through dragging (don't release the right-click until you want to select the highlighted item).
 * ``MIDDLE-CLICK`` : opens a PieMenu meant for "normal" selection. You can release the button and select as you wish with a left-click.
 * ``CTRL`` (the left one): toggles the visibility of the "permaPie" at the bottom of the screen.
@@ -117,8 +120,8 @@ For their sustained help through the LibGDX discord channel. Their extensive kno
 ### Credits
 I used some images from [Game-Icons.net](https://game-icons.net/), more specifically the 5 icons displayed when clicking the "Toggle Radial" button. To be even more specific, the credits go to [Lorc](http://lorcblog.blogspot.com/). Those are under the [CC BY 3.0 license](https://creativecommons.org/licenses/by/3.0/) license.
 
-Also, raelus made the background image for the "middle-click menu", and the test application uses the [Plain James UI Skin](https://ray3k.wordpress.com/artwork/plain-james-ui-skin-for-libgdx/) created by Raymond "Raeleus" Buckley under the [CC BY 4.0 license](https://creativecommons.org/licenses/by/4.0/). [Check out the others!](https://ray3k.wordpress.com/artwork/)
+Also, raelus made the background image for the "middle-click menu", and the test application uses the [Plain James UI Skin](https://github.com/raeleus/Plain-James-UI) created by Raymond "Raeleus" Buckley under the [CC BY 4.0 license](https://creativecommons.org/licenses/by/4.0/). [Check out the others!](https://ray3k.wordpress.com/artwork/)
 
-The structure of the repository was mirrored from RafaSKB's [typing-label](https://github.com/rafaskb/typing-label) library.
+The structure and build scripts of this repository were strongly inspired by RafaSKB's [typing-label](https://github.com/rafaskb/typing-label) library.
 
 Parts of this README were lazily copied and adapted from EarlyGrey's library (with his agreement). Cheers!
