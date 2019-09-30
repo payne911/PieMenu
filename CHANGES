@@ -1,6 +1,7 @@
 [0.1.2-alpha]
-- Refactoring the project's structure to ressemble to other usual LibGDX libraries.
+- Refactoring the project's structure to resemble to other usual LibGDX libraries.
 - Opening up the API (more public methods accessible to users of the library).
+- Including ShapeDrawer as dependency by-default.
 
 [0.1.1-alpha]
 - JitPack deployment properly integrated.
