@@ -66,7 +66,7 @@ public class ButtonToggle extends ApplicationAdapter {
         style.innerRadius = 50;
         style.startDegreesOffset = 315;
         style.totalDegreesDrawn = 270;
-        style.backgroundColor = new Color(1,1,1,.2f);
+        style.childRegionColor = new Color(1,1,1,.2f);
         style.separatorWidth = 2;
         style.circumferenceWidth = 2;
         style.circumferenceColor = Color.BLACK;
