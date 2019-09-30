@@ -13,6 +13,7 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 
 ## Table of Content
 * [Demo](#demo)
+* [Controls](#controls)
 * [Including in Project](#including-in-project)
 * [Usage](#usage)
 * [Wiki](#wiki)
@@ -24,9 +25,11 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 ## Demo
 ![early_demo](https://raw.githubusercontent.com/payne911/PieMenu/master/media/early_demo.gif)
 
+
+### Controls
 An [online demo](https://payne911.github.io/PieMenu/) is available, but very buggy for now. The actual Java code works fine, though!
 
-Generally, the controls are:
+If you want to check out the same demo, but within the `desktop` setup, check out [the Demonstration class](https://github.com/payne911/PieMenu/blob/master/src/test/java/com/payne/games/piemenu/Demonstration.java). The controls are:
 * ``RIGHT-CLICK`` : opens a PieMenu meant for selection through dragging (don't release the right-click until you want to select the highlighted item).
 * ``MIDDLE-CLICK`` : opens a PieMenu meant for "normal" selection. You can release the button and select as you wish with a left-click.
 * ``CTRL`` (the left one): toggles the visibility of the "permaPie" at the bottom of the screen.
