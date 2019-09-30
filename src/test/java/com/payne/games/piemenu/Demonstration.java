@@ -37,13 +37,13 @@ public class Demonstration extends ApplicationAdapter {
     private PieMenu.PieMenuStyle midStyle2;
     private RadialGroup radial;
 
+    private Color backgroundColor = new Color(1,1,1,.2f);
     private int dragPieAmount = 0;
     private int permaPieAmount = 0;
     private int radialAmount = 0;
     private float red = .25f;
-    private float blue = .75f;
     private float green = .25f;
-    private float alpha = 1;
+    private float blue = .75f;
     private final int INITIAL_CHILDREN_AMOUNT = 5;
 
 
@@ -309,7 +309,7 @@ public class Demonstration extends ApplicationAdapter {
         style.innerRadius = 20;
         style.totalDegreesDrawn = 180;
         style.circumferenceWidth = 1;
-        style.backgroundColor = new Color(1,1,1,.2f);
+        style.backgroundColor = backgroundColor;
         style.selectedChildRegionColor = new Color(.5f,.5f,.5f,1);
         style.childRegionColor = new Color(.33f,.33f,.33f,1);
         style.alternateChildRegionColor = new Color(.25f,.25f,.25f,1);
@@ -326,9 +326,8 @@ public class Demonstration extends ApplicationAdapter {
         permaPie.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                alpha = MathUtils.map(0,permaPie.getChildren().size-1,0,1,permaPie.getSelectedIndex());
-                Color color = radial.getStyle().backgroundColor;
-                radial.getStyle().backgroundColor.set(color.r, color.g, color.b, alpha);
+                float alpha = MathUtils.map(0,permaPie.getAmountOfChildren()-1,0,1,permaPie.getSelectedIndex());
+                radial.getStyle().backgroundColor.set(backgroundColor.r, backgroundColor.g, backgroundColor.b, alpha);
             }
         });
 
@@ -339,10 +338,11 @@ public class Demonstration extends ApplicationAdapter {
         }
 
         /* Including the Widget at some absolute coordinate in the World. */
-        permaPie.setPosition(Gdx.graphics.getWidth()/2,0, Align.center); // (320,0)
-        permaPie.selectIndex(permaPie.getChildren().size-1);
+        permaPie.setPosition(Gdx.graphics.getWidth()/2f,0, Align.center);
+        permaPie.selectIndex(permaPie.getAmountOfChildren()-1);
         stage.addActor(permaPie);
         permaPie.setVisible(true);
+        permaPie.setName("permaPie");
     }
 
 
@@ -351,8 +351,12 @@ public class Demonstration extends ApplicationAdapter {
 
     @Override
     public void render () {
+
+        /* Clearing the screen and filling up the background. */
         Gdx.gl.glClearColor(red, green, blue, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        /* Updating and drawing the Stage. */
         stage.act();
         stage.draw();
 
@@ -370,11 +374,11 @@ public class Demonstration extends ApplicationAdapter {
             create();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
-            if(dragPie.getChildren().size == 0)
+            if(dragPie.getAmountOfChildren() == 0)
                 return;
-            dragPie.removeActor(dragPie.getChild(dragPie.getChildren().size-1));
-            permaPie.removeActor(permaPie.getChild(permaPie.getChildren().size-1));
-            radial.removeActor(radial.getChild(radial.getChildren().size-1));
+            dragPie.removeActor(dragPie.getChild(dragPie.getAmountOfChildren()-1));
+            permaPie.removeActor(permaPie.getChild(permaPie.getAmountOfChildren()-1));
+            radial.removeActor(radial.getChild(radial.getAmountOfChildren()-1));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
             permaPie.setVisible(!permaPie.isVisible());
@@ -400,6 +404,8 @@ public class Demonstration extends ApplicationAdapter {
 
     @Override
     public void dispose () {
+
+        /* Disposing is good practice! */
         skin.dispose();
         stage.dispose();
         tmpTex.dispose();

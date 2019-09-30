@@ -240,11 +240,11 @@ public class PieMenu extends RadialGroup {
     public int findChildSectorAtStage(float x, float y) {
         float angle = angleAtStage(x,y);
         angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
-        int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
+        int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getAmountOfChildren());
         if(infiniteSelectionRange)
             return childIndex;
         stageToLocalCoordinates(vector2.set(x,y));
-        return isWithinRadii(vector2.x - style.radius, vector2.y - style.radius) ? childIndex : getChildren().size; // size is equivalent to "invalid"
+        return isWithinRadii(vector2.x - style.radius, vector2.y - style.radius) ? childIndex : getAmountOfChildren(); // size is equivalent to "invalid"
     }
 
     @Override
@@ -253,7 +253,7 @@ public class PieMenu extends RadialGroup {
         /* Pre-calculating */
         float bgRadian = MathUtils.degreesToRadians*style.totalDegreesDrawn;
         float tmpOffset = MathUtils.degreesToRadians*style.startDegreesOffset;
-        int size = getChildren().size;
+        int size = getAmountOfChildren();
         float tmpRad = bgRadian / size;
 
         /* Background image */

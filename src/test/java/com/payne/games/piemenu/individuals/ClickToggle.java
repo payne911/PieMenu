@@ -60,9 +60,6 @@ public class ClickToggle extends ApplicationAdapter {
         style.alternateChildRegionColor = new Color(.7f,0,0,1);
         menu = new PieMenu(shape, style);
 
-        /* No need to customize the behavior: we use the default one. */
-        // default
-
         /* Adding the listeners. */
         menu.addListener(menu.getSuggestedClickListener());
         menu.addListener(new ChangeListener() {

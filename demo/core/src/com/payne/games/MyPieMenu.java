@@ -324,7 +324,7 @@ public class MyPieMenu extends ApplicationAdapter {
         permaPie.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                alpha = MathUtils.map(0,permaPie.getChildren().size-1,0,1,permaPie.getSelectedIndex());
+                alpha = MathUtils.map(0,permaPie.getAmountOfChildren()-1,0,1,permaPie.getSelectedIndex());
                 Color color = radial.getStyle().backgroundColor;
                 radial.getStyle().backgroundColor.set(color.r, color.g, color.b, alpha);
             }
@@ -338,7 +338,7 @@ public class MyPieMenu extends ApplicationAdapter {
 
         /* Including the Widget at some absolute coordinate in the World. */
         permaPie.setPosition(Gdx.graphics.getWidth()/2,0, Align.center); // (320,0)
-        permaPie.selectIndex(permaPie.getChildren().size-1);
+        permaPie.selectIndex(permaPie.getAmountOfChildren()-1);
         stage.addActor(permaPie);
         permaPie.setVisible(true);
     }
@@ -368,11 +368,11 @@ public class MyPieMenu extends ApplicationAdapter {
             create();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
-            if(dragPie.getChildren().size == 0)
+            if(dragPie.getAmountOfChildren() == 0)
                 return;
-            dragPie.removeActor(dragPie.getChild(dragPie.getChildren().size-1));
-            permaPie.removeActor(permaPie.getChild(permaPie.getChildren().size-1));
-            radial.removeActor(radial.getChild(radial.getChildren().size-1));
+            dragPie.removeActor(dragPie.getChild(dragPie.getAmountOfChildren()-1));
+            permaPie.removeActor(permaPie.getChild(permaPie.getAmountOfChildren()-1));
+            radial.removeActor(radial.getChild(radial.getAmountOfChildren()-1));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
             permaPie.setVisible(!permaPie.isVisible());

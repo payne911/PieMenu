@@ -158,9 +158,9 @@ public class RadialGroup extends WidgetGroup {
 
     @Override
     public void layout() {
-        float degreesPerChild = style.totalDegreesDrawn / getChildren().size;
+        float degreesPerChild = style.totalDegreesDrawn / getAmountOfChildren();
         float half = (float)1 / 2;
-        for (int i = 0; i < getChildren().size; i++) {
+        for (int i = 0; i < getAmountOfChildren(); i++) {
             Actor actor = getChildren().get(i);
             vector2.set((style.radius+style.innerRadius)/2, 0);
             vector2.rotate(degreesPerChild*(i + half) + style.startDegreesOffset);
@@ -191,7 +191,7 @@ public class RadialGroup extends WidgetGroup {
         /* Pre-calculating */
         float bgRadian = MathUtils.degreesToRadians*style.totalDegreesDrawn;
         float tmpOffset = MathUtils.degreesToRadians*style.startDegreesOffset;
-        int size = getChildren().size;
+        int size = getAmountOfChildren();
         float tmpRad = bgRadian / size;
 
         /* Background image */
@@ -219,7 +219,7 @@ public class RadialGroup extends WidgetGroup {
     }
 
     protected void drawChildSeparator(Vector2 vector2, float drawnRadianAngle) {
-        if(getChildren().size > 1 && style.separatorColor != null)
+        if(getAmountOfChildren() > 1 && style.separatorColor != null)
             sd.line(pointAtAngle(vector22, vector2, style.innerRadius, drawnRadianAngle),
                     pointAtAngle(vector23, vector2, style.radius, drawnRadianAngle),
                     style.separatorColor, style.separatorWidth);
@@ -280,7 +280,7 @@ public class RadialGroup extends WidgetGroup {
 
         localToStageCoordinates(vector2.set(x,y));
         int childIndex = findChildSectorAtStage(vector2.x,vector2.y);
-        if (childIndex < getChildren().size) {
+        if (childIndex < getAmountOfChildren()) {
             Actor child = getChildren().get(childIndex);
             if(child.getTouchable() == Touchable.disabled)
                 return this;
@@ -306,9 +306,9 @@ public class RadialGroup extends WidgetGroup {
     public int findChildSectorAtStage(float x, float y) {
         float angle = angleAtStage(x,y);
         angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
-        int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getChildren().size);
+        int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getAmountOfChildren());
         stageToLocalCoordinates(vector2.set(x,y));
-        return isWithinRadii(vector2.x - style.radius, vector2.y - style.radius) ? childIndex : getChildren().size; // size is equivalent to "invalid"
+        return isWithinRadii(vector2.x - style.radius, vector2.y - style.radius) ? childIndex : getAmountOfChildren(); // size is equivalent to "invalid"
     }
 
     /**
