@@ -1,4 +1,4 @@
-[0.1.2-alpha]
+[0.2.1-alpha]
 - Refactoring the project's structure to resemble to other usual LibGDX libraries.
 - Opening up the API (more public methods accessible to users of the library).
 - Including ShapeDrawer as dependency by-default.
