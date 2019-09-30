@@ -5,7 +5,7 @@
 
 A library for [LibGDX](https://libgdx.badlogicgames.com/), an open-source game development application framework written in Java.
 
-Aims at providing users with `WidgetGroup` called `RadialGroup`: it is a simple container that places its children `Actors` in a circular fashion.
+Aims at providing users with the so-called `RadialGroup`: it is a simple container that places its children `Actors` in a circular fashion.
 
 The more interesting feature might be the `PieMenu` class : it wraps the `RadialGroup` with a bunch of functionalities that allow highlight and selection of items within the Group.
 
