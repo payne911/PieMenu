@@ -22,12 +22,13 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
-public class MyPieMenu extends ApplicationAdapter {
+public class Demonstration extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
     private Texture tmpTex;
     private PolygonSpriteBatch batch;
     private ShapeDrawer shape;
+
     private PieMenu dragPie;
     private PieMenu permaPie;
     private PieMenu rightMousePie;
@@ -35,6 +36,7 @@ public class MyPieMenu extends ApplicationAdapter {
     private PieMenu.PieMenuStyle midStyle1;
     private PieMenu.PieMenuStyle midStyle2;
     private RadialGroup radial;
+
     private int dragPieAmount = 0;
     private int permaPieAmount = 0;
     private int radialAmount = 0;
