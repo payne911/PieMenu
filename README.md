@@ -45,7 +45,7 @@ allprojects {
 
     ext {
     	...
-        pieMenuVersion = '0.1.2-alpha'
+        pieMenuVersion = 'v0.2.1-alpha'
     }
     
     repositories {
@@ -63,7 +63,7 @@ project(":core") {
 
     dependencies {
         ...
-        api "com.github.payne911:PieMenu:core:$pieMenuVersion"
+        api "com.github.payne911:PieMenu:$pieMenuVersion"
     }
 }
 ```
