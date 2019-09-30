@@ -73,9 +73,8 @@ public class ClickToggle extends ApplicationAdapter {
         });
 
         /* Populating the widget. */
-        int dragPieAmount = 0;
         for (int i = 0; i < 4; i++) {
-            Label label = new Label(Integer.toString(dragPieAmount++), skin);
+            Label label = new Label(Integer.toString(i), skin);
             menu.addActor(label);
         }
 
