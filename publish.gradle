@@ -1,0 +1,28 @@
+modifyPom {
+    project {
+        name 'pie-menu'
+        description 'A LibGDX RadialGroup allowing the use of a PieMenu UI Widget.'
+        url 'https://github.com/payne911/PieMenu'
+        inceptionYear '2019'
+
+        licenses {
+            license {
+                name 'The MIT License (MIT)'
+                url 'https://mit-license.org/'
+                distribution 'repo'
+            }
+        }
+
+        developers {
+            developer {
+                id 'payne'
+                name 'Jérémi Grenier-Berthiaume'
+                email 'jeremi.grenier.berthiaume@gmail.com'
+            }
+        }
+    }
+}
+
+nexusStaging {
+    packageGroup = 'com.payne'
+}
