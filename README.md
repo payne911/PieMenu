@@ -22,7 +22,7 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 ---
 
 ## Demo
-![early_demo](https://raw.githubusercontent.com/payne911/PieMenu/master/android/assets/early_demo.gif)
+![early_demo](https://raw.githubusercontent.com/payne911/PieMenu/master/media/early_demo.gif)
 
 An [online demo](https://payne911.github.io/PieMenu/) is available, but very buggy for now. The actual Java code works fine, though!
 
@@ -45,7 +45,7 @@ allprojects {
 
     ext {
     	...
-        radialGroupVersion = '0.1.0-alpha'
+        pieMenuVersion = '0.1.2-alpha'
     }
     
     repositories {
@@ -61,10 +61,9 @@ And  in your `core` project (still inside the root `build.gradle`) add the depen
 project(":core") {
     apply plugin: "java-library"
 
-
     dependencies {
         ...
-        implementation "com.github.payne911:PieMenu:core:$radialGroupVersion"
+        api "com.github.payne911:PieMenu:core:$pieMenuVersion"
     }
 }
 ```
@@ -95,6 +94,8 @@ dragPie.addListener(new ChangeListener() {
 stage.addActor(dragPie);
 ```
 
+And *voilà*!
+
 ### Wiki
 This library offers you many types of behaviors related to pie menus. They will all be documented in [the Wiki](https://github.com/payne911/PieMenu/wiki), so make sure to check it out.
 
@@ -113,4 +114,6 @@ I used some images from [Game-Icons.net](https://game-icons.net/), more specific
 
 Also, raelus made the background image for the "middle-click menu", and the test application uses the [Plain James UI Skin](https://ray3k.wordpress.com/artwork/plain-james-ui-skin-for-libgdx/) created by Raymond "Raeleus" Buckley under the [CC BY 4.0 license](https://creativecommons.org/licenses/by/4.0/). [Check out the others!](https://ray3k.wordpress.com/artwork/)
 
-Parts of this README were lazily copied and adapted from EarlyGrey's library (on his recommandation). Cheers!
+The structure of the repository was mirrored from RafaSKB's [typing-label](https://github.com/rafaskb/typing-label) library.
+
+Parts of this README were lazily copied and adapted from EarlyGrey's library (with his agreement). Cheers!
