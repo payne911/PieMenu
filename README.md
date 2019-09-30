@@ -122,6 +122,6 @@ I used some images from [Game-Icons.net](https://game-icons.net/), more specific
 
 Also, raelus made the background image for the "middle-click menu", and the test application uses the [Plain James UI Skin](https://github.com/raeleus/Plain-James-UI) created by Raymond "Raeleus" Buckley under the [CC BY 4.0 license](https://creativecommons.org/licenses/by/4.0/). [Check out the others!](https://ray3k.wordpress.com/artwork/)
 
-The structure of the repository was mirrored from RafaSKB's [typing-label](https://github.com/rafaskb/typing-label) library.
+The structure and build scripts of this repository were strongly inspired by RafaSKB's [typing-label](https://github.com/rafaskb/typing-label) library.
 
 Parts of this README were lazily copied and adapted from EarlyGrey's library (with his agreement). Cheers!
