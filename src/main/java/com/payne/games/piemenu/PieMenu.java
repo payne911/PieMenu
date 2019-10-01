@@ -176,8 +176,7 @@ public class PieMenu extends RadialGroup {
      * This bypasses the {@link #selectionButton} filter that is inside the
      * {@link SuggestedClickListener}
      */
-    @Deprecated
-    public void triggerDefaultListenerTouchDown() {
+    public void triggerDefaultListenerTouchDown() { // todo: is this proper? Candidate for @Deprecated
         InputEvent event = new InputEvent();
         event.setType(InputEvent.Type.touchDown);
         event.setButton(getSelectionButton());
