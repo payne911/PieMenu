@@ -174,7 +174,7 @@ public class PieMenu extends RadialGroup {
      * that will allow the user to directly be interacting with the
      * {@code touchDragged} event.<br>
      * This bypasses the {@link #selectionButton} filter that is inside the
-     * {@link SuggestedClickListener}
+     * {@link SuggestedClickListener}.
      */
     public void triggerDefaultListenerTouchDown() { // todo: is this proper? Candidate for @Deprecated
         InputEvent event = new InputEvent();
