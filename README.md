@@ -1,5 +1,8 @@
+![Pie Menu logo](https://raw.githubusercontent.com/payne911/PieMenu/master/pie_menu_logo.png "Logo Title Text 1")
+
 # PieMenu
 [![](https://jitpack.io/v/payne911/PieMenu.svg)](https://jitpack.io/#payne911/PieMenu)
+[![license](https://img.shields.io/github/license/rafaskb/typing-label.svg)](https://github.com/rafaskb/typing-label/blob/master/LICENSE)
 
 ---
 
