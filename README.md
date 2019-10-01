@@ -51,7 +51,7 @@ allprojects {
 
     ext {
     	...
-        pieMenuVersion = '1.0.0'
+        pieMenuVersion = '1.0.1'
     }
     
     repositories {
@@ -75,6 +75,8 @@ project(":core") {
 ```
 
 See the [jitpack website](https://jitpack.io/#payne911/PieMenu) for more info.
+
+If you plan on releasing your project with an html module, check out the [Wiki page on integrating gwt](https://github.com/payne911/PieMenu/wiki/GWT-integration).
 
 ---
 
