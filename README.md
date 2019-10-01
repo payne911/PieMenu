@@ -3,7 +3,7 @@
 
 ---
 
-A library for [LibGDX](https://libgdx.badlogicgames.com/), an open-source game development application framework written in Java.
+A library for [libGDX](https://libgdx.badlogicgames.com/), an open-source game development application framework written in Java.
 
 Aims at providing users with the so-called `RadialGroup`: it is a simple container that places its children `Actors` in a circular fashion.
 
@@ -115,7 +115,7 @@ More specifically, you might be interested in:
 * mgsx
 * TEttinger
 
-For their sustained help through the LibGDX discord channel. Their extensive knowledge was greatly appreciated.
+For their sustained help through the libGDX discord channel. Their extensive knowledge was greatly appreciated.
 
 ### Credits
 I used some images from [Game-Icons.net](https://game-icons.net/), more specifically the 5 icons displayed when clicking the "Toggle Radial" button. To be even more specific, the credits go to [Lorc](http://lorcblog.blogspot.com/). Those are under the [CC BY 3.0 license](https://creativecommons.org/licenses/by/3.0/) license.
