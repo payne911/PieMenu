@@ -1,7 +1,7 @@
 modifyPom {
     project {
         name 'pie-menu'
-        description 'A LibGDX RadialGroup allowing the use of a PieMenu UI Widget.'
+        description 'A libGDX RadialGroup allowing the use of a PieMenu UI Widget.'
         url 'https://github.com/payne911/PieMenu'
         inceptionYear '2019'
 

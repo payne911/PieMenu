@@ -1,7 +1,13 @@
+[1.0.0]
+- Image child-Actors are now properly sized to remain within their sector.
+- All of the examples are separated in different test classes for easy copy-paste.
+- Even more API methods available to the public.
+- Finished writing the JavaDoc.
+
 [0.2.1-alpha]
-- Refactoring the project's structure to resemble to other usual LibGDX libraries.
+- Refactoring the project's structure to resemble to other usual libGDX libraries.
 - Opening up the API (more public methods accessible to users of the library).
-- Including ShapeDrawer as dependency by-default.
+- Including ShapeDrawer as a dependency by-default.
 
 [0.1.1-alpha]
 - JitPack deployment properly integrated.
