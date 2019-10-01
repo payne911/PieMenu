@@ -104,7 +104,7 @@ public class ButtonBound extends ApplicationAdapter {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 int index = menu.getSelectedIndex();
-                if(menu.isValidIndex(index)) {
+                if(!menu.isValidIndex(index)) {
                     textButton.setText("Drag Pie");
                     return;
                 }
