@@ -48,7 +48,7 @@ allprojects {
 
     ext {
     	...
-        pieMenuVersion = 'v0.2.1-alpha' // can also be '0.2.1-alpha' if you prefer
+        pieMenuVersion = '1.0.0'
     }
     
     repositories {
