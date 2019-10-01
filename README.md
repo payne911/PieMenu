@@ -113,18 +113,18 @@ More specifically, you might be interested in:
 ---
 
 ## Thanks to
-* EarlyGrey (I'm actually entirely dependent on his library: [ShapeDrawer](https://github.com/earlygrey/shapedrawer))
-* raelus
-* mgsx
-* TEttinger
+* [EarlyGrey](https://github.com/earlygrey) (I'm actually entirely dependent on his library: [ShapeDrawer](https://github.com/earlygrey/shapedrawer))
+* [raeleus](https://github.com/raeleus)
+* [mgsx](https://github.com/mgsx-dev)
+* [TEttinger](https://github.com/tommyettinger)
 
 For their sustained help through the libGDX discord channel. Their extensive knowledge was greatly appreciated.
 
 ### Credits
 I used some images from [Game-Icons.net](https://game-icons.net/), more specifically the 5 icons displayed when clicking the "Toggle Radial" button. To be even more specific, the credits go to [Lorc](http://lorcblog.blogspot.com/). Those are under the [CC BY 3.0 license](https://creativecommons.org/licenses/by/3.0/) license.
 
-Also, raelus made the background image for the "middle-click menu", and the test application uses the [Plain James UI Skin](https://github.com/raeleus/Plain-James-UI) created by Raymond "Raeleus" Buckley under the [CC BY 4.0 license](https://creativecommons.org/licenses/by/4.0/). [Check out the others!](https://ray3k.wordpress.com/artwork/)
+Also, [raeleus](https://github.com/raeleus) made the background image for the "middle-click menu" (which is also used in this library's logo), and the test application uses the [Plain James UI Skin](https://github.com/raeleus/Plain-James-UI) created by Raymond "Raeleus" Buckley under the [CC BY 4.0 license](https://creativecommons.org/licenses/by/4.0/). [Check out the others!](https://ray3k.wordpress.com/artwork/)
 
-The structure and build scripts of this repository were strongly inspired by RafaSKB's [typing-label](https://github.com/rafaskb/typing-label) library.
+The structure and build scripts of this repository were strongly inspired by [RafaSKB](https://github.com/rafaskb)'s [typing-label](https://github.com/rafaskb/typing-label) library.
 
 Parts of this README were lazily copied and adapted from EarlyGrey's library (with his agreement). Cheers!
