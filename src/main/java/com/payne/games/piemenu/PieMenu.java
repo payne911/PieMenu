@@ -16,8 +16,8 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 /**
- * A PieMenu reuses the RadialGroup's functionalities to provide a way to
- * interact with the contained Actors through the "hit-box" of the regions.
+ * A PieMenu reuses the {@link RadialGroup}'s functionalities to provide a way
+ * to interact with the contained Actors through the "hit-box" of the regions.
  *
  * @author Jérémi Grenier-Berthiaume (aka "payne")
  */
@@ -46,14 +46,15 @@ public class PieMenu extends RadialGroup {
     private boolean highlightIsSelection = false;
 
     /**
-     * Set to {@code true} if you want the Widget to stop controlling its visibility.
-     * You will be in charge of calling {@link #setVisible(boolean)} whenever
-     * you want to influence its visibility.
+     * Set to {@code true} if you want the Widget to stop controlling its
+     * visibility: you would then be in charge of calling
+     * {@link #setVisible(boolean)} whenever you want to influence its visibility.
      */
     private boolean manualControlOfVisibility = false;
 
     /**
-     * Should selection only happen if mouse is within the radius of the widget?
+     * Determines whether or not selection should only happen if the mouse is
+     * within the radius of the widget.
      */
     private boolean infiniteSelectionRange = true;
 
@@ -81,24 +82,47 @@ public class PieMenu extends RadialGroup {
 
 
 
+    /**
+     * A PieMenu reuses the {@link RadialGroup}'s functionalities to provide a way
+     * to interact with the contained Actors through the "hit-box" of the regions.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param style defines the way the widget looks like.
+     */
     public PieMenu(final ShapeDrawer sd, PieMenuStyle style) {
         super(sd);
         setStyle(style);
         setTouchable(Touchable.enabled);
-
-        suggestedClickListener = new SuggestedClickListener(); // todo: if keeping this, copy in other constructors
+        suggestedClickListener = new SuggestedClickListener();
     }
 
+    /**
+     * A PieMenu reuses the {@link RadialGroup}'s functionalities to provide a way
+     * to interact with the contained Actors through the "hit-box" of the regions.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     */
     public PieMenu(final ShapeDrawer sd, Skin skin) {
         super(sd);
         setStyle(skin.get(PieMenuStyle.class));
         setTouchable(Touchable.enabled);
+        suggestedClickListener = new SuggestedClickListener();
     }
 
+    /**
+     * A PieMenu reuses the {@link RadialGroup}'s functionalities to provide a way
+     * to interact with the contained Actors through the "hit-box" of the regions.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     */
     public PieMenu(final ShapeDrawer sd, Skin skin, String style) {
         super(sd);
         setStyle(skin.get(style, PieMenuStyle.class));
         setTouchable(Touchable.enabled);
+        suggestedClickListener = new SuggestedClickListener();
     }
 
 
@@ -164,7 +188,9 @@ public class PieMenu extends RadialGroup {
      * Selects the child at the given index. Triggers the
      * {{@link ChangeListener#changed(ChangeListener.ChangeEvent, Actor)}}.<br>
      * Indices are based on the order which was used to add child Actors to the
-     * Widget. First one added is at index 0, of course, and so on.
+     * Widget. First one added is at index 0, of course, and so on.<br>
+     * It would be good practice to use {@link #isValidIndex(int)} to ensure that
+     * the index provided to this method is valid.
      *
      * @param newIndex index of the child (and thus region) which was selected.
      */
@@ -203,7 +229,9 @@ public class PieMenu extends RadialGroup {
      * Called to check if the candidate region should be highlighted (and possibly
      * selected). If it is the case, will apply the appropriate action.<br>
      * Indices are based on the order which was used to add child Actors to the
-     * Widget. First one added is at index 0, of course, and so on.
+     * Widget. First one added is at index 0, of course, and so on.<br>
+     * It would be good practice to use {@link #isValidIndex(int)} to ensure that
+     * the index provided to this method is valid.
      *
      * @param newIndex index of the child (and thus region) which was highlighted.
      * @param highlightIsSelection whether or not a highlight is to be
@@ -307,14 +335,14 @@ public class PieMenu extends RadialGroup {
 
     /**
      * The suggested ClickListener that comes with the PieMenu. You are not
-     * obligated to use it, but this one has been designed to work as in, for
+     * obligated to use it, but this one has been designed to work as is, for
      * the most part.
      */
     public class SuggestedClickListener extends ClickListener {
 
         /**
          * The suggested ClickListener that comes with the PieMenu. You are not
-         * obligated to use it, but this one has been designed to work as in, for
+         * obligated to use it, but this one has been designed to work as is, for
          * the most part.
          */
         public SuggestedClickListener() {
@@ -402,32 +430,109 @@ public class PieMenu extends RadialGroup {
 
 
 
+
+
+
+
     /*
     =============================== GETTERS/SETTERS ============================
-     */ // todo: JavaDoc
+     */
 
 
-    public int getSelectionButton() {
-        return selectionButton;
-    }
-    public void setSelectionButton(int selectionButton) {
-        this.selectionButton = selectionButton;
-    }
-    public void setSuggestedClickListener(SuggestedClickListener suggestedClickListener) {
-        this.suggestedClickListener = suggestedClickListener;
-    }
-    public SuggestedClickListener getSuggestedClickListener() {
-        return suggestedClickListener;
-    }
+    /**
+     * The {@link #infiniteSelectionRange} flag determines whether or not selection
+     * should only happen if the mouse is within the radius of the widget.
+     */
     public boolean isInfiniteSelectionRange() {
         return infiniteSelectionRange;
     }
+
+    /**
+     * The {@link #highlightIsSelection} flag is set to {@code true} if you want
+     * the {@link ChangeListener#changed(ChangeListener.ChangeEvent, Actor)}
+     * to be called every time the currently highlighted value changes. This
+     * will also cause the automatic selection of the item that was highlighted.<br>
+     * {@link HighlightChangeListener#onHighlightChange()} is also provided as
+     * a "convenience interface" if you would prefer to keep selection separated
+     * from highlights in the callbacks.
+     */
+    public boolean isHighlightIsSelection() {
+        return highlightIsSelection;
+    }
+
+    /**
+     * The {@link #manualControlOfVisibility} flag is set to {@code true} if you
+     * want the Widget to stop controlling its visibility: you would then be in
+     * charge of calling {@link #setVisible(boolean)} whenever you want to
+     * influence its visibility.
+     */
+    public boolean isManualControlOfVisibility() {
+        return manualControlOfVisibility;
+    }
+
+    /**
+     * @return the mouse-button that is expected to be required to be pressed or
+     * released to interact with the widget.
+     */
+    public int getSelectionButton() {
+        return selectionButton;
+    }
+
+    /**
+     * @return the Style that defines this Widget. This style contains information
+     * about what is the value of the radius or the width of the separators, for
+     * example.
+     */
+    public PieMenuStyle getStyle() {
+        return style;
+    }
+
+    /**
+     * Determines which button must be used to interact with the Widget.<br>
+     * If you are not using the {@link SuggestedClickListener}, then this option
+     * will not work as-is and you will have to implement it again.
+     *
+     * @param selectionButton Use {@link Input.Buttons} to find the proper integer.
+     */
+    public void setSelectionButton(int selectionButton) {
+        this.selectionButton = selectionButton;
+    }
+
+
+    /**
+     * The suggested {@link ClickListener} that comes with the {@link PieMenu}
+     * implementation of this library. You are not obligated to use it, but this
+     * one has been designed to work as is, for the most part.
+     *
+     * It will generally be "attached" to an Actor on which a click would trigger the appearance of the Widget. It would be done this way: someActorInstance.addListener(myPieMenu.getSuggestedClickListener());.
+     *
+     * However, if the behavior of the Widget isn't related to another Actor and behaves on its own accord, then you probably want to "attach" the listener on the Widget itself. It would be done this way: myPieMenu.addListener(myPieMenu.getSuggestedClickListener());.
+     */
+    public SuggestedClickListener getSuggestedClickListener() {
+        return suggestedClickListener;
+    }
+
+    /**
+     * Determines whether or not selection should only happen if the mouse is
+     * within the radius of the widget.
+     */
     public void setInfiniteSelectionRange(boolean infiniteSelectionRange) {
         this.infiniteSelectionRange = infiniteSelectionRange;
     }
+
+    /**
+     * If the {@link ChangeListener} isn't enough, you can add this listener to
+     * be able to execute code every time the currently highlighted item changes.
+     */
     public HighlightChangeListener getHighlightChangeListener() {
         return highlightChangeListener;
     }
+
+    /**
+     * If the "ChangeListener" wasn't enough, you can add a "HighlightChangeListener"
+     * to be able to execute code every time the "currently highlighted" value
+     * changes.
+     */
     public void setHighlightChangeListener(HighlightChangeListener highlightChangeListener) {
         this.highlightChangeListener = highlightChangeListener;
     }
@@ -448,27 +553,58 @@ public class PieMenu extends RadialGroup {
     public int getSelectedIndex() {
         return selectedIndex;
     }
+
+    /**
+     * Changes the selected index to the desired value, but will not trigger any
+     * callback such as the {@link ChangeListener}. If you want the callback to
+     * be trigger, use {@link #selectIndex(int)} instead.<br>
+     * To ensure the index you are giving to this method is valid, use
+     * {@link #isValidIndex(int)}.
+     *
+     * @param selectedIndex this integer should be between
+     */
     public void setSelectedIndex(int selectedIndex) {
         this.selectedIndex = selectedIndex;
     }
+
+    /**
+     * @return the currently highlighted item's index.
+     */
     public int getHighlightedIndex() {
         return highlightedIndex;
     }
+
+    /**
+     * Changes the highlighted index to the desired value, but will not trigger
+     * any callback such as the {@link HighlightChangeListener}. If you want
+     * the callback to be trigger, use {@link #highlightIndex(int, boolean)} instead.<br>
+     * To ensure the index you are giving to this method is valid, use
+     * {@link #isValidIndex(int)}.
+     *
+     * @param highlightedIndex
+     */
     public void setHighlightedIndex(int highlightedIndex) {
         this.highlightedIndex = highlightedIndex;
     }
-    public boolean isHighlightIsSelection() {
-        return highlightIsSelection;
-    }
+
+    /**
+     * Set to {@code true} if you want the
+     * {@link ChangeListener#changed(ChangeListener.ChangeEvent, Actor)}
+     * to be called every time the currently highlighted value changes. This
+     * will also cause the automatic selection of the item that was highlighted.<br>
+     * {@link HighlightChangeListener#onHighlightChange()} is also provided as
+     * a "convenience interface" if you would prefer to keep selection separated
+     * from highlights in the callbacks.
+     */
     public void setHighlightIsSelection(boolean highlightIsSelection) {
         this.highlightIsSelection = highlightIsSelection;
     }
-    public PieMenuStyle getStyle() {
-        return style;
-    }
-    public boolean isManualControlOfVisibility() {
-        return manualControlOfVisibility;
-    }
+
+    /**
+     * Set to {@code true} if you want the Widget to stop controlling its visibility.
+     * You will be in charge of calling {@link #setVisible(boolean)} whenever
+     * you want to influence its visibility.
+     */
     public void setManualControlOfVisibility(boolean manualControlOfVisibility) {
         this.manualControlOfVisibility = manualControlOfVisibility;
     }

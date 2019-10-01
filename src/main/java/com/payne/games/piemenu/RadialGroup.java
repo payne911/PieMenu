@@ -16,8 +16,8 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 /**
- * A RadialGroup is a container of Actors which will be laid out in a circular
- * fashion.
+ * A RadialGroup aims at providing the user with a simple way to lay out
+ * the contained Actors in a circular fashion.
  *
  * @author Jérémi Grenier-Berthiaume (aka "payne")
  */
@@ -48,24 +48,51 @@ public class RadialGroup extends WidgetGroup {
         setVisible(false);
     }
 
+    /**
+     * A RadialGroup aims at providing the user with a simple way to lay out
+     * the contained Actors in a circular fashion.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param style defines the way the widget looks like.
+     */
     public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style) {
         this(sd);
         setStyle(style);
         setTouchable(Touchable.childrenOnly);
     }
 
+    /**
+     * A RadialGroup aims at providing the user with a simple way to lay out
+     * the contained Actors in a circular fashion.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     */
     public RadialGroup(final ShapeDrawer sd, Skin skin) {
         this(sd);
         setStyle(skin.get(RadialGroupStyle.class));
         setTouchable(Touchable.childrenOnly);
     }
 
+    /**
+     * A RadialGroup aims at providing the user with a simple way to lay out
+     * the contained Actors in a circular fashion.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     */
     public RadialGroup(final ShapeDrawer sd, Skin skin, String style) {
         this(sd);
         setStyle(skin.get(style, RadialGroupStyle.class));
         setTouchable(Touchable.childrenOnly);
     }
 
+    /**
+     * @return the Style that defines this Widget. This style contains information
+     * about what is the value of the radius or the width of the separators, for
+     * example.
+     */
     public RadialGroupStyle getStyle() {
         return style;
     }
@@ -165,8 +192,12 @@ public class RadialGroup extends WidgetGroup {
             vector2.set((style.radius+style.innerRadius)/2, 0);
             vector2.rotate(degreesPerChild*(i + half) + style.startDegreesOffset);
 
-            if(actor instanceof Image) { // todo: do this properly !
-                actor.setSize(30, 30);
+            if(actor instanceof Image) {
+                /* Adjusting images to fit within their sector. */
+                float size = 2*(style.radius*MathUtils.sinDeg(degreesPerChild/2)
+                        - (MathUtils.sinDeg(degreesPerChild/2))*(style.radius - style.innerRadius));
+                size *= 1.26; // todo: hard-coded and should get tested more thoroughly
+                actor.setSize(size, size);
             }
             actor.setPosition(vector2.x+style.radius, vector2.y+style.radius, Align.center);
         }
@@ -270,6 +301,8 @@ public class RadialGroup extends WidgetGroup {
     /**
      * @param x x-coordinate relative to the origin (bottom left) of the widget
      * @param y y-coordinate relative to the origin (bottom left) of the widget
+     * @param touchable if {@code true}, hit detection will respect the
+     *                  {@link #setTouchable(Touchable) touchability}.
      * @return deepest child's hit at (x,y). Else, the widget itself if it's
      *         the background. Else null.
      */
@@ -362,11 +395,13 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * Will center the Widget on the center point of the provided Actor.
+     * Centers the Widget on the center point of the provided Actor.
      *
      * @param actor the Actor to center on.
      */
     public void centerOnActor(Actor actor) {
+        if(actor == null)
+            return;
         setPosition(actor.getX() + actor.getWidth()/2,
                 actor.getY() + actor.getHeight()/2, Align.center);
     }
@@ -380,7 +415,7 @@ public class RadialGroup extends WidgetGroup {
      * @return {@code true} only if the index is linked to a valid child sector.
      */
     public boolean isValidIndex(int index) {
-        return !(index == -1 || index >= getAmountOfChildren());
+        return !(index <= -1 || index >= getAmountOfChildren());
     }
 
     /**
@@ -391,6 +426,9 @@ public class RadialGroup extends WidgetGroup {
     }
 
 
+    /**
+     * @return the ShapeDrawer used to draw everything but the contained Actors.
+     */
     public ShapeDrawer getShapeDrawer() {
         return sd;
     }
@@ -517,21 +555,28 @@ public class RadialGroup extends WidgetGroup {
 
 
         /**
-         * Encompasses all the characteristics that define the way the Widget will be drawn.
+         * Encompasses all the characteristics that define the way the Widget
+         * will be drawn.
          */
         public RadialGroupStyle() {
         }
 
+        /**
+         * Encompasses all the characteristics that define the way the Widget
+         * will be drawn.
+         *
+         * @param style a Style to copy the parameters from.
+         */
         public RadialGroupStyle(RadialGroupStyle style) {
             this.background = style.background;
             this.radius = style.radius;
             this.innerRadius = style.innerRadius;
             this.startDegreesOffset = style.startDegreesOffset;
             this.totalDegreesDrawn = style.totalDegreesDrawn;
-            this.separatorColor = style.separatorColor;
-            this.childRegionColor = style.childRegionColor;
-            this.alternateChildRegionColor = style.alternateChildRegionColor;
-            this.backgroundColor = style.backgroundColor;
+            this.separatorColor = new Color(style.separatorColor);
+            this.childRegionColor = new Color(style.childRegionColor);
+            this.alternateChildRegionColor = new Color(style.alternateChildRegionColor);
+            this.backgroundColor = new Color(style.backgroundColor);
         }
     }
 }
