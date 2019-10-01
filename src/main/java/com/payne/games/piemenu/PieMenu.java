@@ -392,8 +392,16 @@ public class PieMenu extends RadialGroup {
          * Defines the color of the region which is currently selected.
          */
         public Color selectedChildRegionColor;
-        public Color hoveredColor; // todo: integrate hoveredColor?
-        public float selectedRadius; // todo: integrate into drawing so that selected region is bigger than others
+
+        /**
+         * WIP. Not yet implemented!
+         */
+        @Deprecated public Color hoveredColor; // todo: integrate hoveredColor?
+
+        /**
+         * WIP. Not yet implemented!
+         */
+        @Deprecated public float selectedRadius; // todo: integrate into drawing so that selected region is bigger than others
 
         /**
          * Encompasses all the characteristics that define the way the
