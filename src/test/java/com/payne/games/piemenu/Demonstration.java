@@ -68,6 +68,13 @@ public class Demonstration extends ApplicationAdapter {
         pixmap.dispose();
         // ideally, you would extract such a pixel from your Atlas instead
         shape = new ShapeDrawer(batch, new TextureRegion(tmpTex));
+        /* If you want smoother edges, you can do this instead, but it might affect performances. */
+//        shape = new ShapeDrawer(batch, new TextureRegion(tmpTex)) {
+//            @Override
+//            protected int estimateSidesRequired(float radiusX, float radiusY) {
+//                return 2*super.estimateSidesRequired(radiusX, radiusY);
+//            }
+//        };
 
         /* Adding the demo widgets. */
         setUpDragPieMenu(root);

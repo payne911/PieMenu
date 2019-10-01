@@ -10,6 +10,7 @@ buildscript {
     }
 }
 
+apply plugin: 'maven'
 apply plugin: 'java-library'
 apply plugin: 'com.bmuschko.nexus'
 apply plugin: 'io.codearte.nexus-staging'
@@ -18,7 +19,7 @@ apply from: 'publish.gradle'
 sourceCompatibility = 1.7
 
 def projectName = 'pie-menu'
-version '1.0.0'
+version '1.0.1'
 group 'com.payne.games'
 
 def gdxVersion = '1.9.10'
