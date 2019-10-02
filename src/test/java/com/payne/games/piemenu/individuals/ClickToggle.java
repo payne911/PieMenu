@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
+import com.payne.games.piemenu.PieMenuSuggestedClickListener;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
@@ -64,11 +65,12 @@ public class ClickToggle extends ApplicationAdapter {
         menu = new PieMenu(shape, style);
 
         /* Adding the listeners. */
-        menu.addListener(menu.getSuggestedClickListener());
+        menu.addListener(new PieMenuSuggestedClickListener());
         menu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("ChangeListener - newly selected index: " + menu.getSelectedIndex());
+                menu.setVisible(false);
             }
         });
 

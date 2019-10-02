@@ -1,6 +1,11 @@
-[1.0.1]
-- Preparing HTML-GWT set up
-- Multisampling from the DesktopLauncher for smoother recordings
+[2.0.0]
+- The default of "infiniteSelectionRange" is now `false`.
+- Removed the PieMenu.SuggestedClickListener inner class and made it its own class: PieMenuSuggestedClickListener.
+- Removed the "manualVisibility" flag: it wasn't consistent enough and forced users to learn or guess about some internal workings.
+- Removed the "highlightIsSelection" flag: it complexified the API despite there being the Highlight callback.
+- Fixed a bug with the `selectIndex(int)` method.
+- Preparing HTML-GWT set up.
+- Multisampling from the DesktopLauncher for smoother recordings.
 
 [1.0.0]
 - Image child-Actors are now properly sized to remain within their sector.

@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
+import com.payne.games.piemenu.PieMenuSuggestedClickListener;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
@@ -66,15 +67,14 @@ public class ClickDrag extends ApplicationAdapter {
         menu = new PieMenu(shape, style);
 
         /* Customizing the behavior. */
-        menu.setHighlightIsSelection(true); // because we want instant feedback
+        menu.setInfiniteSelectionRange(true);
         menu.setSelectionButton(Input.Buttons.RIGHT); // right-click for interactions with the widget
 
         /* Setting up listeners. */
-        menu.addListener(menu.getSuggestedClickListener());
-        menu.addListener(new ChangeListener() {
+        menu.setHighlightChangeListener(new PieMenu.HighlightChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                switch(menu.getSelectedIndex()) {
+            public void onHighlightChange(int highlightedIndex) {
+                switch(highlightedIndex) {
                     case 0:
                         red   = .25f;
                         blue  = .75f;
@@ -90,12 +90,19 @@ public class ClickDrag extends ApplicationAdapter {
                         blue  = .25f;
                         green = .75f;
                         break;
-                    default: // good practice
+                    default:
                         red   = .75f;
                         blue  = .75f;
                         green = .75f;
                         break;
                 }
+            }
+        });
+        menu.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("ChangeListener - selected index: " + menu.getSelectedIndex());
+                menu.setVisible(false);
             }
         });
 
@@ -132,7 +139,9 @@ public class ClickDrag extends ApplicationAdapter {
 
         if (Gdx.input.isButtonJustPressed(menu.getSelectionButton())) {
             menu.centerOnMouse();
-            menu.triggerDefaultListenerTouchDown(); // Programmatically sends the user into the `touchDragged` Event
+            menu.setVisible(true);
+            stage.addTouchFocus(new PieMenuSuggestedClickListener(), menu,
+                    menu, 0, menu.getSelectionButton());
         }
     }
 

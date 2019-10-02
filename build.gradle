@@ -19,7 +19,7 @@ apply from: 'publish.gradle'
 sourceCompatibility = 1.7
 
 def projectName = 'pie-menu'
-version '1.0.1'
+version '2.0.0'
 group 'com.payne.games'
 
 def gdxVersion = '1.9.10'
@@ -43,6 +43,13 @@ jar {
         attributes 'Implementation-Title': projectName, 'Implementation-Version': version
     }
 }
+
+// [START] added to test JitPack JavaDoc
+wrapper {
+    gradleVersion = "5.1.1"
+    distributionType = Wrapper.DistributionType.ALL
+}
+// [END] added to test JitPack JavaDoc
 
 repositories {
     mavenLocal()    // you might want to remove this if you have issues resolving deps

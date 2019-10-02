@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
+import com.payne.games.piemenu.PieMenuSuggestedClickListener;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
@@ -73,6 +74,9 @@ public class ButtonBound extends ApplicationAdapter {
         style.alternateChildRegionColor = new Color(.7f,0,0,1);
         menu = new PieMenu(shape, style);
 
+        /* Customizing the behavior. */
+        menu.setInfiniteSelectionRange(true);
+
         /* Populating the widget. */
         for (int i = 0; i < 5; i++) {
             Label label = new Label(Integer.toString(i), skin);
@@ -93,16 +97,18 @@ public class ButtonBound extends ApplicationAdapter {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 menu.resetSelection();
                 menu.centerOnActor(textButton);
+                menu.setVisible(true);
+                menu.transferInteraction(stage, new PieMenuSuggestedClickListener(), menu.getSelectionButton());
                 return true;
             }
         });
-        textButton.addListener(menu.getSuggestedClickListener());
         root.add(textButton).expand().bottom();
 
         /* Adding the listener. */
         menu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                menu.setVisible(false);
                 int index = menu.getSelectedIndex();
                 if(!menu.isValidIndex(index)) {
                     textButton.setText("Drag Pie");

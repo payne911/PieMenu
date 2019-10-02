@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
+import com.payne.games.piemenu.PieMenuSuggestedClickListener;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
@@ -68,12 +69,8 @@ public class Permanent extends ApplicationAdapter {
         style.circumferenceColor = new Color(0,0,0,1);
         menu = new PieMenu(shape, style);
 
-        /* Customizing the behavior. */
-        menu.setInfiniteSelectionRange(false);
-        menu.setManualControlOfVisibility(true);
-
         /* Setting up listeners. */
-        menu.addListener(menu.getSuggestedClickListener());
+        menu.addListener(new PieMenuSuggestedClickListener());
         menu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -91,7 +88,7 @@ public class Permanent extends ApplicationAdapter {
         /* Including the Widget at some absolute coordinate in the World. */
         menu.setPosition(Gdx.graphics.getWidth()/2f,0, Align.center); // positioning along the edge
         menu.selectIndex(menu.getAmountOfChildren()-1); // selecting an initial value
-        menu.setVisible(true); // because we have full control of visibility now
+        menu.setVisible(true);
         stage.addActor(menu);
     }
 

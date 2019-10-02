@@ -10,9 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -46,6 +44,9 @@ public class Demonstration extends ApplicationAdapter {
     private float blue = .75f;
     private final int INITIAL_CHILDREN_AMOUNT = 5;
 
+    /* An "out-of-the-box" ClickListener that works as-is. You can make your own, though. */
+    private PieMenuSuggestedClickListener suggestedClickListener = new PieMenuSuggestedClickListener();
+
 
     @Override
     public void create () {
@@ -77,7 +78,7 @@ public class Demonstration extends ApplicationAdapter {
 //        };
 
         /* Adding the demo widgets. */
-        setUpDragPieMenu(root);
+        setUpButtonDragPieMenu(root);
         setUpRightMousePieMenu();
         setUpMiddleMousePieMenu();
         setUpRadialWidget(root);
@@ -118,11 +119,10 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Including the Widget in the Stage. */
         stage.addActor(radial);
-        radial.setName("radial");
     }
 
 
-    private void setUpDragPieMenu(Table root) {
+    private void setUpButtonDragPieMenu(Table root) {
 
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
@@ -137,9 +137,7 @@ public class Demonstration extends ApplicationAdapter {
         dragPie = new PieMenu(shape, style);
 
         /* Customizing the behavior. */
-        dragPie.setHighlightIsSelection(false);
         dragPie.setInfiniteSelectionRange(true);
-        dragPie.setManualControlOfVisibility(false);
 
         /* Populating the widget. */
         for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
@@ -161,16 +159,18 @@ public class Demonstration extends ApplicationAdapter {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 dragPie.resetSelection();
                 dragPie.centerOnActor(textButton);
+                dragPie.setVisible(true);
+                dragPie.transferInteraction(stage, suggestedClickListener, dragPie.getSelectionButton());
                 return true;
             }
         });
-        textButton.addListener(dragPie.getSuggestedClickListener());
         root.add(textButton).expand().bottom();
 
         /* Adding the listener. */
         dragPie.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                dragPie.setVisible(false);
                 int index = dragPie.getSelectedIndex();
                 if(!dragPie.isValidIndex(index)) {
                     textButton.setText("Drag Pie");
@@ -183,7 +183,6 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Including the Widget in the Stage. */
         stage.addActor(dragPie);
-        dragPie.setName("dragPie");
     }
 
     private void setUpRightMousePieMenu() {
@@ -199,17 +198,14 @@ public class Demonstration extends ApplicationAdapter {
         rightMousePie = new PieMenu(shape, style);
 
         /* Customizing the behavior. */
-        rightMousePie.setHighlightIsSelection(true);
         rightMousePie.setInfiniteSelectionRange(true);
-        rightMousePie.setManualControlOfVisibility(false);
         rightMousePie.setSelectionButton(Input.Buttons.RIGHT);
 
         /* Setting up listeners */
-        rightMousePie.addListener(rightMousePie.getSuggestedClickListener());
-        rightMousePie.addListener(new ChangeListener() {
+        rightMousePie.setHighlightChangeListener(new PieMenu.HighlightChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                switch(rightMousePie.getSelectedIndex()) {
+            public void onHighlightChange(int highlightedIndex) {
+                switch(highlightedIndex) {
                     case 0:
                         red   = .25f;
                         blue  = .75f;
@@ -233,6 +229,13 @@ public class Demonstration extends ApplicationAdapter {
                 }
             }
         });
+        rightMousePie.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("ChangeListener - selected index: " + rightMousePie.getSelectedIndex());
+                rightMousePie.setVisible(false);
+            }
+        });
 
         /* Populating the widget. */
         Label blue = new Label("blue", skin);
@@ -245,7 +248,6 @@ public class Demonstration extends ApplicationAdapter {
         /* Including the Widget in the Stage. */
         rightMousePie.selectIndex(0);
         stage.addActor(rightMousePie);
-        rightMousePie.setName("rightMousePie");
     }
 
     private void setUpMiddleMousePieMenu() {
@@ -262,22 +264,15 @@ public class Demonstration extends ApplicationAdapter {
         middleMousePie = new PieMenu(shape, midStyle1);
 
         /* Customizing the behavior. */
-        middleMousePie.setHighlightIsSelection(false);
         middleMousePie.setInfiniteSelectionRange(true);
-        middleMousePie.setManualControlOfVisibility(false);
 
         /* Adding some listeners. */
-        middleMousePie.addListener(middleMousePie.getSuggestedClickListener());
+        middleMousePie.addListener(suggestedClickListener);
         middleMousePie.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("ChangeListener - selected index: " + middleMousePie.getSelectedIndex());
-            }
-        });
-        middleMousePie.setHighlightChangeListener(new PieMenu.HighlightChangeListener() {
-            @Override
-            public void onHighlightChange() {
-                System.out.println("HighlightChangeListener - highlighted index: " + middleMousePie.getHighlightedIndex());
+                middleMousePie.setVisible(false);
             }
         });
 
@@ -294,7 +289,6 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Including the Widget in the Stage. */
         stage.addActor(middleMousePie);
-        middleMousePie.setName("middleMousePie");
 
         /* Creating an alternate skin, just for showing off */
         midStyle2 = new PieMenu.PieMenuStyle();
@@ -322,13 +316,8 @@ public class Demonstration extends ApplicationAdapter {
         style.circumferenceColor = new Color(0,0,0,1);
         permaPie = new PieMenu(shape, style);
 
-        /* Customizing the behavior. */
-        permaPie.setHighlightIsSelection(false);
-        permaPie.setInfiniteSelectionRange(false);
-        permaPie.setManualControlOfVisibility(true);
-
         /* Setting up listeners */
-        permaPie.addListener(permaPie.getSuggestedClickListener());
+        permaPie.addListener(suggestedClickListener);
         permaPie.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -346,9 +335,8 @@ public class Demonstration extends ApplicationAdapter {
         /* Including the Widget at some absolute coordinate in the World. */
         permaPie.setPosition(Gdx.graphics.getWidth()/2f,0, Align.center);
         permaPie.selectIndex(permaPie.getAmountOfChildren()-1);
-        stage.addActor(permaPie);
         permaPie.setVisible(true);
-        permaPie.setName("permaPie");
+        stage.addActor(permaPie);
     }
 
 
@@ -391,7 +379,9 @@ public class Demonstration extends ApplicationAdapter {
         }
         if (Gdx.input.isButtonJustPressed(rightMousePie.getSelectionButton())) {
             rightMousePie.centerOnMouse();
-            rightMousePie.triggerDefaultListenerTouchDown(); // Programmatically sends the user into the `touchDragged` Event
+            rightMousePie.setVisible(true);
+            stage.addTouchFocus(suggestedClickListener, rightMousePie,
+                    rightMousePie, 0, rightMousePie.getSelectionButton());
         }
         if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
             middleMousePie.centerOnMouse();
@@ -399,7 +389,9 @@ public class Demonstration extends ApplicationAdapter {
             middleMousePie.setVisible(true);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
-            middleMousePie.setStyle(middleMousePie.getStyle() == midStyle1 ? midStyle2 : midStyle1);
+            middleMousePie.setStyle(
+                    middleMousePie.getStyle() == midStyle1
+                            ? midStyle2 : midStyle1);
         }
     }
 
