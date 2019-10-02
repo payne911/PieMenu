@@ -100,7 +100,7 @@ public class Permanent extends ApplicationAdapter {
     public void render () {
 
         /* Clearing the screen and filling up the background. */
-        Gdx.gl.glClearColor(.5f, .5f, .2f, 1);
+        Gdx.gl.glClearColor(.8f, .4f, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         /* Updating and drawing the Stage. */
