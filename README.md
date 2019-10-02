@@ -51,7 +51,7 @@ allprojects {
 
     ext {
     	...
-        pieMenuVersion = '1.0.1'
+        pieMenuVersion = '2.0.0'
     }
     
     repositories {
@@ -87,19 +87,19 @@ The basic idea looks like this:
 /* Setting up and creating the widget. */
 PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
 style.radius = 80; // you set up the way the widget looks by modifying the "style" variable
-dragPie = new PieMenu(shape, style); // "shape" is an instance of a ShapeDrawer
+PieMenu menu = new PieMenu(shape, style); // "shape" is an instance of a ShapeDrawer
 
 /* Adding the listeners. */
-dragPie.addListener(dragPie.getSuggestedClickListener());
-dragPie.addListener(new ChangeListener() {
+menu.addListener(new PieMenuSuggestedClickListener());
+menu.addListener(new ChangeListener() {
     @Override
     public void changed(ChangeEvent event, Actor actor) {
-        System.out.println("The selected index is: " + dragPie.getSelectedIndex());
+        System.out.println("The selected index is: " + menu.getSelectedIndex());
     }
 });
 
 /* Including the Widget in the Stage. */
-stage.addActor(dragPie);
+stage.addActor(menu);
 ```
 
 And *voilà*!
