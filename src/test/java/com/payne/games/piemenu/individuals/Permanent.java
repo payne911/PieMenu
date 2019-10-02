@@ -85,9 +85,12 @@ public class Permanent extends ApplicationAdapter {
             menu.addActor(label);
         }
 
+        /* Customizing the behavior. */
+        menu.setDefaultIndex(2);
+        menu.selectIndex(menu.getDefaultIndex());
+
         /* Including the Widget at some absolute coordinate in the World. */
         menu.setPosition(Gdx.graphics.getWidth()/2f,0, Align.center); // positioning along the edge
-        menu.selectIndex(menu.getAmountOfChildren()-1); // selecting an initial value
         menu.setVisible(true);
         stage.addActor(menu);
     }

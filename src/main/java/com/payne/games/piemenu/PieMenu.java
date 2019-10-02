@@ -25,14 +25,21 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 public class PieMenu extends RadialGroup {
 
     /**
+     * The index that is used as a fallback value whenever a processed
+     * user-input does not map to a valid child index value.<br>
+     * This value can be negative, if you want nothing to be the default.
+     */
+    private int defaultIndex = -1;
+
+    /**
      * Index of the currently selected item.
      */
-    private int selectedIndex = -1;
+    private int selectedIndex = defaultIndex;
 
     /**
      * Index of the currently highlighted item.
      */
-    private int highlightedIndex = -1;
+    private int highlightedIndex = defaultIndex;
 
     /**
      * Determines whether or not selection should only happen if the mouse is
@@ -144,24 +151,24 @@ public class PieMenu extends RadialGroup {
      * (if you had set it up).
      */
     public void resetSelection() {
-        highlightedIndex = -1;
-        selectedIndex = -1;
+        highlightedIndex = defaultIndex;
+        selectedIndex = defaultIndex;
     }
 
     /**
      * Used to trigger programmatically a {@code touchDown} event in such a way
      * that will allow the user to directly be interacting with the
-     * {@code touchDragged} event of the PieMenu's
-     * {@link com.badlogic.gdx.scenes.scene2d.utils.ClickListener}.<br>
+     * {@code touchDragged} event of the PieMenu's {@link ClickListener}.<br>
      * This bypasses the {@link #selectionButton} filter that is inside the
-     * {@link PieMenuSuggestedClickListener}, for example.
+     * {@link PieMenuSuggestedClickListener#touchDown(InputEvent, float, float, int, int)},
+     * for example.
      */
     @Deprecated
     public void triggerDefaultListenerTouchDown() {
         InputEvent event = new InputEvent();
         event.setType(InputEvent.Type.touchDown);
         event.setButton(getSelectionButton());
-        event.setTarget(this);
+        event.setListenerActor(this);
         fire(event);
     }
 
@@ -195,6 +202,7 @@ public class PieMenu extends RadialGroup {
      * @param newIndex index of the child (and thus region) which was selected.
      */
     public void selectIndex(int newIndex) {
+        newIndex = mapIndexToDefault(newIndex);
         int oldHighlightedIndex = highlightedIndex;
         int oldSelectedIndex = selectedIndex;
 
@@ -236,6 +244,7 @@ public class PieMenu extends RadialGroup {
      * @param newIndex index of the child (and thus region) which was highlighted.
      */
     public void highlightIndex(int newIndex) {
+        newIndex = mapIndexToDefault(newIndex);
         if(newIndex != highlightedIndex) {
             highlightedIndex = newIndex;
             if(highlightChangeListener != null)
@@ -245,8 +254,8 @@ public class PieMenu extends RadialGroup {
 
     /**
      * Called to find the child region that is to be interacted with at the
-     * given coordinate. If there is one, checks if the highlighted item should be
-     * highlighted (and possibly selected). If it is the case, will apply
+     * given coordinate. If there is one, checks if the highlighted item should
+     * be highlighted (and possibly selected). If it is the case, will apply
      * the appropriate action.
      *
      * @param x x-coordinate in the stage.
@@ -264,7 +273,54 @@ public class PieMenu extends RadialGroup {
         if(infiniteSelectionRange)
             return childIndex;
         stageToLocalCoordinates(vector2.set(x,y));
-        return isWithinRadii(vector2.x - style.radius, vector2.y - style.radius) ? childIndex : getAmountOfChildren(); // size is equivalent to "invalid"
+        return isWithinRadii(vector2.x - style.radius, vector2.y - style.radius)
+                ? childIndex : getAmountOfChildren();
+    }
+
+    /**
+     * Used to transform an index into a known range: it'll either remain itself
+     * if it was designating a valid child index, else it becomes the
+     * {@link #defaultIndex} value.
+     *
+     * @param index any index that you want to map to the values described above.
+     * @return either a valid index, ot the {@link #defaultIndex}.
+     */
+    public int mapIndexToDefault(int index) {
+        return isValidIndex(index) ? index : defaultIndex;
+    }
+
+    /**
+     * @param x x-coordinate relative to the origin (bottom left) of the widget
+     * @param y y-coordinate relative to the origin (bottom left) of the widget
+     * @param touchable if {@code true}, hit detection will respect the
+     *                  {@link #setTouchable(Touchable) touchability}.
+     * @return deepest child's hit at (x,y). Else, the widget itself if it's
+     *         the background. Else the widget itself if with infinite range.
+     *         Else null.
+     */
+    @Override
+    public Actor hit(float x, float y, boolean touchable) {
+        if (touchable && getTouchable() == Touchable.disabled) return null;
+        if (!isVisible()) return null;
+
+        localToStageCoordinates(vector2.set(x,y));
+        int childIndex = findChildSectorAtStage(vector2.x,vector2.y);
+        if (isValidIndex(childIndex)) {
+            Actor child = getChildren().get(childIndex);
+            if(child.getTouchable() == Touchable.disabled)
+                return this;
+            child.parentToLocalCoordinates(vector2.set(x, y));
+            Actor hit = child.hit(vector2.x, vector2.y, touchable);
+            if(hit != null)
+                return hit;
+            else
+                return this;
+        }
+
+        if(infiniteSelectionRange)
+            return this;
+
+        return null;
     }
 
     @Override
@@ -394,21 +450,6 @@ public class PieMenu extends RadialGroup {
      */
 
 
-    /**
-     * The {@link #infiniteSelectionRange} flag determines whether or not selection
-     * should only happen if the mouse is within the radius of the widget.
-     */
-    public boolean isInfiniteSelectionRange() {
-        return infiniteSelectionRange;
-    }
-
-    /**
-     * @return the mouse-button that is expected to be required to be pressed or
-     * released to interact with the widget.
-     */
-    public int getSelectionButton() {
-        return selectionButton;
-    }
 
     /**
      * @return the Style that defines this Widget. This style contains information
@@ -420,6 +461,14 @@ public class PieMenu extends RadialGroup {
     }
 
     /**
+     * @return the mouse-button that is expected to be required to be pressed or
+     * released to interact with the widget.
+     */
+    public int getSelectionButton() {
+        return selectionButton;
+    }
+
+    /**
      * Determines which button must be used to interact with the Widget.<br>
      * If you are not using the {@link PieMenuSuggestedClickListener}, then this
      * option will not work as-is and you will have to implement it again.
@@ -428,6 +477,14 @@ public class PieMenu extends RadialGroup {
      */
     public void setSelectionButton(int selectionButton) {
         this.selectionButton = selectionButton;
+    }
+
+    /**
+     * The {@link #infiniteSelectionRange} flag determines whether or not selection
+     * should only happen if the mouse is within the radius of the widget.
+     */
+    public boolean isInfiniteSelectionRange() {
+        return infiniteSelectionRange;
     }
 
     /**
@@ -463,12 +520,10 @@ public class PieMenu extends RadialGroup {
      * The {@link #isValidIndex(int)} method is provided to easily check if the
      * returned value can be mapped to a child or not.
      *
-     * @return -1 after a "reset" or if no item were ever selected on this Widget.<br>
-     *         Else, return the index of the currently selected item.<br>
-     *         Returns the amount of children when the selection happened outside
-     *         of the boundaries (this boundary depends on the customized behaviors
-     *         such as the radius, the inner radius, or whether or not the
-     *         selection has an infinite range).
+     * @return The value of the {@link #defaultIndex} after a "reset", if
+     *         no item were ever selected on this Widget, or if the selection
+     *         happened outside of the boundaries.<br>
+     *         Else, returns the index of the currently selected item.<br>
      */
     public int getSelectedIndex() {
         return selectedIndex;
@@ -485,6 +540,27 @@ public class PieMenu extends RadialGroup {
      */
     public void setSelectedIndex(int selectedIndex) {
         this.selectedIndex = selectedIndex;
+    }
+
+    /**
+     * If negative, it means nothing gets selected by default.
+     *
+     * @return the index that is used as a fallback value whenever a processed
+     *         user-input does not map to a valid child index value.
+     */
+    public int getDefaultIndex() {
+        return defaultIndex;
+    }
+
+    /**
+     * The index that is used as a fallback value whenever a processed
+     * user-input does not map to a valid child index value.<br>
+     * This value can be negative, if you want nothing to be the default.
+     *
+     * @param defaultIndex the desired default value.
+     */
+    public void setDefaultIndex(int defaultIndex) {
+        this.defaultIndex = defaultIndex;
     }
 
     /**

@@ -313,7 +313,7 @@ public class RadialGroup extends WidgetGroup {
 
         localToStageCoordinates(vector2.set(x,y));
         int childIndex = findChildSectorAtStage(vector2.x,vector2.y);
-        if (childIndex < getAmountOfChildren()) {
+        if (isValidIndex(childIndex)) {
             Actor child = getChildren().get(childIndex);
             if(child.getTouchable() == Touchable.disabled)
                 return this;

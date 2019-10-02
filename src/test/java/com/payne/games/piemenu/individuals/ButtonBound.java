@@ -87,11 +87,10 @@ public class ButtonBound extends ApplicationAdapter {
         final TextButton textButton = new TextButton("Drag Pie",  skin);
         textButton.addListener(new ClickListener() {
             /*
-            If this was a ChangeListener, the `dragPit.suggestedClickListener`
-            would get called before the `changed` method would get called.
-            `changed` only gets called after the user releases the click
-            directly within the boundaries of the Button, whereas the
-            SuggestedClickListener is summoned as soon as the click happens.
+            In our particular case, we want to NOT use a ChangeListener because
+            else the user would have to release his mouse-click before seeing
+            the menu, which goes against our current goal of obtaining a
+            "drag-selection" menu.
             */
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

@@ -1,3 +1,7 @@
+[2.1.0]
+- Added a `defaultIndex` flag as a fallback value when an invalid index is being selected.
+- Minor fix on the `PieMenu`'s `hit` method.
+
 [2.0.0]
 - The default of "infiniteSelectionRange" is now `false`.
 - Removed the PieMenu.SuggestedClickListener inner class and made it its own class: PieMenuSuggestedClickListener.
