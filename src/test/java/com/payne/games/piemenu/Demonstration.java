@@ -41,7 +41,7 @@ public class Demonstration extends ApplicationAdapter {
     private int radialAmount = 0;
     private float red = .25f;
     private float green = .25f;
-    private float blue = .75f;
+    private float blue = .45f;
     private final int INITIAL_CHILDREN_AMOUNT = 5;
 
     /* An "out-of-the-box" ClickListener that works as-is. You can make your own, though. */
@@ -58,8 +58,16 @@ public class Demonstration extends ApplicationAdapter {
         Gdx.input.setInputProcessor(stage);
         Table root = new Table();
         root.setFillParent(true);
-        root.defaults().padBottom(150);
         stage.addActor(root);
+
+        /* Controls and instructions. */
+        root.add(new Label("R: restart\n" +
+                "S: toggle the permanent pie\n" +
+                "C: change style of Middle-click Pie\n" +
+                "L: less items in certain menus\n" +
+                "M: more pies in certain menus\n" +
+                "Middle-click / Right-click: try it out!", skin)).colspan(2).padTop(25);
+        root.row().padBottom(150).uniform();
 
         /* Setting up the ShapeDrawer. */
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -207,18 +215,18 @@ public class Demonstration extends ApplicationAdapter {
                 switch(highlightedIndex) {
                     case 0:
                         red   = .25f;
-                        blue  = .75f;
+                        blue  = .45f;
                         green = .25f;
                         break;
                     case 1:
-                        red   = .75f;
+                        red   = .45f;
                         blue  = .25f;
                         green = .25f;
                         break;
                     case 2:
                         red   = .25f;
                         blue  = .25f;
-                        green = .75f;
+                        green = .45f;
                         break;
                     default:
                         red   = .75f;
@@ -233,6 +241,7 @@ public class Demonstration extends ApplicationAdapter {
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("ChangeListener - selected index: " + rightMousePie.getSelectedIndex());
                 rightMousePie.setVisible(false);
+                rightMousePie.remove();
             }
         });
 
@@ -243,10 +252,6 @@ public class Demonstration extends ApplicationAdapter {
         rightMousePie.addActor(red);
         Label green = new Label("green", skin);
         rightMousePie.addActor(green);
-
-        /* Including the Widget in the Stage. */
-        rightMousePie.selectIndex(0);
-        stage.addActor(rightMousePie);
     }
 
     private void setUpMiddleMousePieMenu() {
@@ -272,6 +277,7 @@ public class Demonstration extends ApplicationAdapter {
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("ChangeListener - selected index: " + middleMousePie.getSelectedIndex());
                 middleMousePie.setVisible(false);
+                middleMousePie.remove();
             }
         });
 
@@ -285,9 +291,6 @@ public class Demonstration extends ApplicationAdapter {
         imgs.add(new Image(new Texture(Gdx.files.internal("coffee-mug.png"))));
         for (int i = 0; i < imgs.size; i++)
             middleMousePie.addActor(imgs.get(i));
-
-        /* Including the Widget in the Stage. */
-        stage.addActor(middleMousePie);
 
         /* Creating an alternate skin, just for showing off */
         midStyle2 = new PieMenu.PieMenuStyle();
@@ -357,40 +360,42 @@ public class Demonstration extends ApplicationAdapter {
         stage.draw();
 
         /* Debugging and interactions. */
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             dragPie.addActor(new Label(Integer.toString(dragPieAmount++), skin));
             permaPie.addActor(new Label(Integer.toString(permaPieAmount++), skin));
             radial.addActor(new Label(Integer.toString(radialAmount++), skin));
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             dragPieAmount = 0;
             permaPieAmount = 0;
             radialAmount = 0;
             dispose();
             create();
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             if(dragPie.getAmountOfChildren() == 0)
                 return;
             dragPie.removeActor(dragPie.getChild(dragPie.getAmountOfChildren()-1));
             permaPie.removeActor(permaPie.getChild(permaPie.getAmountOfChildren()-1));
             radial.removeActor(radial.getChild(radial.getAmountOfChildren()-1));
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             permaPie.setVisible(!permaPie.isVisible());
         }
         if (Gdx.input.isButtonJustPressed(rightMousePie.getSelectionButton())) {
+            stage.addActor(rightMousePie);
             rightMousePie.centerOnMouse();
             rightMousePie.setVisible(true);
             stage.addTouchFocus(suggestedClickListener, rightMousePie,
                     rightMousePie, 0, rightMousePie.getSelectionButton());
         }
         if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
+            stage.addActor(middleMousePie);
             middleMousePie.centerOnMouse();
             middleMousePie.resetSelection();
             middleMousePie.setVisible(true);
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
             middleMousePie.setStyle(
                     middleMousePie.getStyle() == midStyle1
                             ? midStyle2 : midStyle1);

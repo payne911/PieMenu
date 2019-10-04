@@ -28,7 +28,9 @@ public class ClickDrag extends ApplicationAdapter {
     private PieMenu menu;
 
     /* For the demonstration's purposes. Not actually necessary. */
-    private float red, green, blue;
+    private float red   = .25f;
+    private float blue  = .75f;
+    private float green = .25f;
 
 
     @Override
@@ -103,6 +105,7 @@ public class ClickDrag extends ApplicationAdapter {
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("ChangeListener - selected index: " + menu.getSelectedIndex());
                 menu.setVisible(false);
+                menu.remove();
             }
         });
 
@@ -113,10 +116,6 @@ public class ClickDrag extends ApplicationAdapter {
         menu.addActor(red);
         Label green = new Label("green", skin);
         menu.addActor(green);
-
-        /* Including the Widget in the Stage. */
-        menu.selectIndex(0); // selecting an initial value
-        stage.addActor(menu);
     }
 
 
@@ -138,6 +137,7 @@ public class ClickDrag extends ApplicationAdapter {
         \==================================================================== */
 
         if (Gdx.input.isButtonJustPressed(menu.getSelectionButton())) {
+            stage.addActor(menu);
             menu.centerOnMouse();
             menu.setVisible(true);
             stage.addTouchFocus(new PieMenuSuggestedClickListener(), menu,

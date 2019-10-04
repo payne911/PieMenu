@@ -64,6 +64,9 @@ public class ClickToggle extends ApplicationAdapter {
         style.childRegionColor = new Color(.73f,.33f,.33f,.1f);
         menu = new PieMenu(shape, style);
 
+        /* Customizing the behavior. */
+        menu.setInfiniteSelectionRange(true);
+
         /* Adding the listeners. */
         menu.addListener(new PieMenuSuggestedClickListener());
         menu.addListener(new ChangeListener() {
@@ -71,6 +74,7 @@ public class ClickToggle extends ApplicationAdapter {
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("ChangeListener - newly selected index: " + menu.getSelectedIndex());
                 menu.setVisible(false);
+                menu.remove();
             }
         });
 
@@ -84,9 +88,6 @@ public class ClickToggle extends ApplicationAdapter {
         imgs.add(new Image(new Texture(Gdx.files.internal("coffee-mug.png"))));
         for (int i = 0; i < imgs.size; i++)
             menu.addActor(imgs.get(i));
-
-        /* Including the Widget in the Stage. */
-        stage.addActor(menu);
     }
 
 
@@ -108,6 +109,7 @@ public class ClickToggle extends ApplicationAdapter {
         \==================================================================== */
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
+            stage.addActor(menu);
             menu.centerOnMouse();
             menu.resetSelection();
             menu.setVisible(true);
