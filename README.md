@@ -20,6 +20,7 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 * [Including in Project](#including-in-project)
 * [Usage](#usage)
 * [Wiki](#wiki)
+* [Contributing](#contributing)
 * [Thanks to](#thanks-to)
 * [Credits](#credits)
 
@@ -51,7 +52,7 @@ allprojects {
 
     ext {
     	...
-        pieMenuVersion = '2.1.0'
+        pieMenuVersion = '2.2.0'
     }
     
     repositories {
@@ -113,6 +114,9 @@ More specifically, you might be interested in:
 * [Seeing how to customize the look](https://github.com/payne911/PieMenu/wiki/Style-customization) of your Widget.
 
 ---
+
+## Contributing
+If you feel like helping this library grow, make sure to check out [the Contributing](https://github.com/payne911/PieMenu/wiki/Contributing) Wiki page.
 
 ## Thanks to
 * [EarlyGrey](https://github.com/earlygrey) (I'm actually entirely dependent on his library: [ShapeDrawer](https://github.com/earlygrey/shapedrawer))
