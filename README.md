@@ -32,9 +32,7 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 
 
 ### Controls
-An [online demo](https://payne911.github.io/PieMenu/) is available.
-
-If you want to check out the same demo, but within the `desktop` setup, check out [the Demonstration class](https://github.com/payne911/PieMenu/blob/master/src/test/java/com/payne/games/piemenu/Demonstration.java). The controls are:
+An [online demo](https://payne911.github.io/PieMenu/) is available. The controls are:
 * ``RIGHT-CLICK`` : opens a PieMenu meant for selection through dragging (don't release the right-click until you want to select the highlighted item).
 * ``MIDDLE-CLICK`` : opens a PieMenu meant for "normal" selection. You can release the button and select as you wish with a left-click.
 * ``S`` : toggles the visibility of the "permaPie" at the bottom of the screen.
@@ -42,6 +40,8 @@ If you want to check out the same demo, but within the `desktop` setup, check ou
 * ``L`` : removes a Child from a few RadialWidgets.
 * ``M`` : adds a Child to a few of the RadialWidgets.
 * ``R`` : "restarts" the application. Everything will be back to what it was initially.
+
+If you want to check out the same demo, but within a `desktop` setup, check out [the Demonstration class](https://github.com/payne911/PieMenu/blob/master/src/test/java/com/payne/games/piemenu/Demonstration.java). 
 
 ---
 
