@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.payne.games.piemenu.AnimatedPieMenu;
 import com.payne.games.piemenu.PieMenu;
 import com.payne.games.piemenu.PieMenuSuggestedClickListener;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -28,7 +29,7 @@ public class ButtonBound extends ApplicationAdapter {
     private Stage stage;
     private Texture tmpTex;
     private PolygonSpriteBatch batch;
-    private PieMenu menu;
+    private AnimatedPieMenu menu;
 
 
     @Override
@@ -72,7 +73,7 @@ public class ButtonBound extends ApplicationAdapter {
         style.selectedChildRegionColor = new Color(.7f,.3f,.5f,1);
         style.childRegionColor = new Color(0,.7f,0,1);
         style.alternateChildRegionColor = new Color(.7f,0,0,1);
-        menu = new PieMenu(shape, style);
+        menu = new AnimatedPieMenu(shape, style);
 
         /* Customizing the behavior. */
         menu.setInfiniteSelectionRange(true);
@@ -96,7 +97,7 @@ public class ButtonBound extends ApplicationAdapter {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 menu.resetSelection();
                 menu.centerOnActor(textButton);
-                menu.setVisible(true);
+                menu.animateOpening(.4f);
                 menu.transferInteraction(stage, new PieMenuSuggestedClickListener(), menu.getSelectionButton());
                 return true;
             }
@@ -107,7 +108,7 @@ public class ButtonBound extends ApplicationAdapter {
         menu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                menu.setVisible(false);
+                menu.transitionToClosing(.4f);
                 int index = menu.getSelectedIndex();
                 if(!menu.isValidIndex(index)) {
                     textButton.setText("Drag Pie");

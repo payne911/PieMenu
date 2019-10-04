@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.payne.games.piemenu.AnimatedRadialGroup;
 import com.payne.games.piemenu.RadialGroup;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
@@ -26,7 +27,7 @@ public class ButtonToggle extends ApplicationAdapter {
     private Stage stage;
     private Texture tmpTex;
     private PolygonSpriteBatch batch;
-    private RadialGroup radGroup;
+    private AnimatedRadialGroup radGroup;
 
 
     @Override
@@ -71,7 +72,7 @@ public class ButtonToggle extends ApplicationAdapter {
         style.circumferenceWidth = 2;
         style.circumferenceColor = Color.BLACK;
         style.separatorColor = style.circumferenceColor;
-        radGroup = new RadialGroup(shape, style);
+        radGroup = new AnimatedRadialGroup(shape, style);
 
         /* Populating the widget. */
         for (int i = 0; i < 8; i++) {
@@ -84,7 +85,7 @@ public class ButtonToggle extends ApplicationAdapter {
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                radGroup.setVisible(!radGroup.isVisible());
+                radGroup.toggleVisibility(.9f); // 0.9 seconds animation
                 radGroup.setPosition(textButton.getX() + textButton.getWidth()/2,
                         textButton.getY() + textButton.getHeight()/2 - 5, Align.center);
             }

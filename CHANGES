@@ -1,3 +1,6 @@
+[2.2.0]
+- Animated versions of the implementations are now available!
+
 [2.1.0]
 - Added a `defaultIndex` flag as a fallback value when an invalid index is being selected.
 - Minor fix on the `PieMenu`'s `hit` method.

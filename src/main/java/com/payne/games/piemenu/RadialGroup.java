@@ -205,7 +205,12 @@ public class RadialGroup extends WidgetGroup {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        drawWithShapeDrawer(batch, parentAlpha);
+        drawWithShapeDrawer(batch, parentAlpha, style.totalDegreesDrawn);
+        drawMe(batch, parentAlpha);
+    }
+
+    @Deprecated
+    protected void drawMe(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
     }
 
@@ -216,11 +221,12 @@ public class RadialGroup extends WidgetGroup {
      * @param batch a Batch used to draw Drawables. The {@link #sd} is used to
      *              draw everything else.
      * @param parentAlpha
+     * @param degreesToDraw how many degrees from the offset should be drawn.
      */
-    protected void drawWithShapeDrawer(Batch batch, float parentAlpha) {
+    protected void drawWithShapeDrawer(Batch batch, float parentAlpha, float degreesToDraw) {
 
         /* Pre-calculating */
-        float bgRadian = MathUtils.degreesToRadians*style.totalDegreesDrawn;
+        float bgRadian = MathUtils.degreesToRadians*degreesToDraw;
         float tmpOffset = MathUtils.degreesToRadians*style.startDegreesOffset;
         int size = getAmountOfChildren();
         float tmpRad = bgRadian / size;
@@ -290,13 +296,6 @@ public class RadialGroup extends WidgetGroup {
         output.set(center.x + radius * MathUtils.cos(radian), center.y + radius * MathUtils.sin(radian));
         return output;
     }
-
-    @Override
-    public void act(float delta) {
-        // todo: animate here?!
-        super.act(delta);
-    }
-
 
     /**
      * @param x x-coordinate relative to the origin (bottom left) of the widget

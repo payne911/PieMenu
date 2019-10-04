@@ -164,7 +164,7 @@ public class PieMenu extends RadialGroup {
      * for example.
      */
     @Deprecated
-    public void triggerDefaultListenerTouchDown() {
+    public void triggerClickListenerTouchDown() {
         InputEvent event = new InputEvent();
         event.setType(InputEvent.Type.touchDown);
         event.setButton(getSelectionButton());
@@ -202,7 +202,7 @@ public class PieMenu extends RadialGroup {
      * @param newIndex index of the child (and thus region) which was selected.
      */
     public void selectIndex(int newIndex) {
-        newIndex = mapIndexToDefault(newIndex);
+        newIndex = mapIndex(newIndex);
         int oldHighlightedIndex = highlightedIndex;
         int oldSelectedIndex = selectedIndex;
 
@@ -244,7 +244,7 @@ public class PieMenu extends RadialGroup {
      * @param newIndex index of the child (and thus region) which was highlighted.
      */
     public void highlightIndex(int newIndex) {
-        newIndex = mapIndexToDefault(newIndex);
+        newIndex = mapIndex(newIndex);
         if(newIndex != highlightedIndex) {
             highlightedIndex = newIndex;
             if(highlightChangeListener != null)
@@ -285,7 +285,7 @@ public class PieMenu extends RadialGroup {
      * @param index any index that you want to map to the values described above.
      * @return either a valid index, ot the {@link #defaultIndex}.
      */
-    public int mapIndexToDefault(int index) {
+    public int mapIndex(int index) {
         return isValidIndex(index) ? index : defaultIndex;
     }
 
@@ -324,10 +324,10 @@ public class PieMenu extends RadialGroup {
     }
 
     @Override
-    protected void drawWithShapeDrawer(Batch batch, float parentAlpha) {
+    protected void drawWithShapeDrawer(Batch batch, float parentAlpha, float degreesToDraw) {
 
         /* Pre-calculating */
-        float bgRadian = MathUtils.degreesToRadians*style.totalDegreesDrawn;
+        float bgRadian = MathUtils.degreesToRadians*degreesToDraw;
         float tmpOffset = MathUtils.degreesToRadians*style.startDegreesOffset;
         int size = getAmountOfChildren();
         float tmpRad = bgRadian / size;

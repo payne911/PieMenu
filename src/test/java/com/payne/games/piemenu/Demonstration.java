@@ -27,13 +27,13 @@ public class Demonstration extends ApplicationAdapter {
     private PolygonSpriteBatch batch;
     private ShapeDrawer shape;
 
-    private PieMenu dragPie;
+    private AnimatedPieMenu dragPie;
     private PieMenu permaPie;
     private PieMenu rightMousePie;
     private PieMenu middleMousePie;
     private PieMenu.PieMenuStyle midStyle1;
     private PieMenu.PieMenuStyle midStyle2;
-    private RadialGroup radial;
+    private AnimatedRadialGroup radial;
 
     private Color backgroundColor = new Color(1,1,1,.2f);
     private int dragPieAmount = 0;
@@ -97,7 +97,7 @@ public class Demonstration extends ApplicationAdapter {
         style.backgroundColor = new Color(1,1,1,1);
         style.childRegionColor = new Color(.4f,.4f,.4f,1);
         style.alternateChildRegionColor = new Color(.6f,0,0,1);
-        radial = new RadialGroup(shape, style);
+        radial = new AnimatedRadialGroup(shape, style);
 
         /* Populating the widget. */
         for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
@@ -110,9 +110,9 @@ public class Demonstration extends ApplicationAdapter {
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                radial.setVisible(!radial.isVisible());
+                radial.toggleVisibility(.9f);
                 radial.setPosition(textButton.getX() + textButton.getWidth()/2,
-                        textButton.getY() + textButton.getHeight() + 15, Align.center);
+                        textButton.getTop() + 15, Align.center);
             }
         });
         root.add(textButton).expand().bottom();
@@ -134,7 +134,7 @@ public class Demonstration extends ApplicationAdapter {
         style.selectedChildRegionColor = new Color(.7f,.3f,.5f,1);
         style.childRegionColor = new Color(0,.7f,0,1);
         style.alternateChildRegionColor = new Color(.7f,0,0,1);
-        dragPie = new PieMenu(shape, style);
+        dragPie = new AnimatedPieMenu(shape, style);
 
         /* Customizing the behavior. */
         dragPie.setInfiniteSelectionRange(true);
@@ -147,7 +147,6 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Setting up the demo-button. */
         final TextButton textButton = new TextButton("Drag Pie",  skin);
-        final float WIDTH = textButton.getWidth();
         textButton.addListener(new ClickListener() {
             /*
             In our particular case, we want to NOT use a ChangeListener because
@@ -159,7 +158,7 @@ public class Demonstration extends ApplicationAdapter {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 dragPie.resetSelection();
                 dragPie.centerOnActor(textButton);
-                dragPie.setVisible(true);
+                dragPie.animateOpening(.4f);
                 dragPie.transferInteraction(stage, suggestedClickListener, dragPie.getSelectionButton());
                 return true;
             }
@@ -170,7 +169,7 @@ public class Demonstration extends ApplicationAdapter {
         dragPie.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                dragPie.setVisible(false);
+                dragPie.transitionToClosing(.4f);
                 int index = dragPie.getSelectedIndex();
                 if(!dragPie.isValidIndex(index)) {
                     textButton.setText("Drag Pie");
@@ -178,7 +177,6 @@ public class Demonstration extends ApplicationAdapter {
                 }
                 Actor child = dragPie.getChild(index);
                 textButton.setText(((Label)child).getText().toString());
-                textButton.setWidth(WIDTH);
             }
         });
 
