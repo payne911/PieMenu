@@ -16,13 +16,14 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 
 ## Table of Content
 * [Demo](#demo)
-* [Controls](#controls)
+  * [Controls](#controls)
 * [Including in Project](#including-in-project)
 * [Usage](#usage)
-* [Wiki](#wiki)
-* [Contributing](#contributing)
-* [Thanks to](#thanks-to)
-* [Credits](#credits)
+  * [Wiki](#wiki)
+* [Final word](#final-word)
+  * [Contributing](#contributing)
+  * [Thanks to](#thanks-to)
+    * [Credits](#credits)
 
 ---
 
@@ -115,10 +116,13 @@ More specifically, you might be interested in:
 
 ---
 
-## Contributing
+## Final word
+Very well: you've made it this far in the README! If you ever end up integrating this library into your cool projects, feel free to send a Pull Request of a GIF showcasing this library and with the name of your game; just make sure it's pushed in [the ``media`` folder](https://github.com/payne911/PieMenu/tree/master/media)!
+
+### Contributing
 If you feel like helping this library grow, make sure to check out [the Contributing](https://github.com/payne911/PieMenu/wiki/Contributing) Wiki page.
 
-## Thanks to
+### Thanks to
 * [EarlyGrey](https://github.com/earlygrey) (I'm actually entirely dependent on his library: [ShapeDrawer](https://github.com/earlygrey/shapedrawer))
 * [raeleus](https://github.com/raeleus)
 * [mgsx](https://github.com/mgsx-dev)
@@ -126,7 +130,7 @@ If you feel like helping this library grow, make sure to check out [the Contribu
 
 For their sustained help through the libGDX discord channel. Their extensive knowledge was greatly appreciated.
 
-### Credits
+#### Credits
 I used some images from [Game-Icons.net](https://game-icons.net/), more specifically the 5 icons displayed when clicking the "Toggle Radial" button. To be even more specific, the credits go to [Lorc](http://lorcblog.blogspot.com/). Those are under the [CC BY 3.0 license](https://creativecommons.org/licenses/by/3.0/) license.
 
 Also, [raeleus](https://github.com/raeleus) made the background image for the "middle-click menu" (which is also used in this library's logo), and the test application uses the [Plain James UI Skin](https://github.com/raeleus/Plain-James-UI) created by Raymond "Raeleus" Buckley under the [CC BY 4.0 license](https://creativecommons.org/licenses/by/4.0/). [Check out the others!](https://ray3k.wordpress.com/artwork/)
