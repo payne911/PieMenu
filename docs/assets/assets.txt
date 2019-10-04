@@ -2,15 +2,14 @@ d:assets:0:application/unknown
 i:beer-stein.png:20145:image/png
 i:coffee-mug.png:20084:image/png
 i:disc.png:197667:image/png
-i:early_demo.gif:1025657:image/gif
 t:font-export.fnt:9942:application/unknown
 t:font-title-export.fnt:10103:application/unknown
 i:gooey-daemon.png:28241:image/png
 i:heart-drop.png:20140:image/png
 i:jeweled-chalice.png:19112:image/png
 i:rael_pie.png:19513:image/png
-t:skin.atlas:3375:application/unknown
-t:skin.json:4506:application/unknown
+t:skin.atlas:3603:application/unknown
+t:skin.json:4763:application/unknown
 i:skin.png:59520:image/png
 t:com/badlogic/gdx/graphics/g3d/particles/particles.fragment.glsl:859:application/unknown
 t:com/badlogic/gdx/graphics/g3d/particles/particles.vertex.glsl:2996:application/unknown
