@@ -33,7 +33,7 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 
 ### Controls
 An [online demo](https://payne911.github.io/PieMenu/) is available. The controls are:
-* ``RIGHT-CLICK`` : opens a PieMenu meant for selection through dragging (don't release the right-click until you want to select the highlighted item).
+* ``RIGHT-CLICK`` : opens a PieMenu meant for selection through dragging (don't release the right-click until you're done with your selection). It was configured to let you preview the selection's effect.
 * ``MIDDLE-CLICK`` : opens a PieMenu meant for "normal" selection. You can release the button and select as you wish with a left-click.
 * ``S`` : toggles the visibility of the "permaPie" at the bottom of the screen.
 * ``C`` : toggles the style used for the "middle-click" menu.
