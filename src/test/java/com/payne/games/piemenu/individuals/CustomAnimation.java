@@ -82,7 +82,7 @@ public class CustomAnimation extends ApplicationAdapter {
                 System.out.println("selected: " + pieMenu.getSelectedIndex());
             }
         });
-        pieMenu.setHighlightChangeListener(new PieMenu.HighlightChangeListener() {
+        pieMenu.addListener(new PieMenu.HighlightChangeListener() {
             @Override
             public void onHighlightChange(int highlightedIndex) {
                 System.out.println("highlighted: " + highlightedIndex);

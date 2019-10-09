@@ -5,10 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -208,8 +205,8 @@ public class PieMenu extends RadialGroup {
 
         selectedIndex = newIndex;
         highlightedIndex = newIndex;
-        if (highlightChangeListener != null && newIndex != oldHighlightedIndex)
-            highlightChangeListener.onHighlightChange(newIndex); // todo: should we really call this?!
+        if (newIndex != oldHighlightedIndex)
+            fire(new HighlightChangeEvent(newIndex)); // todo: should we really call this?!
 
         ChangeListener.ChangeEvent changeEvent = Pools.obtain(ChangeListener.ChangeEvent.class);
         if (fire(changeEvent)) {
@@ -247,8 +244,7 @@ public class PieMenu extends RadialGroup {
         newIndex = mapIndex(newIndex);
         if(newIndex != highlightedIndex) {
             highlightedIndex = newIndex;
-            if(highlightChangeListener != null)
-                highlightChangeListener.onHighlightChange(newIndex);
+            fire(new HighlightChangeEvent(newIndex));
         }
     }
 
@@ -386,6 +382,15 @@ public class PieMenu extends RadialGroup {
 
 
 
+
+
+
+
+    /*
+    =================================== STYLE ==================================
+     */
+
+
     /**
      * Encompasses all the characteristics that define the way the PieMenu will be drawn.
      */
@@ -422,11 +427,41 @@ public class PieMenu extends RadialGroup {
     }
 
 
-    /**
-     * A "convenience interface" that allows users to execute code whenever
-     * the "currently highlighted" value changes.
+
+
+
+
+
+
+
+    /*
+    =========================== HIGHLIGHT LISTENER =============================
      */
-    public interface HighlightChangeListener {
+
+
+    private static class HighlightChangeEvent extends Event {
+        private int newIndex;
+
+        public HighlightChangeEvent(int newIndex) {
+            this.newIndex = newIndex;
+        }
+    }
+
+    /**
+     * If the {@link ChangeListener} wasn't enough, you can add a
+     * {@link HighlightChangeListener} to be able to execute code every time
+     * the currently-highlighted value changes.<br>
+     * Keep in mind that if you use {@link #resetSelection()} or
+     * {@link #setHighlightedIndex(int)}, this callback is not triggered.
+     */
+    public abstract static class HighlightChangeListener implements EventListener {
+
+        @Override
+        public boolean handle(Event event) {
+            if(event instanceof HighlightChangeEvent)
+                onHighlightChange(((HighlightChangeEvent)event).newIndex);
+            return false;
+        }
 
         /**
          * Called every time the "currently highlighted" value changes.<br>
@@ -437,7 +472,7 @@ public class PieMenu extends RadialGroup {
          *
          * @param highlightedIndex the newly highlighted index.
          */
-        void onHighlightChange(int highlightedIndex);
+        public abstract void onHighlightChange(int highlightedIndex);
     }
 
 
@@ -506,25 +541,6 @@ public class PieMenu extends RadialGroup {
      */
     public void setInfiniteSelectionRange(boolean infiniteSelectionRange) {
         this.infiniteSelectionRange = infiniteSelectionRange;
-    }
-
-    /**
-     * If the {@link ChangeListener} isn't enough, you can add this listener to
-     * be able to execute code every time the currently-highlighted item changes.
-     */
-    public HighlightChangeListener getHighlightChangeListener() {
-        return highlightChangeListener;
-    }
-
-    /**
-     * If the {@link ChangeListener} wasn't enough, you can add a
-     * {@link HighlightChangeListener} to be able to execute code every time
-     * the currently-highlighted value changes.<br>
-     * Keep in mind that if you use {@link #resetSelection()} or
-     * {@link #setHighlightedIndex(int)}, this callback is not triggered.
-     */
-    public void setHighlightChangeListener(HighlightChangeListener highlightChangeListener) {
-        this.highlightChangeListener = highlightChangeListener;
     }
 
     /**

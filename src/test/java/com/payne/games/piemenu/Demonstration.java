@@ -209,7 +209,7 @@ public class Demonstration extends ApplicationAdapter {
         rightMousePie.setSelectionButton(Input.Buttons.RIGHT);
 
         /* Setting up listeners */
-        rightMousePie.setHighlightChangeListener(new PieMenu.HighlightChangeListener() {
+        rightMousePie.addListener(new PieMenu.HighlightChangeListener() {
             @Override
             public void onHighlightChange(int highlightedIndex) {
                 switch(highlightedIndex) {
