@@ -34,6 +34,7 @@ public class RadialGroup extends WidgetGroup {
     private RadialGroupStyle style;
 
     /* For internal use (optimization). */
+    private float lastRadius = 0;
     protected static final float BG_BUFFER = 1;
     private static Vector2 vector2 = new Vector2();
     private static Vector2 vector22 = new Vector2();
@@ -89,6 +90,16 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
+     * Returns the label's style. Modifying the returned style may not have an
+     * effect until {@link #setStyle(RadialGroupStyle)} is called.<br>
+     * It's probable that your code will look like this (to give you an idea):
+     * <pre>
+     * {@code
+     * radialGroup.getStyle().whatYouWantToChange = someNewValue;
+     * radialGroup.setStyle(radialGroup.getStyle());
+     * }
+     * </pre>
+     *
      * @return the Style that defines this Widget. This style contains information
      * about what is the value of the radius or the width of the separators, for
      * example.
@@ -107,9 +118,13 @@ public class RadialGroup extends WidgetGroup {
     public void setStyle(RadialGroupStyle style) {
         checkStyle(style);
         this.style = style;
-        setWidth(getPrefWidth());
-        setHeight(getPrefHeight());
-        invalidate();
+        if(style.radius != lastRadius) {
+            lastRadius = style.radius;
+            setSize(getPrefWidth(), getPrefHeight());
+            invalidateHierarchy();
+        } else {
+            invalidate();
+        }
     }
 
     /**
@@ -118,6 +133,9 @@ public class RadialGroup extends WidgetGroup {
      * @param style a style class you want to check properties of.
      */
     protected void checkStyle(RadialGroupStyle style) {
+        if(style == null)
+            throw new IllegalArgumentException("style cannot be null.");
+
         if(style.separatorWidth < 0)
             throw new IllegalArgumentException("separatorWidth cannot be negative.");
 
@@ -171,16 +189,30 @@ public class RadialGroup extends WidgetGroup {
 
     @Override
     public void addActor(Actor actor) {
+        if(actor == null) throw new IllegalArgumentException("actor cannot be null.");
         super.addActor(actor);
         invalidate();
     }
 
     @Override
     public boolean removeActor(Actor actor) {
+        if(actor == null) throw new IllegalArgumentException("actor cannot be null.");
         boolean wasRemoved = super.removeActor(actor);
         if(wasRemoved)
             invalidate();
         return wasRemoved;
+    }
+
+    /**
+     * Determines how far from the center the contained child Actors should be.
+     * By default, the value is {@code (style.radius+style.innerRadius)/2}.<br>
+     * Override this method when creating your Widget if you want to have control
+     * on where the Actors get placed.
+     *
+     * @return distance of actors from the center.
+     */
+    public float getActorDistanceFromCenter() {
+        return (style.radius+style.innerRadius)/2;
     }
 
     @Override
@@ -189,7 +221,7 @@ public class RadialGroup extends WidgetGroup {
         float half = 1f / 2;
         for (int i = 0; i < getAmountOfChildren(); i++) {
             Actor actor = getChildren().get(i);
-            vector2.set((style.radius+style.innerRadius)/2, 0);
+            vector2.set(getActorDistanceFromCenter(), 0);
             vector2.rotate(degreesPerChild*(i + half) + style.startDegreesOffset);
 
             if(actor instanceof Image) {
@@ -242,7 +274,7 @@ public class RadialGroup extends WidgetGroup {
         }
 
         /* Children */
-        vector2.set(getX()+style.radius, getY()+style.radius);
+        vector2.set(getX()+style.radius, getY()+style.radius); // center of widget
         for(int i=0; i<size; i++) {
             float tmp = tmpOffset + i*tmpRad;
             drawChildWithoutSelection(vector2, i, tmp, tmpRad);
@@ -272,7 +304,11 @@ public class RadialGroup extends WidgetGroup {
                 sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2, startAngle, radian, style.radius-style.innerRadius);
             }
         }
+
+        /* Circumference */
         drawChildCircumference(vector2, startAngle, radian, style.radius - style.circumferenceWidth/2);
+        if(style.innerRadius > 0)
+            drawChildCircumference(vector2, startAngle, radian, style.innerRadius + style.circumferenceWidth/2);
     }
 
     protected void drawChildCircumference(Vector2 vector2, float startAngle, float radian, float radius) {

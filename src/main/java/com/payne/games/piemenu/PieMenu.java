@@ -122,7 +122,6 @@ public class PieMenu extends RadialGroup {
         super.setStyle(style);
         checkStyle(style);
         this.style = style;
-        invalidate();
     }
 
     /**
@@ -140,6 +139,7 @@ public class PieMenu extends RadialGroup {
             throw new IllegalArgumentException("selectedRadius cannot be negative.");
         if(style.selectedRadius == 0)
             style.selectedRadius = style.radius;
+        // todo: once integrated, if selectRadius > radius, don't forget to setSize on the Widget
     }
 
 
@@ -343,7 +343,7 @@ public class PieMenu extends RadialGroup {
         }
 
         /* Children */
-        vector2.set(getX()+style.radius, getY()+style.radius);
+        vector2.set(getX()+style.radius, getY()+style.radius); // center of widget
         for(int i=0; i<size; i++) {
             float tmp = tmpOffset + i*tmpRad;
             if(style.selectedChildRegionColor != null) {
@@ -377,7 +377,10 @@ public class PieMenu extends RadialGroup {
             sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2, startAngle, radian, style.radius-style.innerRadius);
         }
 
+        /* Circumference */
         drawChildCircumference(vector2, startAngle, radian, style.radius - style.circumferenceWidth/2); // todo: integrate selectedRadius here
+        if(style.innerRadius > 0)
+            drawChildCircumference(vector2, startAngle, radian, style.innerRadius + style.circumferenceWidth/2);
     }
 
 
@@ -452,6 +455,16 @@ public class PieMenu extends RadialGroup {
 
 
     /**
+     * Returns the label's style. Modifying the returned style may not have an
+     * effect until {@link #setStyle(PieMenuStyle)} is called.<br>
+     * It's probable that your code will look like this (to give you an idea):
+     * <pre>
+     * {@code
+     * pieMenu.getStyle().whatYouWantToChange = someNewValue;
+     * pieMenu.setStyle(pieMenu.getStyle());
+     * }
+     * </pre>
+     *
      * @return the Style that defines this Widget. This style contains information
      * about what is the value of the radius or the width of the separators, for
      * example.
