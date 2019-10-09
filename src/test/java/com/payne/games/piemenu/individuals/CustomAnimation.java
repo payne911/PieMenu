@@ -38,8 +38,7 @@ public class CustomAnimation extends ApplicationAdapter {
         /* Basic style. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.radius = BASE_RADIUS;
-        style.selectedChildRegionColor = new Color(1,0,0,1); // todo: was .5f alpha
-        style.childRegionColor = new Color(0.3f,0.3f,0.3f,1);
+        style.selectedChildRegionColor = new Color(1,0,0,.5f);
 
         /* Initializing our PieMenu. */
         sp = new ShapeDrawer(batch, skin.getRegion("white"));

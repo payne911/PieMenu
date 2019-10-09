@@ -464,11 +464,7 @@ public class PieMenu extends RadialGroup {
         }
 
         /**
-         * Called every time the "currently highlighted" value changes.<br>
-         * It is possible to achieve somewhat the same goal by calling
-         * {@code setHighlightIsSelection(true)} on the PieMenu: that will
-         * trigger the {@link ChangeListener} every time the currently
-         * highlighted value changes.
+         * Called every time the "currently highlighted" value changes.
          *
          * @param highlightedIndex the newly highlighted index.
          */
