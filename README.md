@@ -16,7 +16,9 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 
 ## Table of Content
 * [Demo](#demo)
-  * [Controls](#controls)
+  * [Basic widgets](#basic-widgets)
+    * [Controls](#controls)
+  * [Custom-animated widgets](#custom-animated-widgets)
 * [Including in Project](#including-in-project)
 * [Usage](#usage)
   * [Wiki](#wiki)
@@ -28,10 +30,12 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 ---
 
 ## Demo
+First, let us demonstrate what you might be able to get out of this library (those are just examples and the variety of possiblities is much larger, if not endless).
+
+### Basic Widgets
 ![early_demo](https://raw.githubusercontent.com/payne911/PieMenu/master/media/early_demo.gif)
 
-
-### Controls
+#### Controls
 An [online demo](https://payne911.github.io/PieMenu/) is available. The controls are:
 * ``RIGHT-CLICK`` : opens a PieMenu meant for selection through dragging (don't release the right-click until you're done with your selection). It was configured to let you preview the selection's effect.
 * ``MIDDLE-CLICK`` : opens a PieMenu meant for "normal" selection. You can release the button and select as you wish with a left-click.
@@ -42,6 +46,12 @@ An [online demo](https://payne911.github.io/PieMenu/) is available. The controls
 * ``R`` : "restarts" the application. Everything will be back to what it was initially.
 
 If you want to check out the same demo, but within a `desktop` setup, check out [the Demonstration class](https://github.com/payne911/PieMenu/blob/master/src/test/java/com/payne/games/piemenu/Demonstration.java). 
+
+### Custom-animated Widgets
+You can also create your own animations:
+![custom_animation](https://github.com/payne911/PieMenu/blob/master/media/custom_animation.gif?raw=true)
+
+It's surprisingly easy. Check out [the Animated Widget wiki page](https://github.com/payne911/PieMenu/wiki/Animated-widget/) to find out!
 
 ---
 
