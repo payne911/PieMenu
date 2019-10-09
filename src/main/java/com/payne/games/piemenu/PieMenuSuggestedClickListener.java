@@ -30,7 +30,10 @@ public class PieMenuSuggestedClickListener extends ClickListener {
             return false;
         PieMenu pie = (PieMenu)event.getListenerActor();
 
-        return button == pie.getSelectionButton();
+        boolean accepted = (button == pie.getSelectionButton());
+        if(accepted)
+            pie.highlightChildRegionAtStage(event.getStageX(), event.getStageY());
+        return accepted;
     }
 
     /**

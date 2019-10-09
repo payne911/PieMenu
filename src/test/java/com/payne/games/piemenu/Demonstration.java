@@ -263,9 +263,16 @@ public class Demonstration extends ApplicationAdapter {
         midStyle1.innerRadius = 24;
         midStyle1.startDegreesOffset = 30;
         midStyle1.selectedChildRegionColor = new Color(1,.5f,.5f,.5f);
-        midStyle1.childRegionColor = new Color(.73f,.33f,.33f,.1f);
         midStyle1.background = new Image(new Texture(Gdx.files.internal("rael_pie.png"))).getDrawable();
-        middleMousePie = new PieMenu(shape, midStyle1);
+        middleMousePie = new PieMenu(shape, midStyle1) {
+            /* Since we are using Images, we want to resize them to fit within each sector. */
+            @Override
+            public void adjustActorSize(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
+                float size = getEstimatedRadiusAt(degreesPerChild, actorDistanceFromCenter);
+                size *= 1.26f; // adjusting the returned value to our likes
+                actor.setSize(size, size);
+            }
+        };
 
         /* Customizing the behavior. */
         middleMousePie.setInfiniteSelectionRange(true);

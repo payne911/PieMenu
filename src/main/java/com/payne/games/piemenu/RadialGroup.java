@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -32,6 +31,13 @@ public class RadialGroup extends WidgetGroup {
      * Defines the way the widget looks.
      */
     private RadialGroupStyle style;
+
+    /**
+     * The alpha value propagated to the whole Widget. It defaults to 1.
+     * All the alpha values are multiplied by this value.
+     */
+    protected float globalAlphaMultiplier = 1;
+
 
     /* For internal use (optimization). */
     private float lastRadius = 0;
@@ -207,12 +213,93 @@ public class RadialGroup extends WidgetGroup {
      * Determines how far from the center the contained child Actors should be.
      * By default, the value is {@code (style.radius+style.innerRadius)/2}.<br>
      * Override this method when creating your Widget if you want to have control
-     * on where the Actors get placed.
+     * on where the Actors get placed.<br>
+     * <b>Do not</b> position the Actor directly in this method: that is handled
+     * internally. Just return the desired distance from the center.<br><br>
+     * Here is an example:
+     * <pre>
+     * {@code
+     * RadialGroup myWidget = new RadialGroup(shapeDrawer, myStyle) {
+     *     @Override
+     *     public float getActorDistanceFromCenter(Actor actor) {
+     *         // We want the Labels to be placed closer to the edge than the default value
+     *         return getAmountOfChildren() > 1
+     *                 ? getStyle().radius - getChild(0).getWidth()
+     *                 : 0;
+     *     }
+     * };
+     * }
+     * </pre>
      *
-     * @return distance of actors from the center.
+     * @param actor the Actor whose position is to be determined. This instance
+     *              is here for convenience so that you can run a check with
+     *              {@code instanceof} if you want to.
+     * @return distance of this Actor's center from the center of the widget.
      */
-    public float getActorDistanceFromCenter() {
+    public float getActorDistanceFromCenter(Actor actor) {
         return (style.radius+style.innerRadius)/2;
+    }
+
+    /**
+     * Used to change the size of an Actor according to certain rules. By
+     * default, there are no changes applied.<br>
+     * Override this method when creating your Widget if you want to have control
+     * on how to resize the Actors that get placed within your Widget.<br>
+     * <b>Don't forget to actually call {@link #setSize(float, float)} on the
+     * Actor</b>, else nothing will happen.<br><br>
+     * Here is an example:
+     * <pre>
+     * {@code
+     * RadialGroup myWidget = new RadialGroup(shapeDrawer, myStyle) {
+     *     @Override
+     *     public void adjustActorSize(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
+     *         float size = getEstimatedRadiusAt(degreesPerChild, actorDistanceFromCenter);
+     *         size *= 1.26f; // adjusting the returned value to our likes
+     *         actor.setSize(size, size);
+     *     }
+     * };
+     * }
+     * </pre>
+     *
+     * @see #getEstimatedRadiusAt(float, float)
+     * @param actor the Actor whose size is to be adjusted.
+     * @param degreesPerChild the amount of degrees that a child's sector takes.
+     * @param actorDistanceFromCenter the distance at which the child Actor is
+     *                                positioned from the center of the widget.
+     */
+    public void adjustActorSize(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
+
+    }
+
+    /**
+     * Used to estimate the radius of a circle to be constrained within the widget
+     * according to the input parameters. Doubling the returned value would give
+     * you the size of a contained Actor which would roughly fill most of its
+     * sector, or possibly overflow slightly. It is suggested to adjust slightly
+     * the returned value by multiplying it with a factor of your choice.<br>
+     * The return value's is calculated this way:
+     * <pre>
+     * {@code
+     * float tmp1 = actorDistanceFromCenter * MathUtils.sinDeg(degreesPerChild/2);
+     * float tmp2 = style.radius - actorDistanceFromCenter;
+     * float tmp3 = actorDistanceFromCenter - style.innerRadius;
+     * return Math.min(tmp1, tmp2, tmp3); // pseudo-code for clarity
+     * }
+     * </pre>
+     * It's basically the minimum between 3 different possible radius values
+     * based on certain layout properties.
+     *
+     * @param degreesPerChild the amount of degrees that a child's sector takes.
+     * @param actorDistanceFromCenter the distance at which the child Actor is
+     *                                positioned from the center of the widget.
+     * @return an estimated radius value for an Actor placed with the given
+     *         constraints.
+     */
+    public float getEstimatedRadiusAt(float degreesPerChild, float actorDistanceFromCenter) {
+        float tmp1 = actorDistanceFromCenter * MathUtils.sinDeg(degreesPerChild/2);
+        float tmp2 = style.radius - actorDistanceFromCenter;
+        float tmp3 = actorDistanceFromCenter - style.innerRadius;
+        return Math.min(Math.min(tmp1, tmp2), tmp3);
     }
 
     @Override
@@ -221,16 +308,10 @@ public class RadialGroup extends WidgetGroup {
         float half = 1f / 2;
         for (int i = 0; i < getAmountOfChildren(); i++) {
             Actor actor = getChildren().get(i);
-            vector2.set(getActorDistanceFromCenter(), 0);
+            float dist = getActorDistanceFromCenter(actor);
+            vector2.set(dist, 0);
             vector2.rotate(degreesPerChild*(i + half) + style.startDegreesOffset);
-
-            if(actor instanceof Image) {
-                /* Adjusting images to fit within their sector. */
-                float size = 2*(style.radius*MathUtils.sinDeg(degreesPerChild/2)
-                        - (MathUtils.sinDeg(degreesPerChild/2))*(style.radius - style.innerRadius));
-                size *= 1.26; // todo: hard-coded and should get tested more thoroughly
-                actor.setSize(size, size);
-            }
+            adjustActorSize(actor, degreesPerChild, dist); // overridden by user
             actor.setPosition(vector2.x+style.radius, vector2.y+style.radius, Align.center);
         }
     }
@@ -244,6 +325,17 @@ public class RadialGroup extends WidgetGroup {
     @Deprecated
     protected void drawMe(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
+    }
+
+    /**
+     * Used to propagate the parent's alpha value to the children.<br>
+     * Changes the ShapeDrawer's color.
+     *
+     * @param sd the ShapeDrawer whose color will be changed.
+     * @param input the Color to be copying RGB values from.
+     */
+    protected void propagateAlpha(ShapeDrawer sd, Color input) {
+        sd.setColor(input.r, input.g, input.b, input.a * globalAlphaMultiplier);
     }
 
     /**
@@ -264,13 +356,19 @@ public class RadialGroup extends WidgetGroup {
         float tmpRad = bgRadian / size;
 
         /* Background image */
-        if(style.background != null)
+        if(style.background != null) {
+            Color bc = batch.getColor();
+            float restoreAlpha = bc.a;
+            batch.setColor(bc.r, bc.g, bc.b, bc.a * globalAlphaMultiplier);
             style.background.draw(batch, getX(), getY(), getWidth(), getHeight());
+            batch.setColor(bc.r, bc.g, bc.b, restoreAlpha);
+        }
 
         /* Rest of background */
         if(style.backgroundColor != null) {
-            sd.setColor(style.backgroundColor);
-            sd.sector(getX()+style.radius, getY()+style.radius, style.radius-BG_BUFFER, tmpOffset, bgRadian);
+            propagateAlpha(sd, style.backgroundColor);
+            sd.sector(getX()+style.radius, getY()+style.radius,
+                    style.radius-BG_BUFFER, tmpOffset, bgRadian);
         }
 
         /* Children */
@@ -288,32 +386,41 @@ public class RadialGroup extends WidgetGroup {
     }
 
     protected void drawChildSeparator(Vector2 vector2, float drawnRadianAngle) {
-        if(getAmountOfChildren() > 1 && style.separatorColor != null)
+        if(getAmountOfChildren() > 1 && style.separatorColor != null) {
+            propagateAlpha(sd, style.separatorColor);
             sd.line(pointAtAngle(vector22, vector2, style.innerRadius, drawnRadianAngle),
                     pointAtAngle(vector23, vector2, style.radius, drawnRadianAngle),
-                    style.separatorColor, style.separatorWidth);
+                    style.separatorWidth);
+        }
     }
 
     protected void drawChildWithoutSelection(Vector2 vector2, int index, float startAngle, float radian) {
         if(style.childRegionColor != null) {
             if(style.alternateChildRegionColor != null) {
-                sd.setColor(index%2 == 0 ? style.childRegionColor : style.alternateChildRegionColor);
-                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2, startAngle, radian, style.radius-style.innerRadius);
+                propagateAlpha(sd,
+                        index%2 == 0
+                                ? style.childRegionColor
+                                : style.alternateChildRegionColor);
+                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2,
+                        startAngle, radian, style.radius-style.innerRadius);
             } else {
-                sd.setColor(style.childRegionColor);
-                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2, startAngle, radian, style.radius-style.innerRadius);
+                propagateAlpha(sd, style.childRegionColor);
+                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2,
+                        startAngle, radian, style.radius-style.innerRadius);
             }
         }
 
         /* Circumference */
-        drawChildCircumference(vector2, startAngle, radian, style.radius - style.circumferenceWidth/2);
+        drawChildCircumference(vector2, startAngle, radian,
+                style.radius - style.circumferenceWidth/2);
         if(style.innerRadius > 0)
-            drawChildCircumference(vector2, startAngle, radian, style.innerRadius + style.circumferenceWidth/2);
+            drawChildCircumference(vector2, startAngle, radian,
+                    style.innerRadius + style.circumferenceWidth/2);
     }
 
     protected void drawChildCircumference(Vector2 vector2, float startAngle, float radian, float radius) {
         if(style.circumferenceColor != null && style.circumferenceWidth > 0) {
-            sd.setColor(style.circumferenceColor);
+            propagateAlpha(sd, style.circumferenceColor);
             sd.arc(vector2.x, vector2.y, radius, startAngle, radian, style.circumferenceWidth);
         }
     }
@@ -468,10 +575,26 @@ public class RadialGroup extends WidgetGroup {
         return sd;
     }
 
+    /**
+     * @return the multiplier's value which is applied to all the alpha values
+     *         of the things contained by the widget (regions, lines, drawables, etc.)
+     */
+    public float getGlobalAlphaMultiplier() {
+        return globalAlphaMultiplier;
+    }
 
-
-
-
+    /**
+     * This will globally change the alpha value of the widget.<br>
+     * It defaults to 1.
+     *
+     * @param globalAlphaMultiplier this value is multiplied to all of the alpha
+     *                              value of the things contained by the widget
+     *                              (regions, lines, drawables, etc.).
+     */
+    public void setGlobalAlphaMultiplier(float globalAlphaMultiplier) {
+        this.globalAlphaMultiplier = globalAlphaMultiplier;
+        setColor(getColor().r, getColor().g, getColor().b, getColor().a * globalAlphaMultiplier);
+    }
 
     /**
      * Encompasses all the characteristics that define the way the Widget will be drawn.

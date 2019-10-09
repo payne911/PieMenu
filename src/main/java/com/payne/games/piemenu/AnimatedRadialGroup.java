@@ -2,10 +2,8 @@ package com.payne.games.piemenu;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -145,22 +143,16 @@ public class AnimatedRadialGroup extends RadialGroup {
     @Override
     public void layout() {
         boolean notAnimated = !isCurrentlyAnimated() && !originalColors.isEmpty();
-        float degreesPerChild = currentAngle / getAmountOfChildren();
         float openingPercentage = currentAngle / style.totalDegreesDrawn;
+        float degreesPerChild = currentAngle / getAmountOfChildren();
         float half = 1f / 2;
+
         for (int i = 0; i < getAmountOfChildren(); i++) {
             Actor actor = getChildren().get(i);
-
-            /* Positioning. */
-            vector2.set((style.radius+style.innerRadius)/2, 0);
+            float dist = getActorDistanceFromCenter(actor);
+            vector2.set(dist, 0);
             vector2.rotate(degreesPerChild*(i + half) + style.startDegreesOffset);
-            if(actor instanceof Image) {
-                /* Adjusting images to fit within their sector. */
-                float size = 2*(style.radius* MathUtils.sinDeg(degreesPerChild/2)
-                        - (MathUtils.sinDeg(degreesPerChild/2))*(style.radius - style.innerRadius));
-                size *= 1.26; // todo: hard-coded and should get tested more thoroughly
-                actor.setSize(size, size);
-            }
+            adjustActorSize(actor, degreesPerChild, dist); // overridden by user
             actor.setPosition(vector2.x+style.radius, vector2.y+style.radius, Align.center);
 
             /* Updating alpha (fade-in animation). */
@@ -232,7 +224,8 @@ public class AnimatedRadialGroup extends RadialGroup {
      * If the widget is opening, it will now be closing, for example.<br>
      * Visibility plays a role in determining the current state (for example,
      * if the widget is not visible, it is assumed that it's as if it was closed).
-     * @param durationSeconds
+     *
+     * @param durationSeconds How long the animation will take to finish.
      */
     public void toggleVisibility(float durationSeconds) {
         if(isOpening || (isVisible() && !isClosing)) {
@@ -352,6 +345,8 @@ public class AnimatedRadialGroup extends RadialGroup {
      * After a closing animation, its value is equal to 0.<br>
      * After an opening animation, its value is equal to
      * {@code style.totalDegreesDrawn}.<br>
+     * This means that the accepted values are from 0 to style.totalDegreesDrawn,
+     * inclusively.<br>
      * <br>
      * It is recommended to use
      * <pre>
@@ -366,7 +361,7 @@ public class AnimatedRadialGroup extends RadialGroup {
      *                     currently be displayed.
      */
     public void setCurrentAngle(float currentAngle) {
-        if(currentAngle > style.totalDegreesDrawn || currentAngle < 0)
+        if(currentAngle >= style.totalDegreesDrawn || currentAngle <= 0)
             throw new IllegalArgumentException("currentAngle must be between 0 and `style.totalDegreesDrawn`.");
         this.currentAngle = currentAngle;
     }

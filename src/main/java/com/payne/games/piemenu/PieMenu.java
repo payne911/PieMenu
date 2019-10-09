@@ -329,24 +329,29 @@ public class PieMenu extends RadialGroup {
         float tmpRad = bgRadian / size;
 
         /* Background image */
-        if(style.background != null)
+        if(style.background != null) {
+            Color bc = batch.getColor();
+            float restoreAlpha = bc.a;
+            batch.setColor(bc.r, bc.g, bc.b, bc.a * globalAlphaMultiplier);
             style.background.draw(batch, getX(), getY(), getWidth(), getHeight());
+            batch.setColor(bc.r, bc.g, bc.b, restoreAlpha);
+        }
 
         /* Rest of background */
         if(style.backgroundColor != null) {
-            sd.setColor(style.backgroundColor);
-            sd.sector(getX()+style.radius, getY()+style.radius, style.radius-BG_BUFFER, tmpOffset, bgRadian);
+            propagateAlpha(sd, style.backgroundColor);
+            sd.sector(getX()+style.radius, getY()+style.radius,
+                    style.radius-BG_BUFFER, tmpOffset, bgRadian);
         }
 
         /* Children */
         vector2.set(getX()+style.radius, getY()+style.radius); // center of widget
         for(int i=0; i<size; i++) {
             float tmp = tmpOffset + i*tmpRad;
-            if(style.selectedChildRegionColor != null) {
+            if(style.selectedChildRegionColor != null)
                 drawChildWithSelection(vector2, i, tmp, tmpRad);
-            } else {
+            else
                 drawChildWithoutSelection(vector2, i, tmp, tmpRad);
-            }
 
             /* Separator */
             drawChildSeparator(vector2, tmp);
@@ -359,24 +364,36 @@ public class PieMenu extends RadialGroup {
     protected void drawChildWithSelection(Vector2 vector2, int index, float startAngle, float radian) {
         if(style.childRegionColor != null) {
             if(style.alternateChildRegionColor != null) {
-                sd.setColor(index == highlightedIndex ? style.selectedChildRegionColor
-                        : index%2 == 0 ? style.childRegionColor
-                        : style.alternateChildRegionColor);
-                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2, startAngle, radian, style.radius-style.innerRadius);
+                propagateAlpha(sd,
+                        index == highlightedIndex
+                                ? style.selectedChildRegionColor
+                                : index%2 == 0
+                                ? style.childRegionColor
+                                : style.alternateChildRegionColor);
+                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2,
+                        startAngle, radian, style.radius-style.innerRadius);
             } else {
-                sd.setColor(index == highlightedIndex ? style.selectedChildRegionColor : style.childRegionColor);
-                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2, startAngle, radian, style.radius-style.innerRadius);
+                propagateAlpha(sd,
+                        index == highlightedIndex
+                                ? style.selectedChildRegionColor
+                                : style.childRegionColor);
+                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2,
+                        startAngle, radian, style.radius-style.innerRadius);
             }
         } else {
-            sd.setColor(index == highlightedIndex ? style.selectedChildRegionColor
-                    : TRANSPARENT); // for when the user only specified a "selectedColor"
+            propagateAlpha(sd,
+                    index == highlightedIndex
+                            ? style.selectedChildRegionColor
+                            : TRANSPARENT); // for when the user only specified a "selectedColor"
             sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2, startAngle, radian, style.radius-style.innerRadius);
         }
 
         /* Circumference */
-        drawChildCircumference(vector2, startAngle, radian, style.radius - style.circumferenceWidth/2); // todo: integrate selectedRadius here
+        drawChildCircumference(vector2, startAngle, radian,
+                style.radius - style.circumferenceWidth/2); // todo: integrate selectedRadius here
         if(style.innerRadius > 0)
-            drawChildCircumference(vector2, startAngle, radian, style.innerRadius + style.circumferenceWidth/2);
+            drawChildCircumference(vector2, startAngle, radian,
+                    style.innerRadius + style.circumferenceWidth/2);
     }
 
 
@@ -413,6 +430,11 @@ public class PieMenu extends RadialGroup {
         @Deprecated public float selectedRadius; // todo: integrate into drawing so that selected region is bigger than others
 
         /**
+         * WIP. Not yet implemented!
+         */
+        @Deprecated public float hoveredRadius; // todo: integrate into drawing so that hovered region is bigger than others
+
+        /**
          * Encompasses all the characteristics that define the way the
          * PieMenu will be drawn.
          */
@@ -421,7 +443,9 @@ public class PieMenu extends RadialGroup {
 
         public PieMenuStyle(PieMenu.PieMenuStyle style) {
             super(style);
-            this.selectedChildRegionColor = style.selectedChildRegionColor;
+            this.selectedChildRegionColor = new Color(style.selectedChildRegionColor);
+            this.hoveredColor = new Color(style.hoveredColor);
+            this.hoveredRadius = style.hoveredRadius;
             this.selectedRadius = style.selectedRadius;
         }
     }

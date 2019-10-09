@@ -61,8 +61,15 @@ public class ClickToggle extends ApplicationAdapter {
         style.innerRadius = 24;
         style.startDegreesOffset = 30;
         style.selectedChildRegionColor = new Color(1,.5f,.5f,.5f);
-        style.childRegionColor = new Color(.73f,.33f,.33f,.1f);
-        menu = new PieMenu(shape, style);
+        menu = new PieMenu(shape, style) {
+            /* Since we are using Images, we want to resize them to fit within each sector. */
+            @Override
+            public void adjustActorSize(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
+                float size = getEstimatedRadiusAt(degreesPerChild, actorDistanceFromCenter);
+                size *= 1.26f; // adjusting the returned value to our likes
+                actor.setSize(size, size);
+            }
+        };
 
         /* Customizing the behavior. */
         menu.setInfiniteSelectionRange(true);

@@ -22,9 +22,12 @@ public class CustomAnimation extends ApplicationAdapter {
     private Stage stage;
     private Skin skin;
     private PieMenu pieMenu;
-    private ShapeDrawer sp;
+    private ShapeDrawer sd;
+
+    /* Specific to this demonstration's widget. */
     private float time;
     private final float BASE_RADIUS = 180;
+
 
     @Override
     public void create() {
@@ -41,20 +44,40 @@ public class CustomAnimation extends ApplicationAdapter {
         style.selectedChildRegionColor = new Color(1,0,0,.5f);
 
         /* Initializing our PieMenu. */
-        sp = new ShapeDrawer(batch, skin.getRegion("white"));
-        pieMenu = new PieMenu(sp, style) {
+        sd = new ShapeDrawer(batch, skin.getRegion("white")) {
+            /* OPTIONAL: Increasing the precision (at the possible cost of performance). */
             @Override
-            public float getActorDistanceFromCenter() {
+            protected int estimateSidesRequired(float radiusX, float radiusY) {
+                return 4*super.estimateSidesRequired(radiusX, radiusY);
+            }
+        };
+        pieMenu = new PieMenu(sd, style) {
+            @Override
+            public float getActorDistanceFromCenter(Actor actor) {
+
+                /* We want the Labels to be placed closer to the edge than the default value. */
                 return getAmountOfChildren() > 1
                         ? getStyle().radius - getChild(0).getWidth()
                         : 0;
             }
+
+            @Override
+            public void act(float delta) {
+                super.act(delta);
+
+                /* Our custom animation! */
+                time += delta*5;
+                pieMenu.getStyle().startDegreesOffset = (time * 10) % 360;
+                pieMenu.getStyle().radius = MathUtils.sin(time) * 20 + BASE_RADIUS;
+                pieMenu.setStyle(pieMenu.getStyle());
+                pieMenu.setPosition(Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f, Align.center);
+            }
         };
 
-        /* Populating our PieMenu. */
+        /* Populating our PieMenu with fancy Labels. */
         for(int i=0 ; i<6 ; i++){
             Label.LabelStyle lbs = new Label.LabelStyle(skin.get("white", Label.LabelStyle.class));
-            lbs.background = new ShapeDrawerDrawable(sp) {
+            lbs.background = new ShapeDrawerDrawable(sd) {
                 @Override
                 public void drawShapes(ShapeDrawer shapeDrawer, float x, float y, float width, float height) {
                     float lw = 10;
@@ -103,14 +126,8 @@ public class CustomAnimation extends ApplicationAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        /* Our custom animation! */
-        float delta = Gdx.graphics.getDeltaTime() * 10;
-        time += delta/2;
-        pieMenu.getStyle().startDegreesOffset = (time * 10) % 360;
-        pieMenu.getStyle().radius = MathUtils.sin(time) * 20 + BASE_RADIUS;
-        pieMenu.setStyle(pieMenu.getStyle());
-        pieMenu.setPosition(Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f, Align.center);
-
+        /* Updating and drawing the Stage. */
+        stage.act();
         stage.draw();
     }
 }
