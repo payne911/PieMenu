@@ -32,7 +32,7 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 ## Demo
 First, let us demonstrate what you might be able to get out of this library (those are just examples and the variety of possiblities is much larger, if not endless).
 
-### Basic Widgets
+### Basic widgets
 ![early_demo](https://raw.githubusercontent.com/payne911/PieMenu/master/media/early_demo.gif)
 
 #### Controls
@@ -47,7 +47,7 @@ An [online demo](https://payne911.github.io/PieMenu/) is available. The controls
 
 If you want to check out the same demo, but within a `desktop` setup, check out [the Demonstration class](https://github.com/payne911/PieMenu/blob/master/src/test/java/com/payne/games/piemenu/Demonstration.java). 
 
-### Custom-animated Widgets
+### Custom-animated widgets
 You can also create your own animations:
 ![custom_animation](https://github.com/payne911/PieMenu/blob/master/media/custom_animation.gif?raw=true)
 
