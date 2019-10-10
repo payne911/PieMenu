@@ -85,6 +85,7 @@ public class RadialGroup extends WidgetGroup {
     /* For internal use (optimization). */
     private float lastRadius = 0;
     protected static final float BG_BUFFER = 1;
+    protected static final Color TRANSPARENT = new Color(0,0,0,0);
     private static Vector2 vector2 = new Vector2();
     private static Vector2 vector22 = new Vector2();
     private static Vector2 vector23 = new Vector2();
@@ -453,7 +454,7 @@ public class RadialGroup extends WidgetGroup {
      * Here is an example:
      * <pre>
      * {@code
-     * RadialGroup myWidget = new RadialGroup(shapeDrawer, myStyle) {
+     * RadialGroup myWidget = new RadialGroup(shapeDrawer, myStyle, 77) {
      *     public float getActorDistanceFromCenter(Actor actor) {
      *         // We want the Actors to be placed closer to the edge than the default value
      *         return getAmountOfChildren() > 1
@@ -483,7 +484,7 @@ public class RadialGroup extends WidgetGroup {
      * Here is an example:
      * <pre>
      * {@code
-     * RadialGroup myWidget = new RadialGroup(shapeDrawer, myStyle) {
+     * RadialGroup myWidget = new RadialGroup(shapeDrawer, myStyle, 77) {
      *     public void adjustActorSize(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
      *         float size = getEstimatedRadiusAt(degreesPerChild, actorDistanceFromCenter);
      *         size *= 1.26f; // adjusting the returned value to our likes
@@ -607,7 +608,7 @@ public class RadialGroup extends WidgetGroup {
         vector2.set(getX()+radius, getY()+radius); // center of widget
         for(int i=0; i<SIZE; i++) {
             float tmp = tmpOffset + i*tmpRad;
-            drawChildWithoutSelection(vector2, i, tmp, tmpRad);
+            drawChild(vector2, i, tmp, tmpRad);
 
             /* Separator */
             drawChildSeparator(vector2, tmp);
@@ -626,28 +627,48 @@ public class RadialGroup extends WidgetGroup {
         }
     }
 
-    protected void drawChildWithoutSelection(Vector2 vector2, int index, float startAngle, float radian) {
-        if(style.childRegionColor != null) {
-            if(style.alternateChildRegionColor != null) {
-                propagateAlpha(sd,
-                        index%2 == 0
-                                ? style.childRegionColor
-                                : style.alternateChildRegionColor);
-                sd.arc(vector2.x, vector2.y, (radius+innerRadius)/2,
-                        startAngle, radian, radius-innerRadius);
-            } else {
-                propagateAlpha(sd, style.childRegionColor);
-                sd.arc(vector2.x, vector2.y, (radius+innerRadius)/2,
-                        startAngle, radian, radius-innerRadius);
-            }
-        }
+    /**
+     * Determines the color of the region in which the actor designated by the
+     * {@code index} parameter. By default, the colors come from the way you
+     * have set up your Style (anything that extends {@link RadialGroupStyle}).<br>
+     * Override this method when creating your Widget if you want to have control
+     * over those colors.<br>
+     * <b>Do not</b> set the color of the {@link ShapeDrawer} in there: that is
+     * handled internally. Just return the desired Color.<br><br>
+     * Here is an example:
+     * <pre>
+     * {@code
+     * RadialGroup myWidget = new RadialGroup(shapeDrawer, myStyle, 77) {
+     *     public float getColor(int index) {
+     *         return new Color(1f/index, 1f/index, .5f, 1);
+     *     }
+     * };
+     * }
+     * </pre>
+     *
+     * @param index index of the child whose region is to be drawn with the returned Color.
+     * @return the Color to be used to draw the region of the child with the given index.
+     */
+    public Color getColor(int index) {
+        if(style.alternateChildRegionColor != null
+                && index%2 == 1)
+            return style.alternateChildRegionColor;
+
+        if(style.childRegionColor != null)
+            return style.childRegionColor;
+
+        return TRANSPARENT;
+    }
+
+    protected void drawChild(Vector2 vector2, int index, float startAngle, float radian) {
+        propagateAlpha(sd, getColor(index));
+        sd.arc(vector2.x, vector2.y, (radius+innerRadius)/2,
+                startAngle, radian, radius-innerRadius);
 
         /* Circumference */
-        drawChildCircumference(vector2, startAngle, radian,
-                radius - style.circumferenceWidth/2);
+        drawChildCircumference(vector2, startAngle, radian, radius - style.circumferenceWidth/2);
         if(innerRadius > 0)
-            drawChildCircumference(vector2, startAngle, radian,
-                    innerRadius + style.circumferenceWidth/2);
+            drawChildCircumference(vector2, startAngle, radian, innerRadius + style.circumferenceWidth/2);
     }
 
     protected void drawChildCircumference(Vector2 vector2, float startAngle, float radian, float radius) {
@@ -808,7 +829,7 @@ public class RadialGroup extends WidgetGroup {
     public static class RadialGroupStyle {
 
         /**
-         * <i>Recommended. Optional.</i><br>
+         * <i><b>Recommended</b>. Optional.</i><br>
          * A background that will be drawn behind everything else within the Widget.<br>
          * Be mindful of the fact that this is unaffected by any of the other
          * variables: it will be resized to fit in the whole region that
@@ -826,7 +847,7 @@ public class RadialGroup extends WidgetGroup {
         public Color backgroundColor;
 
         /**
-         * <i>Recommended. Optional.</i><br>
+         * <i><b>Recommended</b>. Optional.</i><br>
          * The color used by the separating lines between each item.<br>
          * If you do not define a {@link #separatorWidth} along with this value,
          * no lines will be visible.
@@ -834,7 +855,7 @@ public class RadialGroup extends WidgetGroup {
         public Color separatorColor;
 
         /**
-         * <i>Recommended. Optional.</i><br>
+         * <i><b>Recommended</b>. Optional.</i><br>
          * The color used to fill the "pie sectors" of each item.<br>
          * Consider using a fairly high alpha value if you are providing a
          * {@link #background} drawable.
@@ -860,7 +881,7 @@ public class RadialGroup extends WidgetGroup {
         public Color circumferenceColor;
 
         /**
-         * <i>Recommended. Optional.</i><br>
+         * <i><b>Recommended</b>. Optional.</i><br>
          * Determines how wide the lines that separate each region will be.<br>
          * If no {@link #separatorColor} was provided along with this value,
          * no lines will be drawn.
@@ -1006,6 +1027,7 @@ public class RadialGroup extends WidgetGroup {
         if(innerRadius >= radius)
             throw new IllegalArgumentException("innerRadius must be smaller than the radius.");
         this.innerRadius = innerRadius;
+        invalidate();
     }
 
     /**
@@ -1035,6 +1057,7 @@ public class RadialGroup extends WidgetGroup {
         if(startDegreesOffset >= 360)
             throw new IllegalArgumentException("startDegreesOffset must be lower than 360.");
         this.startDegreesOffset = startDegreesOffset;
+        invalidate();
     }
 
     /**
@@ -1062,5 +1085,6 @@ public class RadialGroup extends WidgetGroup {
         if(totalDegreesDrawn > 360)
             throw new IllegalArgumentException("totalDegreesDrawn must be lower or equal to 360.");
         this.totalDegreesDrawn = totalDegreesDrawn;
+        invalidate();
     }
 }

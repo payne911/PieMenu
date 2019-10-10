@@ -47,6 +47,9 @@ public class CustomAnimation extends ApplicationAdapter {
         /* Setting up the Widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.selectedChildRegionColor = new Color(1,0,0,.5f);
+        style.highlightedChildRegionColor = new Color(1,.05f,.05f,.4f);
+        style.hoveredChildRegionColor = new Color(.8f,.8f,.8f,.05f);
+        style.hoveredAndSelectedChildRegionColor = new Color(1,.2f,.2f,.55f);
         pieMenu = new PieMenu(sd, style, BASE_RADIUS) {
             @Override
             public float getActorDistanceFromCenter(Actor actor) {
