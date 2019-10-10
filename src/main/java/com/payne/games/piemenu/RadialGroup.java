@@ -220,7 +220,6 @@ public class RadialGroup extends WidgetGroup {
      * <pre>
      * {@code
      * RadialGroup myWidget = new RadialGroup(shapeDrawer, myStyle) {
-     *     @Override
      *     public float getActorDistanceFromCenter(Actor actor) {
      *         // We want the Actors to be placed closer to the edge than the default value
      *         return getAmountOfChildren() > 1
@@ -251,7 +250,6 @@ public class RadialGroup extends WidgetGroup {
      * <pre>
      * {@code
      * RadialGroup myWidget = new RadialGroup(shapeDrawer, myStyle) {
-     *     @Override
      *     public void adjustActorSize(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
      *         float size = getEstimatedRadiusAt(degreesPerChild, actorDistanceFromCenter);
      *         size *= 1.26f; // adjusting the returned value to our likes
