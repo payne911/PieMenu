@@ -65,15 +65,15 @@ public class ButtonBound extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.radius = 130;
-        style.innerRadius = 50;
-        style.startDegreesOffset = 180;
-        style.totalDegreesDrawn = 320;
         style.backgroundColor = new Color(1,1,1,.3f);
         style.selectedChildRegionColor = new Color(.7f,.3f,.5f,1);
         style.childRegionColor = new Color(0,.7f,0,1);
         style.alternateChildRegionColor = new Color(.7f,0,0,1);
         menu = new AnimatedPieMenu(shape, style);
+        menu.setRadius(130);
+        menu.setInnerRadius(50);
+        menu.setStartDegreesOffset(180);
+        menu.setTotalDegreesDrawn(320);
 
         /* Customizing the behavior. */
         menu.setInfiniteSelectionRange(true);

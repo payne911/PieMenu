@@ -58,9 +58,6 @@ public class Permanent extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.radius = 100;
-        style.innerRadius = 30;
-        style.totalDegreesDrawn = 180;
         style.circumferenceWidth = 1;
         style.backgroundColor = backgroundColor;
         style.selectedChildRegionColor = new Color(.5f,.5f,.5f,1);
@@ -68,6 +65,9 @@ public class Permanent extends ApplicationAdapter {
         style.alternateChildRegionColor = new Color(.25f,.25f,.25f,1);
         style.circumferenceColor = new Color(0,0,0,1);
         menu = new PieMenu(shape, style);
+        menu.setRadius(100);
+        menu.setInnerRadius(30);
+        menu.setTotalDegreesDrawn(180);
 
         /* Setting up listeners. */
         menu.addListener(new PieMenuSuggestedClickListener());

@@ -60,13 +60,13 @@ public class ClickDrag extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.radius = 80;
         style.separatorWidth = 2;
         style.backgroundColor = new Color(1,1,1,.1f);
         style.separatorColor = new Color(.1f,.1f,.1f,1);
         style.selectedChildRegionColor = new Color(.5f,.5f,.5f,1);
         style.childRegionColor = new Color(.33f,.33f,.33f,1);
         menu = new PieMenu(shape, style);
+        menu.setRadius(80);
 
         /* Customizing the behavior. */
         menu.setInfiniteSelectionRange(true);

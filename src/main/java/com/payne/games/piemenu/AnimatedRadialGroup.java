@@ -143,7 +143,7 @@ public class AnimatedRadialGroup extends RadialGroup {
     @Override
     public void layout() {
         boolean notAnimated = !isCurrentlyAnimated() && !originalColors.isEmpty();
-        float openingPercentage = currentAngle / style.totalDegreesDrawn;
+        float openingPercentage = currentAngle / totalDegreesDrawn;
         float degreesPerChild = currentAngle / getAmountOfChildren();
         float half = 1f / 2;
 
@@ -151,9 +151,9 @@ public class AnimatedRadialGroup extends RadialGroup {
             Actor actor = getChildren().get(i);
             float dist = getActorDistanceFromCenter(actor);
             vector2.set(dist, 0);
-            vector2.rotate(degreesPerChild*(i + half) + style.startDegreesOffset);
+            vector2.rotate(degreesPerChild*(i + half) + startDegreesOffset);
             adjustActorSize(actor, degreesPerChild, dist); // overridden by user
-            actor.setPosition(vector2.x+style.radius, vector2.y+style.radius, Align.center);
+            actor.setPosition(vector2.x+radius, vector2.y+radius, Align.center);
 
             /* Updating alpha (fade-in animation). */
             if(isCurrentlyAnimated()) {
@@ -215,7 +215,7 @@ public class AnimatedRadialGroup extends RadialGroup {
      * @param durationSeconds How long the animation will take to finish.
      */
     public void animateClosing(float durationSeconds) {
-        currentAngle = style.totalDegreesDrawn;
+        currentAngle = totalDegreesDrawn;
         transitionToClosing(durationSeconds);
     }
 
@@ -253,8 +253,8 @@ public class AnimatedRadialGroup extends RadialGroup {
             /* Opening. */
             if(isOpening) {
                 currentAngle += speed;
-                if(currentAngle >= style.totalDegreesDrawn) { // finishing the animation
-                    currentAngle = style.totalDegreesDrawn;
+                if(currentAngle >= totalDegreesDrawn) { // finishing the animation
+                    currentAngle = totalDegreesDrawn;
                     isOpening = false;
                 }
 
@@ -361,7 +361,7 @@ public class AnimatedRadialGroup extends RadialGroup {
      *                     currently be displayed.
      */
     public void setCurrentAngle(float currentAngle) {
-        if(currentAngle >= style.totalDegreesDrawn || currentAngle <= 0)
+        if(currentAngle >= totalDegreesDrawn || currentAngle <= 0)
             throw new IllegalArgumentException("currentAngle must be between 0 and `style.totalDegreesDrawn`.");
         this.currentAngle = currentAngle;
     }

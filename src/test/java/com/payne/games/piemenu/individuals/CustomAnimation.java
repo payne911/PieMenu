@@ -37,13 +37,6 @@ public class CustomAnimation extends ApplicationAdapter {
         skin = new Skin(Gdx.files.internal("skin.json"));
         stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
-
-        /* Basic style. */
-        PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.radius = BASE_RADIUS;
-        style.selectedChildRegionColor = new Color(1,0,0,.5f);
-
-        /* Initializing our PieMenu. */
         sd = new ShapeDrawer(batch, skin.getRegion("white")) {
             /* OPTIONAL: Increasing the precision (at the possible cost of performance). */
             @Override
@@ -51,13 +44,17 @@ public class CustomAnimation extends ApplicationAdapter {
                 return 4*super.estimateSidesRequired(radiusX, radiusY);
             }
         };
+
+        /* Setting up the Widget. */
+        PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
+        style.selectedChildRegionColor = new Color(1,0,0,.5f);
         pieMenu = new PieMenu(sd, style) {
             @Override
             public float getActorDistanceFromCenter(Actor actor) {
 
                 /* We want the Labels to be placed closer to the edge than the default value. */
                 return getAmountOfChildren() > 1
-                        ? getStyle().radius - getChild(0).getWidth()
+                        ? radius - getChild(0).getWidth()
                         : 0;
             }
 
@@ -67,12 +64,12 @@ public class CustomAnimation extends ApplicationAdapter {
 
                 /* Our custom animation! */
                 time += delta*5;
-                pieMenu.getStyle().startDegreesOffset = (time * 10) % 360;
-                pieMenu.getStyle().radius = MathUtils.sin(time) * 20 + BASE_RADIUS;
-                pieMenu.setStyle(pieMenu.getStyle());
+                pieMenu.setStartDegreesOffset((time * 10) % 360);
+                pieMenu.setRadius(MathUtils.sin(time) * 20 + BASE_RADIUS);
                 pieMenu.setPosition(Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f, Align.center);
             }
         };
+        pieMenu.setRadius(BASE_RADIUS);
 
         /* Populating our PieMenu with fancy Labels. */
         for(int i=0 ; i<6 ; i++){

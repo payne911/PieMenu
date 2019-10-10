@@ -50,6 +50,16 @@ public class PieMenu extends RadialGroup {
     private PieMenuStyle style;
 
     /**
+     * WIP. Not yet implemented!
+     */ // todo: integrate into drawing so that selected region is bigger than others
+    @Deprecated protected float selectedRadius;
+
+    /**
+     * WIP. Not yet implemented!
+     */ // todo: integrate into drawing so that hovered region is bigger than others
+    @Deprecated protected float hoveredRadius;
+
+    /**
      * If the "ChangeListener" wasn't enough, you can add a "HighlightChangeListener"
      * to be able to execute code every time the "currently highlighted" value
      * changes.
@@ -60,6 +70,7 @@ public class PieMenu extends RadialGroup {
      * Determines which button must be used to interact with the Widget.
      */
     private int selectionButton = Input.Buttons.LEFT;
+
 
     /* For internal use. */
     private static Vector2 vector2 = new Vector2();
@@ -132,10 +143,10 @@ public class PieMenu extends RadialGroup {
      * @param style a style class you want to check properties of.
      */
     protected void checkStyle(PieMenuStyle style) {
-        if(style.selectedRadius < 0)
-            throw new IllegalArgumentException("selectedRadius cannot be negative.");
-        if(style.selectedRadius == 0)
-            style.selectedRadius = style.radius;
+//        if(style.selectedRadius < 0)
+//            throw new IllegalArgumentException("selectedRadius cannot be negative.");
+//        if(style.selectedRadius == 0)
+//            style.selectedRadius = radius;
         // todo: once integrated, if selectRadius > radius, don't forget to setSize on the Widget
     }
 
@@ -264,12 +275,12 @@ public class PieMenu extends RadialGroup {
     @Override
     public int findChildSectorAtStage(float x, float y) {
         float angle = angleAtStage(x,y);
-        angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
-        int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getAmountOfChildren());
+        angle = ((angle - startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
+        int childIndex = MathUtils.floor(angle / totalDegreesDrawn * getAmountOfChildren());
         if(infiniteSelectionRange)
             return childIndex;
         stageToLocalCoordinates(vector2.set(x,y));
-        return isWithinRadii(vector2.x - style.radius, vector2.y - style.radius)
+        return isWithinRadii(vector2.x - radius, vector2.y - radius)
                 ? childIndex : getAmountOfChildren();
     }
 
@@ -324,9 +335,9 @@ public class PieMenu extends RadialGroup {
 
         /* Pre-calculating */
         float bgRadian = MathUtils.degreesToRadians*degreesToDraw;
-        float tmpOffset = MathUtils.degreesToRadians*style.startDegreesOffset;
-        int size = getAmountOfChildren();
-        float tmpRad = bgRadian / size;
+        float tmpOffset = MathUtils.degreesToRadians*startDegreesOffset;
+        final int SIZE = getAmountOfChildren();
+        float tmpRad = bgRadian / SIZE;
 
         /* Background image */
         if(style.background != null) {
@@ -340,13 +351,13 @@ public class PieMenu extends RadialGroup {
         /* Rest of background */
         if(style.backgroundColor != null) {
             propagateAlpha(sd, style.backgroundColor);
-            sd.sector(getX()+style.radius, getY()+style.radius,
-                    style.radius-BG_BUFFER, tmpOffset, bgRadian);
+            sd.sector(getX()+radius, getY()+radius,
+                    radius-BG_BUFFER, tmpOffset, bgRadian);
         }
 
         /* Children */
-        vector2.set(getX()+style.radius, getY()+style.radius); // center of widget
-        for(int i=0; i<size; i++) {
+        vector2.set(getX()+radius, getY()+radius); // center of widget
+        for(int i=0; i<SIZE; i++) {
             float tmp = tmpOffset + i*tmpRad;
             if(style.selectedChildRegionColor != null)
                 drawChildWithSelection(vector2, i, tmp, tmpRad);
@@ -358,7 +369,7 @@ public class PieMenu extends RadialGroup {
         }
 
         /* The remaining last separator to be drawn */
-        drawChildSeparator(vector2, tmpOffset + size*tmpRad);
+        drawChildSeparator(vector2, tmpOffset + SIZE*tmpRad);
     }
 
     protected void drawChildWithSelection(Vector2 vector2, int index, float startAngle, float radian) {
@@ -370,30 +381,31 @@ public class PieMenu extends RadialGroup {
                                 : index%2 == 0
                                 ? style.childRegionColor
                                 : style.alternateChildRegionColor);
-                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2,
-                        startAngle, radian, style.radius-style.innerRadius);
+                sd.arc(vector2.x, vector2.y, (radius+innerRadius)/2,
+                        startAngle, radian, radius-innerRadius);
             } else {
                 propagateAlpha(sd,
                         index == highlightedIndex
                                 ? style.selectedChildRegionColor
                                 : style.childRegionColor);
-                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2,
-                        startAngle, radian, style.radius-style.innerRadius);
+                sd.arc(vector2.x, vector2.y, (radius+innerRadius)/2,
+                        startAngle, radian, radius-innerRadius);
             }
         } else {
             propagateAlpha(sd,
                     index == highlightedIndex
                             ? style.selectedChildRegionColor
                             : TRANSPARENT); // for when the user only specified a "selectedColor"
-            sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2, startAngle, radian, style.radius-style.innerRadius);
+            sd.arc(vector2.x, vector2.y, (radius+innerRadius)/2,
+                    startAngle, radian, radius-innerRadius);
         }
 
         /* Circumference */
         drawChildCircumference(vector2, startAngle, radian,
-                style.radius - style.circumferenceWidth/2); // todo: integrate selectedRadius here
-        if(style.innerRadius > 0)
+                radius - style.circumferenceWidth/2); // todo: integrate selectedRadius here
+        if(innerRadius > 0)
             drawChildCircumference(vector2, startAngle, radian,
-                    style.innerRadius + style.circumferenceWidth/2);
+                    innerRadius + style.circumferenceWidth/2);
     }
 
 
@@ -425,16 +437,6 @@ public class PieMenu extends RadialGroup {
         @Deprecated public Color hoveredColor; // todo: integrate hoveredColor?
 
         /**
-         * WIP. Not yet implemented!
-         */
-        @Deprecated public float selectedRadius; // todo: integrate into drawing so that selected region is bigger than others
-
-        /**
-         * WIP. Not yet implemented!
-         */
-        @Deprecated public float hoveredRadius; // todo: integrate into drawing so that hovered region is bigger than others
-
-        /**
          * Encompasses all the characteristics that define the way the
          * PieMenu will be drawn.
          */
@@ -445,8 +447,6 @@ public class PieMenu extends RadialGroup {
             super(style);
             this.selectedChildRegionColor = new Color(style.selectedChildRegionColor);
             this.hoveredColor = new Color(style.hoveredColor);
-            this.hoveredRadius = style.hoveredRadius;
-            this.selectedRadius = style.selectedRadius;
         }
     }
 
@@ -529,6 +529,7 @@ public class PieMenu extends RadialGroup {
     }
 
     /**
+     * @see #selectionButton
      * @return the mouse-button that is expected to be required to be pressed or
      * released to interact with the widget.
      */
@@ -539,7 +540,8 @@ public class PieMenu extends RadialGroup {
     /**
      * Determines which button must be used to interact with the Widget.<br>
      * If you are not using the {@link PieMenuSuggestedClickListener}, then this
-     * option will not work as-is and you will have to implement it again.
+     * option will not work "as-is" and you will have to implement it again (if
+     * you want to have it).
      *
      * @param selectionButton Use {@link Input.Buttons} to find the proper integer.
      */
@@ -550,6 +552,7 @@ public class PieMenu extends RadialGroup {
     /**
      * The {@link #infiniteSelectionRange} flag determines whether or not selection
      * should only happen if the mouse is within the radius of the widget.
+     * @see #infiniteSelectionRange
      */
     public boolean isInfiniteSelectionRange() {
         return infiniteSelectionRange;
@@ -558,6 +561,7 @@ public class PieMenu extends RadialGroup {
     /**
      * Determines whether or not selection should only happen if the mouse is
      * within the radius of the widget.
+     * @see #infiniteSelectionRange
      */
     public void setInfiniteSelectionRange(boolean infiniteSelectionRange) {
         this.infiniteSelectionRange = infiniteSelectionRange;
@@ -594,6 +598,7 @@ public class PieMenu extends RadialGroup {
     /**
      * If negative, it means nothing gets selected by default.
      *
+     * @see #defaultIndex
      * @return the index that is used as a fallback value whenever a processed
      *         user-input does not map to a valid child index value.
      */

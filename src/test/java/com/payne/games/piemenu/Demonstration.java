@@ -98,14 +98,13 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         RadialGroup.RadialGroupStyle style = new RadialGroup.RadialGroupStyle();
-        style.radius = 100;
-        style.innerRadius = 50;
-        style.startDegreesOffset = 0;
-        style.totalDegreesDrawn = 180;
         style.backgroundColor = new Color(1,1,1,1);
         style.childRegionColor = new Color(.4f,.4f,.4f,1);
         style.alternateChildRegionColor = new Color(.6f,0,0,1);
         radial = new AnimatedRadialGroup(shape, style);
+        radial.setRadius(100);
+        radial.setInnerRadius(50);
+        radial.setTotalDegreesDrawn(180);
 
         /* Populating the widget. */
         for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
@@ -134,15 +133,15 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.radius = 130;
-        style.innerRadius = 50;
-        style.startDegreesOffset = 180;
-        style.totalDegreesDrawn = 320;
         style.backgroundColor = new Color(1,1,1,.3f);
         style.selectedChildRegionColor = new Color(.7f,.3f,.5f,1);
         style.childRegionColor = new Color(0,.7f,0,1);
         style.alternateChildRegionColor = new Color(.7f,0,0,1);
         dragPie = new AnimatedPieMenu(shape, style);
+        dragPie.setRadius(130);
+        dragPie.setInnerRadius(50);
+        dragPie.setStartDegreesOffset(180);
+        dragPie.setTotalDegreesDrawn(320);
 
         /* Customizing the behavior. */
         dragPie.setInfiniteSelectionRange(true);
@@ -196,13 +195,13 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.radius = 80;
         style.separatorWidth = 2;
         style.backgroundColor = new Color(1,1,1,.1f);
         style.separatorColor = new Color(.1f,.1f,.1f,1);
         style.selectedChildRegionColor = new Color(.5f,.5f,.5f,1);
         style.childRegionColor = new Color(.33f,.33f,.33f,1);
         rightMousePie = new PieMenu(shape, style);
+        rightMousePie.setRadius(80);
 
         /* Customizing the behavior. */
         rightMousePie.setInfiniteSelectionRange(true);
@@ -259,9 +258,6 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         midStyle1 = new PieMenu.PieMenuStyle();
-        midStyle1.radius = 80;
-        midStyle1.innerRadius = 24;
-        midStyle1.startDegreesOffset = 30;
         midStyle1.selectedChildRegionColor = new Color(1,.5f,.5f,.5f);
         midStyle1.background = new Image(new Texture(Gdx.files.internal("rael_pie.png"))).getDrawable();
         middleMousePie = new PieMenu(shape, midStyle1) {
@@ -273,6 +269,9 @@ public class Demonstration extends ApplicationAdapter {
                 actor.setSize(size, size);
             }
         };
+        middleMousePie.setRadius(80);
+        middleMousePie.setInnerRadius(24);
+        middleMousePie.setStartDegreesOffset(30);
 
         /* Customizing the behavior. */
         middleMousePie.setInfiniteSelectionRange(true);
@@ -301,8 +300,6 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Creating an alternate skin, just for showing off */
         midStyle2 = new PieMenu.PieMenuStyle();
-        midStyle2.radius = 80;
-        midStyle2.innerRadius = 27;
         midStyle2.separatorWidth = 2;
         midStyle2.selectedChildRegionColor = new Color(1,.5f,.5f,.5f);
         midStyle2.separatorColor = new Color(.1f,.1f,.1f,.5f);
@@ -314,9 +311,6 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.radius = 80;
-        style.innerRadius = 20;
-        style.totalDegreesDrawn = 180;
         style.circumferenceWidth = 1;
         style.backgroundColor = backgroundColor;
         style.selectedChildRegionColor = new Color(.5f,.5f,.5f,1);
@@ -324,6 +318,9 @@ public class Demonstration extends ApplicationAdapter {
         style.alternateChildRegionColor = new Color(.25f,.25f,.25f,1);
         style.circumferenceColor = new Color(0,0,0,1);
         permaPie = new PieMenu(shape, style);
+        permaPie.setRadius(80);
+        permaPie.setInnerRadius(20);
+        permaPie.setTotalDegreesDrawn(180);
 
         /* Setting up listeners */
         permaPie.addListener(suggestedClickListener);
@@ -406,6 +403,9 @@ public class Demonstration extends ApplicationAdapter {
             middleMousePie.setStyle(
                     middleMousePie.getStyle() == midStyle1
                             ? midStyle2 : midStyle1);
+            middleMousePie.setInnerRadius(
+                    middleMousePie.getStyle() == midStyle1
+                            ? 24 : 27);
         }
     }
 

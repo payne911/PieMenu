@@ -33,6 +33,49 @@ public class RadialGroup extends WidgetGroup {
     private RadialGroupStyle style;
 
     /**
+     * <i>Required.</i><br>
+     * The radius that defines how big the Widget will be.<br>
+     * It must be bigger than {@value #BG_BUFFER}.
+     */
+    protected float radius;
+
+    /**
+     * <i>Optional.</i><br>
+     * If provided, the {@link RadialGroupStyle#childRegionColor} will only fill
+     * the region defined between the {@link #radius} and this value. A hole
+     * will be left into the middle of the Widget, like a doughnut, and if a
+     * {@link RadialGroupStyle#background} or a
+     * {@link RadialGroupStyle#backgroundColor} was provided, it will be visible
+     * in the middle.<br>
+     * Actors inserted into the Widget are placed in the middle between the
+     * innerRadius and the {@link #radius}.
+     */
+    protected float innerRadius;
+
+    /**
+     * <i>Optional.</i><br>
+     * Considers that angles start at 0 along the x-axis and increment up
+     * to 360 in a counter-clockwise fashion.<br>
+     * Defines how far from that origin the {@link #totalDegreesDrawn} will
+     * be drawn.<br>
+     * For example, if {@code startDegreesOffset = 90} and
+     * {@code totalDegreesDrawn = 180}, you would obtain the left half of a
+     * circle. All the children would be spread within that half-circle evenly.
+     */
+    protected float startDegreesOffset;
+
+    /**
+     * <i>Required.</i><br>
+     * If not defined, will be initialized to 360 by default.<br>
+     * Determines the total amount of degrees into which the contained
+     * Actors will be spread.<br>
+     * For example, if {@code startDegreesOffset = 0} and
+     * {@code totalDegreesDrawn = 180}, you would obtain the top half of a
+     * circle.
+     */
+    protected float totalDegreesDrawn = 360;
+
+    /**
      * The alpha value propagated to the whole Widget. It defaults to 1.
      * All the alpha values are multiplied by this value.
      */
@@ -124,13 +167,7 @@ public class RadialGroup extends WidgetGroup {
     public void setStyle(RadialGroupStyle style) {
         checkStyle(style);
         this.style = style;
-        if(style.radius != lastRadius) {
-            lastRadius = style.radius;
-            setSize(getPrefWidth(), getPrefHeight());
-            invalidateHierarchy();
-        } else {
-            invalidate();
-        }
+        invalidate();
     }
 
     /**
@@ -148,26 +185,6 @@ public class RadialGroup extends WidgetGroup {
         if(style.circumferenceWidth < 0)
             throw new IllegalArgumentException("circumferenceWidth cannot be negative.");
 
-        if(style.startDegreesOffset < 0)
-            throw new IllegalArgumentException("startDegreesOffset cannot be negative.");
-        if(style.startDegreesOffset >= 360)
-            throw new IllegalArgumentException("startDegreesOffset must be lower than 360.");
-
-        if(style.radius < BG_BUFFER)
-            throw new IllegalArgumentException("radius cannot be smaller than " + BG_BUFFER + ".");
-
-        if(style.totalDegreesDrawn < 0)
-            throw new IllegalArgumentException("totalDegreesDrawn cannot be negative.");
-        if(style.totalDegreesDrawn > 360)
-            throw new IllegalArgumentException("totalDegreesDrawn must be lower or equal to 360.");
-        if(style.totalDegreesDrawn == 0)
-            style.totalDegreesDrawn = 360;
-
-        if(style.innerRadius < 0)
-            throw new IllegalArgumentException("innerRadius cannot be negative.");
-        if(style.innerRadius >= style.radius)
-            throw new IllegalArgumentException("innerRadius must be smaller than the radius.");
-
         if(style.childRegionColor == null && style.alternateChildRegionColor != null)
             throw new IllegalArgumentException("childRegionColor must also be specified if you are defining alternateChildRegionColor. " +
                     "You can however only specify the childRegionColor, if you want.");
@@ -175,22 +192,22 @@ public class RadialGroup extends WidgetGroup {
 
     @Override
     public float getPrefWidth() {
-        return style.radius * 2;
+        return radius * 2;
     }
 
     @Override
     public float getPrefHeight() {
-        return style.radius * 2;
+        return radius * 2;
     }
 
     @Override
     public float getMinWidth() {
-        return style.radius * 2;
+        return radius * 2;
     }
 
     @Override
     public float getMinHeight() {
-        return style.radius * 2;
+        return radius * 2;
     }
 
     @Override
@@ -236,7 +253,7 @@ public class RadialGroup extends WidgetGroup {
      * @return distance of this Actor's center from the center of the widget.
      */
     public float getActorDistanceFromCenter(Actor actor) {
-        return (style.radius+style.innerRadius)/2;
+        return (radius+innerRadius)/2;
     }
 
     /**
@@ -295,28 +312,28 @@ public class RadialGroup extends WidgetGroup {
      */
     public float getEstimatedRadiusAt(float degreesPerChild, float actorDistanceFromCenter) {
         float tmp1 = actorDistanceFromCenter * MathUtils.sinDeg(degreesPerChild/2);
-        float tmp2 = style.radius - actorDistanceFromCenter;
-        float tmp3 = actorDistanceFromCenter - style.innerRadius;
+        float tmp2 = radius - actorDistanceFromCenter;
+        float tmp3 = actorDistanceFromCenter - innerRadius;
         return Math.min(Math.min(tmp1, tmp2), tmp3);
     }
 
     @Override
     public void layout() {
-        float degreesPerChild = style.totalDegreesDrawn / getAmountOfChildren();
+        float degreesPerChild = totalDegreesDrawn / getAmountOfChildren();
         float half = 1f / 2;
         for (int i = 0; i < getAmountOfChildren(); i++) {
             Actor actor = getChildren().get(i);
             float dist = getActorDistanceFromCenter(actor);
             vector2.set(dist, 0);
-            vector2.rotate(degreesPerChild*(i + half) + style.startDegreesOffset);
+            vector2.rotate(degreesPerChild*(i + half) + startDegreesOffset);
             adjustActorSize(actor, degreesPerChild, dist); // overridden by user
-            actor.setPosition(vector2.x+style.radius, vector2.y+style.radius, Align.center);
+            actor.setPosition(vector2.x+radius, vector2.y+radius, Align.center);
         }
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        drawWithShapeDrawer(batch, parentAlpha, style.totalDegreesDrawn);
+        drawWithShapeDrawer(batch, parentAlpha, totalDegreesDrawn);
         drawMe(batch, parentAlpha);
     }
 
@@ -349,9 +366,9 @@ public class RadialGroup extends WidgetGroup {
 
         /* Pre-calculating */
         float bgRadian = MathUtils.degreesToRadians*degreesToDraw;
-        float tmpOffset = MathUtils.degreesToRadians*style.startDegreesOffset;
-        int size = getAmountOfChildren();
-        float tmpRad = bgRadian / size;
+        float tmpOffset = MathUtils.degreesToRadians*startDegreesOffset;
+        final int SIZE = getAmountOfChildren();
+        float tmpRad = bgRadian / SIZE;
 
         /* Background image */
         if(style.background != null) {
@@ -365,13 +382,13 @@ public class RadialGroup extends WidgetGroup {
         /* Rest of background */
         if(style.backgroundColor != null) {
             propagateAlpha(sd, style.backgroundColor);
-            sd.sector(getX()+style.radius, getY()+style.radius,
-                    style.radius-BG_BUFFER, tmpOffset, bgRadian);
+            sd.sector(getX()+radius, getY()+radius,
+                    radius-BG_BUFFER, tmpOffset, bgRadian);
         }
 
         /* Children */
-        vector2.set(getX()+style.radius, getY()+style.radius); // center of widget
-        for(int i=0; i<size; i++) {
+        vector2.set(getX()+radius, getY()+radius); // center of widget
+        for(int i=0; i<SIZE; i++) {
             float tmp = tmpOffset + i*tmpRad;
             drawChildWithoutSelection(vector2, i, tmp, tmpRad);
 
@@ -380,14 +397,14 @@ public class RadialGroup extends WidgetGroup {
         }
 
         /* The remaining last separator to be drawn */
-        drawChildSeparator(vector2, tmpOffset + size*tmpRad);
+        drawChildSeparator(vector2, tmpOffset + SIZE*tmpRad);
     }
 
     protected void drawChildSeparator(Vector2 vector2, float drawnRadianAngle) {
         if(getAmountOfChildren() > 1 && style.separatorColor != null) {
             propagateAlpha(sd, style.separatorColor);
-            sd.line(pointAtAngle(vector22, vector2, style.innerRadius, drawnRadianAngle),
-                    pointAtAngle(vector23, vector2, style.radius, drawnRadianAngle),
+            sd.line(pointAtAngle(vector22, vector2, innerRadius, drawnRadianAngle),
+                    pointAtAngle(vector23, vector2, radius, drawnRadianAngle),
                     style.separatorWidth);
         }
     }
@@ -399,21 +416,21 @@ public class RadialGroup extends WidgetGroup {
                         index%2 == 0
                                 ? style.childRegionColor
                                 : style.alternateChildRegionColor);
-                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2,
-                        startAngle, radian, style.radius-style.innerRadius);
+                sd.arc(vector2.x, vector2.y, (radius+innerRadius)/2,
+                        startAngle, radian, radius-innerRadius);
             } else {
                 propagateAlpha(sd, style.childRegionColor);
-                sd.arc(vector2.x, vector2.y, (style.radius+style.innerRadius)/2,
-                        startAngle, radian, style.radius-style.innerRadius);
+                sd.arc(vector2.x, vector2.y, (radius+innerRadius)/2,
+                        startAngle, radian, radius-innerRadius);
             }
         }
 
         /* Circumference */
         drawChildCircumference(vector2, startAngle, radian,
-                style.radius - style.circumferenceWidth/2);
-        if(style.innerRadius > 0)
+                radius - style.circumferenceWidth/2);
+        if(innerRadius > 0)
             drawChildCircumference(vector2, startAngle, radian,
-                    style.innerRadius + style.circumferenceWidth/2);
+                    innerRadius + style.circumferenceWidth/2);
     }
 
     protected void drawChildCircumference(Vector2 vector2, float startAngle, float radian, float radius) {
@@ -478,10 +495,10 @@ public class RadialGroup extends WidgetGroup {
      */
     public int findChildSectorAtStage(float x, float y) {
         float angle = angleAtStage(x,y);
-        angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
-        int childIndex = MathUtils.floor(angle / style.totalDegreesDrawn * getAmountOfChildren());
+        angle = ((angle - startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
+        int childIndex = MathUtils.floor(angle / totalDegreesDrawn * getAmountOfChildren());
         stageToLocalCoordinates(vector2.set(x,y));
-        return isWithinRadii(vector2.x - style.radius, vector2.y - style.radius) ? childIndex : getAmountOfChildren(); // size is equivalent to "invalid"
+        return isWithinRadii(vector2.x - radius, vector2.y - radius) ? childIndex : getAmountOfChildren(); // size is equivalent to "invalid"
     }
 
     /**
@@ -500,7 +517,7 @@ public class RadialGroup extends WidgetGroup {
      *         relative to the origin (i.e. middle) of the widget
      */
     public float angleAtStage(float x, float y) {
-        return MathUtils.radiansToDegrees * MathUtils.atan2(y - (getY() + style.radius), x - (getX() + style.radius));
+        return MathUtils.radiansToDegrees * MathUtils.atan2(y - (getY() + radius), x - (getX() + radius));
     }
 
     /**
@@ -513,8 +530,8 @@ public class RadialGroup extends WidgetGroup {
      */
     public boolean isWithinRadii(float x, float y) {
         float distance = pow2(x) + pow2(y);
-        float innerRadSquared = pow2(style.innerRadius);
-        float radSquared = pow2(style.radius);
+        float innerRadSquared = pow2(innerRadius);
+        float radSquared = pow2(radius);
         return distance >= innerRadSquared && distance <= radSquared;
     }
 
@@ -558,41 +575,15 @@ public class RadialGroup extends WidgetGroup {
         return !(index <= -1 || index >= getAmountOfChildren());
     }
 
-    /**
-     * @return The amount of Actors that are currently contained in the Widget.
-     */
-    public int getAmountOfChildren() {
-        return getChildren().size;
-    }
 
 
-    /**
-     * @return the ShapeDrawer used to draw everything but the contained Actors.
-     */
-    public ShapeDrawer getShapeDrawer() {
-        return sd;
-    }
 
-    /**
-     * @return the multiplier's value which is applied to all the alpha values
-     *         of the things contained by the widget (regions, lines, drawables, etc.)
-     */
-    public float getGlobalAlphaMultiplier() {
-        return globalAlphaMultiplier;
-    }
 
-    /**
-     * This will globally change the alpha value of the widget.<br>
-     * It defaults to 1.
-     *
-     * @param globalAlphaMultiplier this value is multiplied to all of the alpha
-     *                              value of the things contained by the widget
-     *                              (regions, lines, drawables, etc.).
+
+    /*
+    =================================== STYLE ==================================
      */
-    public void setGlobalAlphaMultiplier(float globalAlphaMultiplier) {
-        this.globalAlphaMultiplier = globalAlphaMultiplier;
-        setColor(getColor().r, getColor().g, getColor().b, getColor().a * globalAlphaMultiplier);
-    }
+
 
     /**
      * Encompasses all the characteristics that define the way the Widget will be drawn.
@@ -652,48 +643,6 @@ public class RadialGroup extends WidgetGroup {
         public Color circumferenceColor;
 
         /**
-         * <i>Required.</i><br>
-         * The radius that defines how big the Widget will be.<br>
-         * It must be bigger than {@value #BG_BUFFER}.
-         */
-        public float radius;
-
-        /**
-         * <i>Optional.</i><br>
-         * If provided, the {@link #childRegionColor} will only fill the region
-         * defined between the {@link #radius} and this value. A hole will be
-         * left into the middle of the Widget, like a doughnut, and if a
-         * {@link #background} or a {@link #backgroundColor} was provided, it
-         * will be visible in the middle.<br>
-         * Actors inserted into the Widget are placed in the middle between the
-         * innerRadius and the {@link #radius}.
-         */
-        public float innerRadius;
-
-        /**
-         * <i>Optional.</i><br>
-         * Considers that angles start at 0 along the x-axis and increment up
-         * to 360 in a counter-clockwise fashion.<br>
-         * Defines how far from that origin the {@link #totalDegreesDrawn} will
-         * be drawn.<br>
-         * For example, if {@code startDegreesOffset = 90} and
-         * {@code totalDegreesDrawn = 180}, you would obtain the left half of a
-         * circle. All the children would be spread within that half-circle evenly.
-         */
-        public float startDegreesOffset;
-
-        /**
-         * <i>Required.</i><br>
-         * If not defined, will be initialized to 360 by default.<br>
-         * Determines the total amount of degrees into which the contained
-         * Actors will be spread.<br>
-         * For example, if {@code startDegreesOffset = 0} and
-         * {@code totalDegreesDrawn = 180}, you would obtain the top half of a
-         * circle.
-         */
-        public float totalDegreesDrawn;
-
-        /**
          * <i>Recommended. Optional.</i><br>
          * Determines how wide the lines that separate each region will be.<br>
          * If no {@link #separatorColor} was provided along with this value,
@@ -725,14 +674,176 @@ public class RadialGroup extends WidgetGroup {
          */
         public RadialGroupStyle(RadialGroupStyle style) {
             this.background = style.background;
-            this.radius = style.radius;
-            this.innerRadius = style.innerRadius;
-            this.startDegreesOffset = style.startDegreesOffset;
-            this.totalDegreesDrawn = style.totalDegreesDrawn;
+            this.circumferenceWidth = style.circumferenceWidth;
+            this.separatorWidth = style.separatorWidth;
             this.separatorColor = new Color(style.separatorColor);
             this.childRegionColor = new Color(style.childRegionColor);
             this.alternateChildRegionColor = new Color(style.alternateChildRegionColor);
             this.backgroundColor = new Color(style.backgroundColor);
         }
+    }
+
+
+
+
+
+
+
+    /*
+    =============================== GETTERS/SETTERS ============================
+     */
+
+
+    /**
+     * @return The amount of Actors that are currently contained in the Widget.
+     */
+    public int getAmountOfChildren() {
+        return getChildren().size;
+    }
+
+
+    /**
+     * @return the ShapeDrawer used to draw everything but the contained Actors.
+     */
+    public ShapeDrawer getShapeDrawer() {
+        return sd;
+    }
+
+    /**
+     * @return the multiplier's value which is applied to all the alpha values
+     *         of the things contained by the widget (regions, lines, drawables, etc.)
+     */
+    public float getGlobalAlphaMultiplier() {
+        return globalAlphaMultiplier;
+    }
+
+    /**
+     * This will globally change the alpha value of the widget.<br>
+     * It defaults to 1 (completely opaque).
+     *
+     * @param globalAlphaMultiplier this value is multiplied to all of the alpha
+     *                              value of the things contained by the widget
+     *                              (regions, lines, drawables, etc.).
+     */
+    public void setGlobalAlphaMultiplier(float globalAlphaMultiplier) {
+        this.globalAlphaMultiplier = globalAlphaMultiplier;
+        setColor(getColor().r, getColor().g, getColor().b, getColor().a * globalAlphaMultiplier);
+    }
+
+    /**
+     * @see #radius
+     * @return The radius that defines how big the Widget will be.
+     */
+    public float getRadius() {
+        return radius;
+    }
+
+    /**
+     * <i>Required.</i><br>
+     * The radius that defines how big the Widget will be.
+     *
+     * @param radius The value must be bigger than {@value #BG_BUFFER}.
+     *               If the value is smaller than the current {@link #innerRadius}
+     *               then the {@link #innerRadius} is set to a smaller value.
+     */
+    public void setRadius(float radius) {
+        if(radius < BG_BUFFER)
+            throw new IllegalArgumentException("radius cannot be smaller than " + BG_BUFFER + ".");
+        if(radius < innerRadius)
+            setInnerRadius(radius - 1);
+        if(radius != lastRadius) {
+            this.radius = radius;
+            lastRadius = radius;
+            setSize(getPrefWidth(), getPrefHeight());
+            invalidateHierarchy();
+        }
+    }
+
+    /**
+     * @see #innerRadius
+     * @return How far from the center do the regions start being drawn.
+     */
+    public float getInnerRadius() {
+        return innerRadius;
+    }
+
+    /**
+     * <i>Optional.</i><br>
+     * If provided, the {@link RadialGroupStyle#childRegionColor} will only fill
+     * the region defined between the {@link #radius} and this value. A hole
+     * will be left into the middle of the Widget, like a doughnut, and if a
+     * {@link RadialGroupStyle#background} or a
+     * {@link RadialGroupStyle#backgroundColor} was provided, it will be visible
+     * in the middle.<br>
+     * Actors inserted into the Widget are placed in the middle between the
+     * innerRadius and the {@link #radius}.
+     *
+     * @param innerRadius How far from the center do the regions start being
+     *                    drawn.<br>
+     *                    The value must be between 0 (inclusive)
+     *                    and {@link #radius} (exclusive).
+     */
+    public void setInnerRadius(float innerRadius) {
+        if(innerRadius < 0)
+            throw new IllegalArgumentException("innerRadius cannot be negative.");
+        if(innerRadius >= radius)
+            throw new IllegalArgumentException("innerRadius must be smaller than the radius.");
+        this.innerRadius = innerRadius;
+    }
+
+    /**
+     * @see #startDegreesOffset
+     * @return How far from the origin, counter-clockwise, the widget starts
+     *         drawing itself.
+     */
+    public float getStartDegreesOffset() {
+        return startDegreesOffset;
+    }
+
+    /**
+     * <i>Optional.</i><br>
+     * Considers that angles start at 0 along the x-axis and increment up
+     * to 360 in a counter-clockwise fashion.<br>
+     * Defines how far from that origin the {@link #totalDegreesDrawn} will
+     * be drawn.<br>
+     * For example, if {@code startDegreesOffset = 90} and
+     * {@code totalDegreesDrawn = 180}, you would obtain the left half of a
+     * circle. All the children would be spread within that half-circle evenly.
+     *
+     * @param startDegreesOffset Must be between 0 (inclusive) and 360 (exclusive).
+     */
+    public void setStartDegreesOffset(float startDegreesOffset) {
+        if(startDegreesOffset < 0)
+            throw new IllegalArgumentException("startDegreesOffset cannot be negative.");
+        if(startDegreesOffset >= 360)
+            throw new IllegalArgumentException("startDegreesOffset must be lower than 360.");
+        this.startDegreesOffset = startDegreesOffset;
+    }
+
+    /**
+     * @see #totalDegreesDrawn
+     * @return How many degrees should the widget span.
+     */
+    public float getTotalDegreesDrawn() {
+        return totalDegreesDrawn;
+    }
+
+    /**
+     * <i>Required.</i><br>
+     * If not defined, will be initialized to 360 by default.<br>
+     * Determines the total amount of degrees into which the contained
+     * Actors will be spread.<br>
+     * For example, if {@code startDegreesOffset = 0} and
+     * {@code totalDegreesDrawn = 180}, you would obtain the top half of a
+     * circle.
+     *
+     * @param totalDegreesDrawn Must be between 0 and 360 (inclusively).
+     */
+    public void setTotalDegreesDrawn(float totalDegreesDrawn) {
+        if(totalDegreesDrawn < 0)
+            throw new IllegalArgumentException("totalDegreesDrawn cannot be negative.");
+        if(totalDegreesDrawn > 360)
+            throw new IllegalArgumentException("totalDegreesDrawn must be lower or equal to 360.");
+        this.totalDegreesDrawn = totalDegreesDrawn;
     }
 }

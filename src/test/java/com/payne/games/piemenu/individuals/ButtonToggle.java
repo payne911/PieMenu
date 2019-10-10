@@ -63,16 +63,16 @@ public class ButtonToggle extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         RadialGroup.RadialGroupStyle style = new RadialGroup.RadialGroupStyle();
-        style.radius = 110;
-        style.innerRadius = 50;
-        style.startDegreesOffset = 315;
-        style.totalDegreesDrawn = 270;
         style.childRegionColor = new Color(1,1,1,.2f);
         style.separatorWidth = 2;
         style.circumferenceWidth = 2;
         style.circumferenceColor = Color.BLACK;
         style.separatorColor = style.circumferenceColor;
         radGroup = new AnimatedRadialGroup(shape, style);
+        radGroup.setRadius(110);
+        radGroup.setInnerRadius(50);
+        radGroup.setStartDegreesOffset(315);
+        radGroup.setTotalDegreesDrawn(270);
 
         /* Populating the widget. */
         for (int i = 0; i < 8; i++) {
