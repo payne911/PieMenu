@@ -132,6 +132,7 @@ public class Demonstration extends ApplicationAdapter {
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.backgroundColor = new Color(1,1,1,.3f);
         style.selectedChildRegionColor = new Color(.7f,.3f,.5f,1);
+        style.highlightedChildRegionColor = new Color(.7f,.3f,.5f,1);
         style.childRegionColor = new Color(0,.7f,0,1);
         style.alternateChildRegionColor = new Color(.7f,0,0,1);
         dragPie = new AnimatedPieMenu(shape, style, 130, 50, 180, 320);
@@ -209,10 +210,9 @@ public class Demonstration extends ApplicationAdapter {
         style.separatorWidth = 2;
         style.backgroundColor = new Color(1,1,1,.1f);
         style.separatorColor = new Color(.1f,.1f,.1f,1);
-        style.selectedChildRegionColor = new Color(.5f,.5f,.5f,1);
+        style.highlightedChildRegionColor = new Color(.5f,.5f,.5f,1);
         style.childRegionColor = new Color(.33f,.33f,.33f,1);
         rightMousePie = new PieMenu(shape, style, 80);
-        rightMousePie.setVisible(false);
 
         /* Customizing the behavior. */
         rightMousePie.setInfiniteSelectionRange(true);
@@ -275,6 +275,7 @@ public class Demonstration extends ApplicationAdapter {
         /* Setting up and creating the widget. */
         midStyle1 = new PieMenu.PieMenuStyle();
         midStyle1.selectedChildRegionColor = new Color(1,.5f,.5f,.5f);
+        midStyle1.highlightedChildRegionColor = new Color(1,.5f,.5f,.5f);
         midStyle1.background = new Image(new Texture(Gdx.files.internal("rael_pie.png"))).getDrawable();
         middleMousePie = new PieMenu(shape, midStyle1, 80, midStyle1InnerRadius, 30) {
             /* Since we are using Images, we want to resize them to fit within each sector. */
@@ -285,7 +286,6 @@ public class Demonstration extends ApplicationAdapter {
                 actor.setSize(size, size);
             }
         };
-        middleMousePie.setVisible(false);
 
         /* Customizing the behavior. */
         middleMousePie.setInfiniteSelectionRange(true);
@@ -315,6 +315,7 @@ public class Demonstration extends ApplicationAdapter {
         midStyle2 = new PieMenu.PieMenuStyle();
         midStyle2.separatorWidth = 2;
         midStyle2.selectedChildRegionColor = new Color(1,.5f,.5f,.5f);
+        midStyle2.highlightedChildRegionColor = new Color(1,.5f,.5f,.5f);
         midStyle2.separatorColor = new Color(.1f,.1f,.1f,.5f);
         midStyle2.childRegionColor = new Color(.73f,.33f,.33f,.1f);
         midStyle2.background = new Image(new Texture(Gdx.files.internal("disc.png"))).getDrawable();
@@ -326,7 +327,7 @@ public class Demonstration extends ApplicationAdapter {
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.circumferenceWidth = 1;
         style.backgroundColor = backgroundColor;
-        style.selectedChildRegionColor = new Color(.5f,.5f,.5f,1);
+        style.highlightedChildRegionColor = new Color(.5f,.5f,.5f,1);
         style.childRegionColor = new Color(.33f,.33f,.33f,1);
         style.alternateChildRegionColor = new Color(.25f,.25f,.25f,1);
         style.circumferenceColor = new Color(0,0,0,1);

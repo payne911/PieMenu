@@ -59,7 +59,7 @@ public class Permanent extends ApplicationAdapter {
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.circumferenceWidth = 1;
         style.backgroundColor = backgroundColor;
-        style.selectedChildRegionColor = new Color(.5f,.5f,.5f,1);
+        style.highlightedChildRegionColor = new Color(.5f,.5f,.5f,1);
         style.childRegionColor = new Color(.33f,.33f,.33f,1);
         style.alternateChildRegionColor = new Color(.25f,.25f,.25f,1);
         style.circumferenceColor = new Color(0,0,0,1);
