@@ -1,3 +1,13 @@
+[2.3.0]
+- Changed the Actor-sizing algorithm (and thus fixed it for low `innerRadius` values).
+- Integrated the propagation of the alpha from parent to children. Use the `setGlobalAlphaMultiplier(float)` method to do so.
+- Fix for Widgets contained within a Table.
+- Fix of the PieMenuStyle Colors-duplication.
+- The `PieMenuSuggestedClickListener` now triggers a highlight on `touchDown` rather than waiting for the mouse to move after the initial click.
+- HighlightChangeListener now extends EventListener. Removed the associated getter and setter: now `addListener()` should be used for that too.
+- Style's `Circumference` values now include the `innerRadius` value.
+- New API methods to allow more customization: `getActorDistanceFromCenter`, `getEstimatedRadiusAt`  and `adjustActorSize` can be changed to be whatever you want.
+
 [2.2.0]
 - Animated versions of the implementations are now available!
 

@@ -222,7 +222,7 @@ public class RadialGroup extends WidgetGroup {
      * RadialGroup myWidget = new RadialGroup(shapeDrawer, myStyle) {
      *     @Override
      *     public float getActorDistanceFromCenter(Actor actor) {
-     *         // We want the Labels to be placed closer to the edge than the default value
+     *         // We want the Actors to be placed closer to the edge than the default value
      *         return getAmountOfChildren() > 1
      *                 ? getStyle().radius - getChild(0).getWidth()
      *                 : 0;
