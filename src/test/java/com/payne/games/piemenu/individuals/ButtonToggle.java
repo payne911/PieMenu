@@ -90,6 +90,7 @@ public class ButtonToggle extends ApplicationAdapter {
 
         /* Including the Widget in the Stage. */
         stage.addActor(radGroup);
+        radGroup.setVisible(false);
     }
 
 

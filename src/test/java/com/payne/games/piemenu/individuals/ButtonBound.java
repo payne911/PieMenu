@@ -117,6 +117,7 @@ public class ButtonBound extends ApplicationAdapter {
 
         /* Including the Widget in the Stage. */
         stage.addActor(menu);
+        menu.setVisible(false);
     }
 
     /**
