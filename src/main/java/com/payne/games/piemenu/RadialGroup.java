@@ -356,58 +356,6 @@ public class RadialGroup extends WidgetGroup {
 
 
 
-    /**
-     * Returns the label's style. Modifying the returned style may not have an
-     * effect until {@link #setStyle(RadialGroupStyle)} is called.<br>
-     * It's probable that your code will look like this (to give you an idea):
-     * <pre>
-     * {@code
-     * radialGroup.getStyle().whatYouWantToChange = someNewValue;
-     * radialGroup.setStyle(radialGroup.getStyle());
-     * }
-     * </pre>
-     *
-     * @return the Style that defines this Widget. This style contains information
-     * about what is the value of the radius or the width of the separators, for
-     * example.
-     */
-    public RadialGroupStyle getStyle() {
-        return style;
-    }
-
-
-    /**
-     * Runs checks before assigning the style to the Widget. Only a valid style
-     * will pass the test.
-     *
-     * @param style the style that will be checked before being assigned.
-     */
-    public void setStyle(RadialGroupStyle style) {
-        checkStyle(style);
-        this.style = style;
-        invalidate();
-    }
-
-    /**
-     * Ensures the input values for the given style are valid.
-     *
-     * @param style a style class you want to check properties of.
-     */
-    protected void checkStyle(RadialGroupStyle style) {
-        if(style == null)
-            throw new IllegalArgumentException("style cannot be null.");
-
-        if(style.separatorWidth < 0)
-            throw new IllegalArgumentException("separatorWidth cannot be negative.");
-
-        if(style.circumferenceWidth < 0)
-            throw new IllegalArgumentException("circumferenceWidth cannot be negative.");
-
-        if(style.childRegionColor == null && style.alternateChildRegionColor != null)
-            throw new IllegalArgumentException("childRegionColor must also be specified if you are defining alternateChildRegionColor. " +
-                    "You can however only specify the childRegionColor, if you want.");
-    }
-
     @Override
     public float getPrefWidth() {
         return radius * 2;
@@ -577,7 +525,7 @@ public class RadialGroup extends WidgetGroup {
      *
      * @param batch a Batch used to draw Drawables. The {@link #sd} is used to
      *              draw everything else.
-     * @param parentAlpha
+     * @param parentAlpha the inherited parent alpha.
      * @param degreesToDraw how many degrees from the offset should be drawn.
      */
     protected void drawWithShapeDrawer(Batch batch, float parentAlpha, float degreesToDraw) {
@@ -790,7 +738,9 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * Centers the Widget on the center point of the provided Actor.
+     * Centers the Widget on the center point of the provided Actor.<br>
+     * Will not follow this Actor: it just sets the position of the center of
+     * the Widget to the center position of that Actor at that specific time.
      *
      * @param actor the Actor to center on.
      */
@@ -822,6 +772,58 @@ public class RadialGroup extends WidgetGroup {
     =================================== STYLE ==================================
      */
 
+
+    /**
+     * Returns the label's style. Modifying the returned style may not have an
+     * effect until {@link #setStyle(RadialGroupStyle)} is called.<br>
+     * It's probable that your code will look like this (to give you an idea):
+     * <pre>
+     * {@code
+     * radialGroup.getStyle().whatYouWantToChange = someNewValue;
+     * radialGroup.setStyle(radialGroup.getStyle());
+     * }
+     * </pre>
+     *
+     * @return the Style that defines this Widget. This style contains information
+     * about what is the value of the radius or the width of the separators, for
+     * example.
+     */
+    public RadialGroupStyle getStyle() {
+        return style;
+    }
+
+
+    /**
+     * Runs checks before assigning the style to the Widget. Only a valid style
+     * will pass the test.
+     *
+     * @param style the style that will be checked before being assigned.
+     */
+    public void setStyle(RadialGroupStyle style) {
+        checkStyle(style);
+        this.style = style;
+        invalidate();
+    }
+
+    /**
+     * Ensures the input values for the given style are valid.
+     *
+     * @param style a style class you want to check properties of.
+     */
+    protected void checkStyle(RadialGroupStyle style) {
+        if(style == null)
+            throw new IllegalArgumentException("style cannot be null.");
+
+        if(style.separatorWidth < 0)
+            throw new IllegalArgumentException("separatorWidth cannot be negative.");
+
+        if(style.circumferenceWidth < 0)
+            throw new IllegalArgumentException("circumferenceWidth cannot be negative.");
+
+        if(style.childRegionColor == null && style.alternateChildRegionColor != null)
+            throw new IllegalArgumentException("childRegionColor must also be specified if you are defining alternateChildRegionColor. " +
+                    "You can however only specify the childRegionColor, if you want.");
+    }
 
     /**
      * Encompasses all the characteristics that define the way the Widget will be drawn.
@@ -913,6 +915,7 @@ public class RadialGroup extends WidgetGroup {
         public RadialGroupStyle(RadialGroupStyle style) {
             this.background = style.background;
             this.circumferenceWidth = style.circumferenceWidth;
+            this.circumferenceColor = new Color(style.circumferenceColor);
             this.separatorWidth = style.separatorWidth;
             this.separatorColor = new Color(style.separatorColor);
             this.childRegionColor = new Color(style.childRegionColor);
@@ -1026,8 +1029,10 @@ public class RadialGroup extends WidgetGroup {
             throw new IllegalArgumentException("innerRadius cannot be negative.");
         if(innerRadius >= radius)
             throw new IllegalArgumentException("innerRadius must be smaller than the radius.");
-        this.innerRadius = innerRadius;
-        invalidate();
+        if(this.innerRadius != innerRadius) {
+            this.innerRadius = innerRadius;
+            invalidate();
+        }
     }
 
     /**
@@ -1056,8 +1061,10 @@ public class RadialGroup extends WidgetGroup {
             throw new IllegalArgumentException("startDegreesOffset cannot be negative.");
         if(startDegreesOffset >= 360)
             throw new IllegalArgumentException("startDegreesOffset must be lower than 360.");
-        this.startDegreesOffset = startDegreesOffset;
-        invalidate();
+        if(this.startDegreesOffset != startDegreesOffset) {
+            this.startDegreesOffset = startDegreesOffset;
+            invalidate();
+        }
     }
 
     /**
@@ -1084,7 +1091,9 @@ public class RadialGroup extends WidgetGroup {
             throw new IllegalArgumentException("totalDegreesDrawn cannot be negative.");
         if(totalDegreesDrawn > 360)
             throw new IllegalArgumentException("totalDegreesDrawn must be lower or equal to 360.");
-        this.totalDegreesDrawn = totalDegreesDrawn;
-        invalidate();
+        if(this.totalDegreesDrawn != totalDegreesDrawn) {
+            this.totalDegreesDrawn = totalDegreesDrawn;
+            invalidate();
+        }
     }
 }

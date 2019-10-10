@@ -63,7 +63,7 @@ allprojects {
 
     ext {
     	...
-        pieMenuVersion = '2.2.0'
+        pieMenuVersion = '3.0.0-rc1'
     }
     
     repositories {
@@ -98,11 +98,10 @@ The basic idea looks like this:
 ```java
 /* Setting up and creating the widget. */
 PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-style.radius = 80; // you set up the way the widget looks by modifying the "style" variable
-PieMenu menu = new PieMenu(shape, style); // "shape" is an instance of a ShapeDrawer
+style.highlightedChildRegionColor = new Color(.7f,.3f,.5f,1); // "style" variables affect the way the widget looks
+PieMenu menu = new PieMenu(shape, style, 80); // "shape" is an instance of a ShapeDrawer, "80" is the radius
 
-/* Adding the listeners. */
-menu.addListener(new PieMenuSuggestedClickListener());
+/* Adding a listener. */
 menu.addListener(new ChangeListener() {
     @Override
     public void changed(ChangeEvent event, Actor actor) {
@@ -110,9 +109,15 @@ menu.addListener(new ChangeListener() {
     }
 });
 
+/* Populating the widget. */
+for (int i = 0; i < 8; i++) {
+    Label label = new Label(Integer.toString(i), skin);
+    menu.addActor(label);
+}
+
+
 /* Including the Widget in the Stage. */
 stage.addActor(menu);
-menu.setVisible(true);
 ```
 
 And *voilà*!
