@@ -34,11 +34,6 @@ import java.util.HashMap;
 public class AnimatedRadialGroup extends RadialGroup {
 
     /**
-     * How the widget looks.
-     */
-    private RadialGroupStyle style;
-
-    /**
      * Duration of the animation.
      */
     private float duration;
@@ -57,85 +52,186 @@ public class AnimatedRadialGroup extends RadialGroup {
 
 
     /**
-     * An animated {@link RadialGroup}.<br>
-     * A very simple folding/unfolding animation can be displayed whenever desired.<br>
-     * Internally uses a {@link #currentAngle} attribute that is used for transitions
-     * between states. Because of that, using {@link #setVisible(boolean)} might not
-     * always reveal the Widget: you would have to ensure to call a setter before:
-     * <pre>
-     * {@code
-     * myMenu.setCurrentAngle(myMenu.getStyle().totalDegreesDrawn);
-     * myMenu.setVisible(true);
-     * }
-     * </pre>
-     * The value of {@link #currentAngle} dictates the currently revealed amount of
-     * angles, out of the total amount of degrees to be drawn. Its value is of 0
-     * when the class is first initialized, and after a closing animation ended:
-     * that is why you might end up not seeing the widget despite setting its
-     * visibility to {@code true} if you haven't called the recommended line of code
-     * provided above.
+     * See {@link AnimatedRadialGroup} for a description.
      *
      * @param sd used to draw everything but the contained actors.
      * @param style defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
      */
-    public AnimatedRadialGroup(ShapeDrawer sd, RadialGroupStyle style) {
-        super(sd, style);
-        this.style = getStyle();
+    public AnimatedRadialGroup(ShapeDrawer sd, RadialGroupStyle style, float radius) {
+        super(sd, style, radius);
     }
 
     /**
-     * An animated {@link RadialGroup}.<br>
-     * A very simple folding/unfolding animation can be displayed whenever desired.<br>
-     * Internally uses a {@link #currentAngle} attribute that is used for transitions
-     * between states. Because of that, using {@link #setVisible(boolean)} might not
-     * always reveal the Widget: you would have to ensure to call a setter before:
-     * <pre>
-     * {@code
-     * myMenu.setCurrentAngle(myMenu.getStyle().totalDegreesDrawn);
-     * myMenu.setVisible(true);
-     * }
-     * </pre>
-     * The value of {@link #currentAngle} dictates the currently revealed amount of
-     * angles, out of the total amount of degrees to be drawn. Its value is of 0
-     * when the class is first initialized, and after a closing animation ended:
-     * that is why you might end up not seeing the widget despite setting its
-     * visibility to {@code true} if you haven't called the recommended line of code
-     * provided above.
+     * See {@link AnimatedRadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param style defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     */
+    public AnimatedRadialGroup(ShapeDrawer sd, RadialGroupStyle style, float radius,
+                               float innerRadius) {
+        super(sd, style, radius, innerRadius);
+    }
+
+    /**
+     * See {@link AnimatedRadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param style defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     */
+    public AnimatedRadialGroup(ShapeDrawer sd, RadialGroupStyle style, float radius,
+                               float innerRadius, float startDegreesOffset) {
+        super(sd, style, radius, innerRadius, startDegreesOffset);
+    }
+
+    /**
+     * See {@link AnimatedRadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param style defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
+     *                          many degrees the widget will span, starting from
+     *                          its {@link #startDegreesOffset}.
+     */
+    public AnimatedRadialGroup(ShapeDrawer sd, RadialGroupStyle style, float radius,
+                               float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
+        super(sd, style, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
+    }
+
+    /**
+     * See {@link AnimatedRadialGroup} for a description.
      *
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
      */
-    public AnimatedRadialGroup(ShapeDrawer sd, Skin skin) {
-        super(sd, skin);
-        this.style = getStyle();
+    public AnimatedRadialGroup(ShapeDrawer sd, Skin skin, float radius) {
+        super(sd, skin, radius);
     }
 
     /**
-     * An animated {@link RadialGroup}.<br>
-     * A very simple folding/unfolding animation can be displayed whenever desired.<br>
-     * Internally uses a {@link #currentAngle} attribute that is used for transitions
-     * between states. Because of that, using {@link #setVisible(boolean)} might not
-     * always reveal the Widget: you would have to ensure to call a setter before:
-     * <pre>
-     * {@code
-     * myMenu.setCurrentAngle(myMenu.getStyle().totalDegreesDrawn);
-     * myMenu.setVisible(true);
-     * }
-     * </pre>
-     * The value of {@link #currentAngle} dictates the currently revealed amount of
-     * angles, out of the total amount of degrees to be drawn. Its value is of 0
-     * when the class is first initialized, and after a closing animation ended:
-     * that is why you might end up not seeing the widget despite setting its
-     * visibility to {@code true} if you haven't called the recommended line of code
-     * provided above.
+     * See {@link AnimatedRadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     */
+    public AnimatedRadialGroup(ShapeDrawer sd, Skin skin, float radius, float innerRadius) {
+        super(sd, skin, radius, innerRadius);
+    }
+
+    /**
+     * See {@link AnimatedRadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     */
+    public AnimatedRadialGroup(ShapeDrawer sd, Skin skin, float radius, float innerRadius,
+                               float startDegreesOffset) {
+        super(sd, skin, radius, innerRadius, startDegreesOffset);
+    }
+
+    /**
+     * See {@link AnimatedRadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
+     *                          many degrees the widget will span, starting from
+     *                          its {@link #startDegreesOffset}.
+     */
+    public AnimatedRadialGroup(ShapeDrawer sd, Skin skin, float radius, float innerRadius,
+                               float startDegreesOffset, float totalDegreesDrawn) {
+        super(sd, skin, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
+    }
+
+    /**
+     * See {@link AnimatedRadialGroup} for a description.
      *
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
+     * @param radius the {@link #radius} that defines the size of the widget.
      */
-    public AnimatedRadialGroup(ShapeDrawer sd, Skin skin, String style) {
-        super(sd, skin, style);
-        this.style = getStyle();
+    public AnimatedRadialGroup(ShapeDrawer sd, Skin skin, String style, float radius) {
+        super(sd, skin, style, radius);
+    }
+
+    /**
+     * See {@link AnimatedRadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     */
+    public AnimatedRadialGroup(ShapeDrawer sd, Skin skin, String style, float radius,
+                               float innerRadius) {
+        super(sd, skin, radius, innerRadius);
+    }
+
+    /**
+     * See {@link AnimatedRadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     */
+    public AnimatedRadialGroup(ShapeDrawer sd, Skin skin, String style, float radius,
+                               float innerRadius, float startDegreesOffset) {
+        super(sd, skin, radius, innerRadius, startDegreesOffset);
+    }
+
+    /**
+     * See {@link AnimatedRadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
+     *                          many degrees the widget will span, starting from
+     *                          its {@link #startDegreesOffset}.
+     */
+    public AnimatedRadialGroup(ShapeDrawer sd, Skin skin, String style, float radius,
+                               float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
+        super(sd, skin, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
     }
 
 

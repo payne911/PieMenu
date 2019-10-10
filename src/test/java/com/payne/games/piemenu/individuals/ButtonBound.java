@@ -69,11 +69,7 @@ public class ButtonBound extends ApplicationAdapter {
         style.selectedChildRegionColor = new Color(.7f,.3f,.5f,1);
         style.childRegionColor = new Color(0,.7f,0,1);
         style.alternateChildRegionColor = new Color(.7f,0,0,1);
-        menu = new AnimatedPieMenu(shape, style);
-        menu.setRadius(130);
-        menu.setInnerRadius(50);
-        menu.setStartDegreesOffset(180);
-        menu.setTotalDegreesDrawn(320);
+        menu = new AnimatedPieMenu(shape, style, 130, 50, 180, 320);
 
         /* Customizing the behavior. */
         menu.setInfiniteSelectionRange(true);

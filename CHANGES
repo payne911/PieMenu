@@ -1,4 +1,8 @@
-[2.3.0]
+[3.0.0]
+- Refactored the Style so that most of the `float` values (`radius` and the likes) have become class-attributes instead.
+- Many more constructors available. Basic `float` properties (`radius` and the likes) are now integrated in the constructors.
+- `PieMenuSuggestedClickListener` renamed to `PieMenuClickListener` due to default integration. A setter is provided to change this `ClickListener` to a custom one.
+- Widget now starts with its visibility set to `true` (it used to be `false`): this is to remain closer to scene2d's expected behavior.
 - Changed the Actor-sizing algorithm (and thus fixed it for low `innerRadius` values).
 - Integrated the propagation of the alpha from parent to children. Use the `setGlobalAlphaMultiplier(float)` method to do so.
 - Fix for Widgets contained within a Table.
@@ -16,10 +20,10 @@
 - Minor fix on the `PieMenu`'s `hit` method.
 
 [2.0.0]
-- The default of "infiniteSelectionRange" is now `false`.
-- Removed the PieMenu.SuggestedClickListener inner class and made it its own class: PieMenuSuggestedClickListener.
-- Removed the "manualVisibility" flag: it wasn't consistent enough and forced users to learn or guess about some internal workings.
-- Removed the "highlightIsSelection" flag: it complexified the API despite there being the Highlight callback.
+- The default of `infiniteSelectionRange` is now `false`.
+- Removed the PieMenu.SuggestedClickListener inner class and made it its own class: `PieMenuSuggestedClickListener`.
+- Removed the `manualVisibility` flag: it wasn't consistent enough and forced users to learn or guess about some internal workings.
+- Removed the `highlightIsSelection` flag: it complexified the API despite there being the Highlight callback.
 - Fixed a bug with the `selectIndex(int)` method.
 - Preparing HTML-GWT set up.
 - Multisampling from the DesktopLauncher for smoother recordings.

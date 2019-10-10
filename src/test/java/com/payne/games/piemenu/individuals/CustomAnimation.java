@@ -48,7 +48,7 @@ public class CustomAnimation extends ApplicationAdapter {
         /* Setting up the Widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.selectedChildRegionColor = new Color(1,0,0,.5f);
-        pieMenu = new PieMenu(sd, style) {
+        pieMenu = new PieMenu(sd, style, BASE_RADIUS) {
             @Override
             public float getActorDistanceFromCenter(Actor actor) {
 
@@ -69,7 +69,6 @@ public class CustomAnimation extends ApplicationAdapter {
                 pieMenu.setPosition(Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f, Align.center);
             }
         };
-        pieMenu.setRadius(BASE_RADIUS);
 
         /* Populating our PieMenu with fancy Labels. */
         for(int i=0 ; i<6 ; i++){
@@ -110,7 +109,6 @@ public class CustomAnimation extends ApplicationAdapter {
 
         /* Placing the PieMenu. */
         stage.addActor(pieMenu);
-        pieMenu.setVisible(true);
     }
 
     @Override

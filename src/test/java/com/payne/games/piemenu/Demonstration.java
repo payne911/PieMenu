@@ -35,6 +35,8 @@ public class Demonstration extends ApplicationAdapter {
     private PieMenu.PieMenuStyle midStyle2;
     private AnimatedRadialGroup radial;
 
+    private float midStyle1InnerRadius = 24;
+    private float midStyle2InnerRadius = 27;
     private Color backgroundColor = new Color(1,1,1,.2f);
     private int dragPieAmount = 0;
     private int permaPieAmount = 0;
@@ -101,10 +103,7 @@ public class Demonstration extends ApplicationAdapter {
         style.backgroundColor = new Color(1,1,1,1);
         style.childRegionColor = new Color(.4f,.4f,.4f,1);
         style.alternateChildRegionColor = new Color(.6f,0,0,1);
-        radial = new AnimatedRadialGroup(shape, style);
-        radial.setRadius(100);
-        radial.setInnerRadius(50);
-        radial.setTotalDegreesDrawn(180);
+        radial = new AnimatedRadialGroup(shape, style, 100, 50, 0, 180);
 
         /* Populating the widget. */
         for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
@@ -126,6 +125,7 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Including the Widget in the Stage. */
         stage.addActor(radial);
+        radial.setVisible(false);
     }
 
 
@@ -137,11 +137,7 @@ public class Demonstration extends ApplicationAdapter {
         style.selectedChildRegionColor = new Color(.7f,.3f,.5f,1);
         style.childRegionColor = new Color(0,.7f,0,1);
         style.alternateChildRegionColor = new Color(.7f,0,0,1);
-        dragPie = new AnimatedPieMenu(shape, style);
-        dragPie.setRadius(130);
-        dragPie.setInnerRadius(50);
-        dragPie.setStartDegreesOffset(180);
-        dragPie.setTotalDegreesDrawn(320);
+        dragPie = new AnimatedPieMenu(shape, style, 130, 50, 180, 320);
 
         /* Customizing the behavior. */
         dragPie.setInfiniteSelectionRange(true);
@@ -189,6 +185,7 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Including the Widget in the Stage. */
         stage.addActor(dragPie);
+        dragPie.setVisible(false);
     }
 
     private void setUpRightMousePieMenu() {
@@ -200,8 +197,8 @@ public class Demonstration extends ApplicationAdapter {
         style.separatorColor = new Color(.1f,.1f,.1f,1);
         style.selectedChildRegionColor = new Color(.5f,.5f,.5f,1);
         style.childRegionColor = new Color(.33f,.33f,.33f,1);
-        rightMousePie = new PieMenu(shape, style);
-        rightMousePie.setRadius(80);
+        rightMousePie = new PieMenu(shape, style, 80);
+        rightMousePie.setVisible(false);
 
         /* Customizing the behavior. */
         rightMousePie.setInfiniteSelectionRange(true);
@@ -260,7 +257,7 @@ public class Demonstration extends ApplicationAdapter {
         midStyle1 = new PieMenu.PieMenuStyle();
         midStyle1.selectedChildRegionColor = new Color(1,.5f,.5f,.5f);
         midStyle1.background = new Image(new Texture(Gdx.files.internal("rael_pie.png"))).getDrawable();
-        middleMousePie = new PieMenu(shape, midStyle1) {
+        middleMousePie = new PieMenu(shape, midStyle1, 80, midStyle1InnerRadius, 30) {
             /* Since we are using Images, we want to resize them to fit within each sector. */
             @Override
             public void adjustActorSize(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
@@ -269,9 +266,7 @@ public class Demonstration extends ApplicationAdapter {
                 actor.setSize(size, size);
             }
         };
-        middleMousePie.setRadius(80);
-        middleMousePie.setInnerRadius(24);
-        middleMousePie.setStartDegreesOffset(30);
+        middleMousePie.setVisible(false);
 
         /* Customizing the behavior. */
         middleMousePie.setInfiniteSelectionRange(true);
@@ -317,10 +312,7 @@ public class Demonstration extends ApplicationAdapter {
         style.childRegionColor = new Color(.33f,.33f,.33f,1);
         style.alternateChildRegionColor = new Color(.25f,.25f,.25f,1);
         style.circumferenceColor = new Color(0,0,0,1);
-        permaPie = new PieMenu(shape, style);
-        permaPie.setRadius(80);
-        permaPie.setInnerRadius(20);
-        permaPie.setTotalDegreesDrawn(180);
+        permaPie = new PieMenu(shape, style, 80, 20, 0 ,180);
 
         /* Setting up listeners */
         permaPie.addListener(suggestedClickListener);
@@ -344,7 +336,6 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Including the Widget at some absolute coordinate in the World. */
         permaPie.setPosition(Gdx.graphics.getWidth()/2f,0, Align.center);
-        permaPie.setVisible(true);
         stage.addActor(permaPie);
     }
 
@@ -405,7 +396,7 @@ public class Demonstration extends ApplicationAdapter {
                             ? midStyle2 : midStyle1);
             middleMousePie.setInnerRadius(
                     middleMousePie.getStyle() == midStyle1
-                            ? 24 : 27);
+                            ? midStyle1InnerRadius : midStyle2InnerRadius);
         }
     }
 

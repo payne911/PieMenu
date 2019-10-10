@@ -93,50 +93,267 @@ public class RadialGroup extends WidgetGroup {
     /**
      * Used internally for the shared properties among constructors of RadialWidgets.
      */
-    protected RadialGroup(final ShapeDrawer sd) {
+    protected RadialGroup(final ShapeDrawer sd, float radius) {
         this.sd = sd;
-        setVisible(false);
+        setRadius(radius);
     }
 
     /**
-     * A RadialGroup aims at providing the user with a simple way to lay out
-     * the contained Actors in a circular fashion.
+     * Used internally for the shared properties among constructors of RadialWidgets.
+     */
+    protected RadialGroup(final ShapeDrawer sd, float radius, float innerRadius) {
+        this.sd = sd;
+        setRadius(radius);
+        setInnerRadius(innerRadius);
+    }
+
+    /**
+     * Used internally for the shared properties among constructors of RadialWidgets.
+     */
+    protected RadialGroup(final ShapeDrawer sd, float radius, float innerRadius,
+                          float startDegreesOffset) {
+        this.sd = sd;
+        setRadius(radius);
+        setInnerRadius(innerRadius);
+        setStartDegreesOffset(startDegreesOffset);
+    }
+
+    /**
+     * Used internally for the shared properties among constructors of RadialWidgets.
+     */
+    protected RadialGroup(final ShapeDrawer sd, float radius, float innerRadius,
+                          float startDegreesOffset, float totalDegreesDrawn) {
+        this.sd = sd;
+        setRadius(radius);
+        setInnerRadius(innerRadius);
+        setStartDegreesOffset(startDegreesOffset);
+        setTotalDegreesDrawn(totalDegreesDrawn);
+    }
+
+    private void constructorsCommon() {
+        setTouchable(Touchable.childrenOnly);
+    }
+
+    /**
+     * See {@link RadialGroup} for a description.
      *
      * @param sd used to draw everything but the contained actors.
      * @param style defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
      */
-    public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style) {
-        this(sd);
+    public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style, float radius) {
+        this(sd, radius);
         setStyle(style);
-        setTouchable(Touchable.childrenOnly);
+        constructorsCommon();
     }
 
     /**
-     * A RadialGroup aims at providing the user with a simple way to lay out
-     * the contained Actors in a circular fashion.
+     * See {@link RadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param style defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     */
+    public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style, float radius,
+                       float innerRadius) {
+        this(sd, radius, innerRadius);
+        setStyle(style);
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link RadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param style defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     */
+    public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style, float radius,
+                       float innerRadius, float startDegreesOffset) {
+        this(sd, radius, innerRadius, startDegreesOffset);
+        setStyle(style);
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link RadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param style defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
+     *                          many degrees the widget will span, starting from
+     *                          its {@link #startDegreesOffset}.
+     */
+    public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style, float radius,
+                       float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
+        this(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
+        setStyle(style);
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link RadialGroup} for a description.
      *
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
      */
-    public RadialGroup(final ShapeDrawer sd, Skin skin) {
-        this(sd);
+    public RadialGroup(final ShapeDrawer sd, Skin skin, float radius) {
+        this(sd, radius);
         setStyle(skin.get(RadialGroupStyle.class));
-        setTouchable(Touchable.childrenOnly);
+        constructorsCommon();
     }
 
     /**
-     * A RadialGroup aims at providing the user with a simple way to lay out
-     * the contained Actors in a circular fashion.
+     * See {@link RadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     */
+    public RadialGroup(final ShapeDrawer sd, Skin skin, float radius,
+                       float innerRadius) {
+        this(sd, radius, innerRadius);
+        setStyle(skin.get(RadialGroupStyle.class));
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link RadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     */
+    public RadialGroup(final ShapeDrawer sd, Skin skin, float radius,
+                       float innerRadius, float startDegreesOffset) {
+        this(sd, radius, innerRadius, startDegreesOffset);
+        setStyle(skin.get(RadialGroupStyle.class));
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link RadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
+     *                          many degrees the widget will span, starting from
+     *                          its {@link #startDegreesOffset}.
+     */
+    public RadialGroup(final ShapeDrawer sd, Skin skin, float radius,
+                       float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
+        this(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
+        setStyle(skin.get(RadialGroupStyle.class));
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link RadialGroup} for a description.
      *
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
+     * @param radius the {@link #radius} that defines the size of the widget.
      */
-    public RadialGroup(final ShapeDrawer sd, Skin skin, String style) {
-        this(sd);
+    public RadialGroup(final ShapeDrawer sd, Skin skin, String style, float radius) {
+        this(sd, radius);
         setStyle(skin.get(style, RadialGroupStyle.class));
-        setTouchable(Touchable.childrenOnly);
+        constructorsCommon();
     }
+
+
+    /**
+     * See {@link RadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     */
+    public RadialGroup(final ShapeDrawer sd, Skin skin, String style, float radius,
+                       float innerRadius) {
+        this(sd, radius, innerRadius);
+        setStyle(skin.get(style, RadialGroupStyle.class));
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link RadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     */
+    public RadialGroup(final ShapeDrawer sd, Skin skin, String style, float radius,
+                       float innerRadius, float startDegreesOffset) {
+        this(sd, radius, innerRadius, startDegreesOffset);
+        setStyle(skin.get(style, RadialGroupStyle.class));
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link RadialGroup} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
+     *                          many degrees the widget will span, starting from
+     *                          its {@link #startDegreesOffset}.
+     */
+    public RadialGroup(final ShapeDrawer sd, Skin skin, String style, float radius,
+                       float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
+        this(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
+        setStyle(skin.get(style, RadialGroupStyle.class));
+        constructorsCommon();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Returns the label's style. Modifying the returned style may not have an

@@ -79,45 +79,226 @@ public class PieMenu extends RadialGroup {
 
 
 
+    private void constructorsCommon() {
+        setTouchable(Touchable.enabled);
+    }
+
     /**
-     * A PieMenu reuses the {@link RadialGroup}'s functionalities to provide a way
-     * to interact with the contained Actors through the "hit-box" of the regions.
+     * See {@link PieMenu} for a description.
      *
      * @param sd used to draw everything but the contained actors.
      * @param style defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
      */
-    public PieMenu(final ShapeDrawer sd, PieMenuStyle style) {
-        super(sd);
+    public PieMenu(final ShapeDrawer sd, PieMenuStyle style, float radius) {
+        super(sd, radius);
         setStyle(style);
-        setTouchable(Touchable.enabled);
+        constructorsCommon();
     }
 
     /**
-     * A PieMenu reuses the {@link RadialGroup}'s functionalities to provide a way
-     * to interact with the contained Actors through the "hit-box" of the regions.
+     * See {@link PieMenu} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param style defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     */
+    public PieMenu(final ShapeDrawer sd, PieMenuStyle style, float radius, float innerRadius) {
+        super(sd, radius, innerRadius);
+        setStyle(style);
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link PieMenu} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param style defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     */
+    public PieMenu(final ShapeDrawer sd, PieMenuStyle style, float radius, float innerRadius,
+                   float startDegreesOffset) {
+        super(sd, radius, innerRadius, startDegreesOffset);
+        setStyle(style);
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link PieMenu} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param style defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
+     *                          many degrees the widget will span, starting from
+     *                          its {@link #startDegreesOffset}.
+     */
+    public PieMenu(final ShapeDrawer sd, PieMenuStyle style, float radius, float innerRadius,
+                   float startDegreesOffset, float totalDegreesDrawn) {
+        super(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
+        setStyle(style);
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link PieMenu} for a description.
      *
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
      */
-    public PieMenu(final ShapeDrawer sd, Skin skin) {
-        super(sd);
+    public PieMenu(final ShapeDrawer sd, Skin skin, float radius) {
+        super(sd, radius);
         setStyle(skin.get(PieMenuStyle.class));
-        setTouchable(Touchable.enabled);
+        constructorsCommon();
     }
 
     /**
-     * A PieMenu reuses the {@link RadialGroup}'s functionalities to provide a way
-     * to interact with the contained Actors through the "hit-box" of the regions.
+     * See {@link PieMenu} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     */
+    public PieMenu(final ShapeDrawer sd, Skin skin, float radius, float innerRadius) {
+        super(sd, radius, innerRadius);
+        setStyle(skin.get(PieMenuStyle.class));
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link PieMenu} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     */
+    public PieMenu(final ShapeDrawer sd, Skin skin, float radius, float innerRadius,
+                   float startDegreesOffset) {
+        super(sd, radius, innerRadius, startDegreesOffset);
+        setStyle(skin.get(PieMenuStyle.class));
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link PieMenu} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
+     *                          many degrees the widget will span, starting from
+     *                          its {@link #startDegreesOffset}.
+     */
+    public PieMenu(final ShapeDrawer sd, Skin skin, float radius, float innerRadius,
+                   float startDegreesOffset, float totalDegreesDrawn) {
+        super(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
+        setStyle(skin.get(PieMenuStyle.class));
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link PieMenu} for a description.
      *
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
+     * @param radius the {@link #radius} that defines the size of the widget.
      */
-    public PieMenu(final ShapeDrawer sd, Skin skin, String style) {
-        super(sd);
+    public PieMenu(final ShapeDrawer sd, Skin skin, String style, float radius) {
+        super(sd, radius);
         setStyle(skin.get(style, PieMenuStyle.class));
-        setTouchable(Touchable.enabled);
+        constructorsCommon();
     }
+
+    /**
+     * See {@link PieMenu} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     */
+    public PieMenu(final ShapeDrawer sd, Skin skin, String style, float radius,
+                   float innerRadius) {
+        super(sd, radius, innerRadius);
+        setStyle(skin.get(style, PieMenuStyle.class));
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link PieMenu} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     */
+    public PieMenu(final ShapeDrawer sd, Skin skin, String style, float radius,
+                   float innerRadius, float startDegreesOffset) {
+        super(sd, radius, innerRadius, startDegreesOffset);
+        setStyle(skin.get(style, PieMenuStyle.class));
+        constructorsCommon();
+    }
+
+    /**
+     * See {@link PieMenu} for a description.
+     *
+     * @param sd used to draw everything but the contained actors.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     *                    center should the regions start.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
+     *                          many degrees the widget will span, starting from
+     *                          its {@link #startDegreesOffset}.
+     */
+    public PieMenu(final ShapeDrawer sd, Skin skin, String style, float radius,
+                   float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
+        super(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
+        setStyle(skin.get(style, PieMenuStyle.class));
+        constructorsCommon();
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
     /**

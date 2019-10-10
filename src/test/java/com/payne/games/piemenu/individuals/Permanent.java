@@ -64,10 +64,7 @@ public class Permanent extends ApplicationAdapter {
         style.childRegionColor = new Color(.33f,.33f,.33f,1);
         style.alternateChildRegionColor = new Color(.25f,.25f,.25f,1);
         style.circumferenceColor = new Color(0,0,0,1);
-        menu = new PieMenu(shape, style);
-        menu.setRadius(100);
-        menu.setInnerRadius(30);
-        menu.setTotalDegreesDrawn(180);
+        menu = new PieMenu(shape, style, 100, 30, 0 ,180);
 
         /* Setting up listeners. */
         menu.addListener(new PieMenuSuggestedClickListener());

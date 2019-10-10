@@ -58,7 +58,7 @@ public class ClickToggle extends ApplicationAdapter {
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.background = new Image(new Texture(Gdx.files.internal("rael_pie.png"))).getDrawable(); // image background!
         style.selectedChildRegionColor = new Color(1,.5f,.5f,.5f);
-        menu = new PieMenu(shape, style) {
+        menu = new PieMenu(shape, style, 80, 24, 30) {
             /* Since we are using Images, we want to resize them to fit within each sector. */
             @Override
             public void adjustActorSize(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
@@ -67,9 +67,6 @@ public class ClickToggle extends ApplicationAdapter {
                 actor.setSize(size, size);
             }
         };
-        menu.setRadius(80);
-        menu.setInnerRadius(24);
-        menu.setStartDegreesOffset(30);
 
         /* Customizing the behavior. */
         menu.setInfiniteSelectionRange(true);
