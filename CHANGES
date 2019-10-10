@@ -1,8 +1,9 @@
 [3.0.0]
 - Refactored the Style so that most of the `float` values (`radius` and the likes) have become class-attributes instead.
 - Many more constructors available. Basic `float` properties (`radius` and the likes) are now integrated in the constructors.
-- `PieMenuSuggestedClickListener` renamed to `PieMenuClickListener` due to default integration. A setter is provided to change this `ClickListener` to a custom one.
-- Widget now starts with its visibility set to `true` (it used to be `false`): this is to remain closer to scene2d's expected behavior.
+- `PieMenuSuggestedClickListener` renamed to `PieMenuClickListener` due to its now-default integration as a static inner class. A setter is provided to change this `ClickListener` to a custom one.
+- Removed from the API the `@Deprecated` methods which should have been implemented by the users themselves anyway. This is reflected in the corresponding code-examples.
+- Widgets now start with their visibility set to `true` (it used to be `false`): this is to remain closer to scene2d's expected behavior.
 - Changed the Actor-sizing algorithm (and thus fixed it for low `innerRadius` values).
 - Integrated the propagation of the alpha from parent to children. Use the `setGlobalAlphaMultiplier(float)` method to do so.
 - Fix for Widgets contained within a Table.

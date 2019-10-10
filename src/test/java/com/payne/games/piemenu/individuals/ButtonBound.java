@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -20,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.AnimatedPieMenu;
 import com.payne.games.piemenu.PieMenu;
-import com.payne.games.piemenu.PieMenuSuggestedClickListener;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
@@ -94,13 +94,13 @@ public class ButtonBound extends ApplicationAdapter {
                 menu.resetSelection();
                 menu.centerOnActor(textButton);
                 menu.animateOpening(.4f);
-                menu.transferInteraction(stage, new PieMenuSuggestedClickListener(), menu.getSelectionButton());
+                transferInteraction(stage, menu);
                 return true;
             }
         });
         root.add(textButton).expand().bottom();
 
-        /* Adding the listener. */
+        /* Adding a selection-listener. */
         menu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -117,6 +117,23 @@ public class ButtonBound extends ApplicationAdapter {
 
         /* Including the Widget in the Stage. */
         stage.addActor(menu);
+    }
+
+    /**
+     * To be used to get the user to transition directly into
+     * {@link InputListener#touchDragged(InputEvent, float, float, int)}
+     * as if he had triggered
+     * {@link InputListener#touchDown(InputEvent, float, float, int, int)}.<br>
+     * I am not certain this is the recommended way of doing this, but for the
+     * purposes of this demonstration, it works!
+     *
+     * @param stage the stage.
+     * @param widget the PieMenu on which to transfer the interaction.
+     */
+    private void transferInteraction(Stage stage, PieMenu widget) {
+        if(widget == null) throw new IllegalArgumentException("widget cannot be null.");
+        if(widget.getPieMenuListener() == null) throw new IllegalArgumentException("inputListener cannot be null.");
+        stage.addTouchFocus(widget.getPieMenuListener(), widget, widget, 0, widget.getSelectionButton());
     }
 
 

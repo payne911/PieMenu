@@ -46,9 +46,6 @@ public class Demonstration extends ApplicationAdapter {
     private float blue = .45f;
     private final int INITIAL_CHILDREN_AMOUNT = 5;
 
-    /* An "out-of-the-box" ClickListener that works as-is. You can make your own, though. */
-    private PieMenuSuggestedClickListener suggestedClickListener = new PieMenuSuggestedClickListener();
-
 
     @Override
     public void create () {
@@ -162,13 +159,13 @@ public class Demonstration extends ApplicationAdapter {
                 dragPie.resetSelection();
                 dragPie.centerOnActor(textButton);
                 dragPie.animateOpening(.4f);
-                dragPie.transferInteraction(stage, suggestedClickListener, dragPie.getSelectionButton());
+                transferInteraction(stage, dragPie);
                 return true;
             }
         });
         root.add(textButton).expand().bottom();
 
-        /* Adding the listener. */
+        /* Adding a selection-listener. */
         dragPie.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -188,6 +185,23 @@ public class Demonstration extends ApplicationAdapter {
         dragPie.setVisible(false);
     }
 
+    /**
+     * To be used to get the user to transition directly into
+     * {@link InputListener#touchDragged(InputEvent, float, float, int)}
+     * as if he had triggered
+     * {@link InputListener#touchDown(InputEvent, float, float, int, int)}.<br>
+     * I am not certain this is the recommended way of doing this, but for the
+     * purposes of this demonstration, it works!
+     *
+     * @param stage the stage.
+     * @param widget the PieMenu on which to transfer the interaction.
+     */
+    private void transferInteraction(Stage stage, PieMenu widget) {
+        if(widget == null) throw new IllegalArgumentException("widget cannot be null.");
+        if(widget.getPieMenuListener() == null) throw new IllegalArgumentException("inputListener cannot be null.");
+        stage.addTouchFocus(widget.getPieMenuListener(), widget, widget, 0, widget.getSelectionButton());
+    }
+
     private void setUpRightMousePieMenu() {
 
         /* Setting up and creating the widget. */
@@ -204,7 +218,7 @@ public class Demonstration extends ApplicationAdapter {
         rightMousePie.setInfiniteSelectionRange(true);
         rightMousePie.setSelectionButton(Input.Buttons.RIGHT);
 
-        /* Setting up listeners */
+        /* Setting up listeners. */
         rightMousePie.addListener(new PieMenu.HighlightChangeListener() {
             @Override
             public void onHighlightChange(int highlightedIndex) {
@@ -271,8 +285,7 @@ public class Demonstration extends ApplicationAdapter {
         /* Customizing the behavior. */
         middleMousePie.setInfiniteSelectionRange(true);
 
-        /* Adding some listeners. */
-        middleMousePie.addListener(suggestedClickListener);
+        /* Adding a selection-listener. */
         middleMousePie.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -314,8 +327,7 @@ public class Demonstration extends ApplicationAdapter {
         style.circumferenceColor = new Color(0,0,0,1);
         permaPie = new PieMenu(shape, style, 80, 20, 0 ,180);
 
-        /* Setting up listeners */
-        permaPie.addListener(suggestedClickListener);
+        /* Adding a selection-listener. */
         permaPie.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -381,8 +393,7 @@ public class Demonstration extends ApplicationAdapter {
             stage.addActor(rightMousePie);
             rightMousePie.centerOnMouse();
             rightMousePie.setVisible(true);
-            stage.addTouchFocus(suggestedClickListener, rightMousePie,
-                    rightMousePie, 0, rightMousePie.getSelectionButton());
+            transferInteraction(stage, rightMousePie);
         }
         if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
             stage.addActor(middleMousePie);

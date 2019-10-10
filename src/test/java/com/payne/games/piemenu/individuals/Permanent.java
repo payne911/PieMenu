@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
-import com.payne.games.piemenu.PieMenuSuggestedClickListener;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
@@ -66,8 +65,7 @@ public class Permanent extends ApplicationAdapter {
         style.circumferenceColor = new Color(0,0,0,1);
         menu = new PieMenu(shape, style, 100, 30, 0 ,180);
 
-        /* Setting up listeners. */
-        menu.addListener(new PieMenuSuggestedClickListener());
+        /* Adding a selection-listener. */
         menu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

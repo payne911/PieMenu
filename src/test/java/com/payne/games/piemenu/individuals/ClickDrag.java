@@ -10,13 +10,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
-import com.payne.games.piemenu.PieMenuSuggestedClickListener;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
@@ -139,10 +140,27 @@ public class ClickDrag extends ApplicationAdapter {
             stage.addActor(menu);
             menu.centerOnMouse();
             menu.setVisible(true);
-            stage.addTouchFocus(new PieMenuSuggestedClickListener(), menu,
-                    menu, 0, menu.getSelectionButton());
+            transferInteraction(stage, menu);
         }
     }
+
+    /**
+     * To be used to get the user to transition directly into
+     * {@link InputListener#touchDragged(InputEvent, float, float, int)}
+     * as if he had triggered
+     * {@link InputListener#touchDown(InputEvent, float, float, int, int)}.<br>
+     * I am not certain this is the recommended way of doing this, but for the
+     * purposes of this demonstration, it works!
+     *
+     * @param stage the stage.
+     * @param widget the PieMenu on which to transfer the interaction.
+     */
+    private void transferInteraction(Stage stage, PieMenu widget) {
+        if(widget == null) throw new IllegalArgumentException("widget cannot be null.");
+        if(widget.getPieMenuListener() == null) throw new IllegalArgumentException("inputListener cannot be null.");
+        stage.addTouchFocus(widget.getPieMenuListener(), widget, widget, 0, widget.getSelectionButton());
+    }
+
 
 
     @Override

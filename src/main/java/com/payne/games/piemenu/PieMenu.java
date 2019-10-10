@@ -22,6 +22,13 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 public class PieMenu extends RadialGroup {
 
     /**
+     * This listener controls the interactions with the {@link PieMenu}.<br>
+     * It defaults to being a {@link PieMenuClickListener} but can be changed
+     * to your own implementation by calling {@link #setPieMenuListener(InputListener)}.
+     */
+    private InputListener pieMenuListener = new PieMenuClickListener();
+
+    /**
      * The index that is used as a fallback value whenever a processed
      * user-input does not map to a valid child index value.<br>
      * This value can be negative, if you want nothing to be the default.
@@ -49,15 +56,15 @@ public class PieMenu extends RadialGroup {
      */
     private PieMenuStyle style;
 
-    /**
-     * WIP. Not yet implemented!
-     */ // todo: integrate into drawing so that selected region is bigger than others
-    @Deprecated protected float selectedRadius;
-
-    /**
-     * WIP. Not yet implemented!
-     */ // todo: integrate into drawing so that hovered region is bigger than others
-    @Deprecated protected float hoveredRadius;
+//    /**
+//     * WIP. Not yet implemented!
+//     */ // todo: integrate into drawing so that selected region is bigger than others
+//    protected float selectedRadius;
+//
+//    /**
+//     * WIP. Not yet implemented!
+//     */ // todo: integrate into drawing so that hovered region is bigger than others
+//    protected float hoveredRadius;
 
     /**
      * If the "ChangeListener" wasn't enough, you can add a "HighlightChangeListener"
@@ -80,6 +87,7 @@ public class PieMenu extends RadialGroup {
 
 
     private void constructorsCommon() {
+        addListener(pieMenuListener);
         setTouchable(Touchable.enabled);
     }
 
@@ -345,42 +353,6 @@ public class PieMenu extends RadialGroup {
     }
 
     /**
-     * Used to trigger programmatically a {@code touchDown} event in such a way
-     * that will allow the user to directly be interacting with the
-     * {@code touchDragged} event of the PieMenu's {@link ClickListener}.<br>
-     * This bypasses the {@link #selectionButton} filter that is inside the
-     * {@link PieMenuSuggestedClickListener#touchDown(InputEvent, float, float, int, int)},
-     * for example.
-     */
-    @Deprecated
-    public void triggerClickListenerTouchDown() {
-        InputEvent event = new InputEvent();
-        event.setType(InputEvent.Type.touchDown);
-        event.setButton(getSelectionButton());
-        event.setListenerActor(this);
-        fire(event);
-    }
-
-    /**
-     * To be used to get the user to transition directly into
-     * {@link ClickListener#touchDragged(InputEvent, float, float, int)}
-     * as if he had triggered
-     * {@link ClickListener#touchDown(InputEvent, float, float, int, int)}.
-     *
-     * @param stage the stage.
-     * @param clickListener a {@link ClickListener} into which the user transitions
-     *                      into calling {@link ClickListener#touchDragged(InputEvent, float, float, int)}
-     *                      automatically.
-     * @param button should be an {@link Input.Buttons}. The button the
-     *               {@link ClickListener#touchDragged(InputEvent, float, float, int)}
-     *               is called with.
-     */
-    @Deprecated
-    public void transferInteraction(Stage stage, ClickListener clickListener, int button) {
-        stage.addTouchFocus(clickListener, this, this, 0, button);
-    }
-
-    /**
      * Selects the child at the given index. Triggers the
      * {{@link ChangeListener#changed(ChangeListener.ChangeEvent, Actor)}}.<br>
      * Indices are based on the order which was used to add child Actors to the
@@ -612,10 +584,10 @@ public class PieMenu extends RadialGroup {
          */
         public Color selectedChildRegionColor;
 
-        /**
-         * WIP. Not yet implemented!
-         */
-        @Deprecated public Color hoveredColor; // todo: integrate hoveredColor?
+//        /**
+//         * WIP. Not yet implemented!
+//         */
+//        @Deprecated public Color hoveredColor; // todo: integrate hoveredColor?
 
         /**
          * Encompasses all the characteristics that define the way the
@@ -627,7 +599,7 @@ public class PieMenu extends RadialGroup {
         public PieMenuStyle(PieMenu.PieMenuStyle style) {
             super(style);
             this.selectedChildRegionColor = new Color(style.selectedChildRegionColor);
-            this.hoveredColor = new Color(style.hoveredColor);
+//            this.hoveredColor = new Color(style.hoveredColor);
         }
     }
 
@@ -640,8 +612,72 @@ public class PieMenu extends RadialGroup {
 
 
     /*
-    =========================== HIGHLIGHT LISTENER =============================
+    =============================== LISTENERS ==================================
      */
+
+
+    /**
+     * The suggested {@link ClickListener} that comes with the {@link PieMenu}. You
+     * are not obligated to use it, but this one has been designed to work as is,
+     * for the most part.
+     */
+    public static class PieMenuClickListener extends ClickListener {
+
+        /**
+         * The suggested {@link ClickListener} that comes with the {@link PieMenu}.
+         * You are not obligated to use it, but this one has been designed to work
+         * as is, for the most part.
+         */
+        public PieMenuClickListener() {
+            setTapSquareSize(Integer.MAX_VALUE);
+        }
+
+        /**
+         * @param x x-coordinate in pixels, relative to the bottom left of the attached actor
+         * @param y y-coordinate in pixels, relative to the bottom left of the attached actor
+         */
+        @Override
+        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            if(!(event.getListenerActor() instanceof PieMenu))
+                return false;
+            PieMenu pie = (PieMenu)event.getListenerActor();
+
+            boolean accepted = (button == pie.getSelectionButton());
+            if(accepted)
+                pie.highlightChildRegionAtStage(event.getStageX(), event.getStageY());
+            return accepted;
+        }
+
+        /**
+         * @param x x-coordinate in pixels, relative to the bottom left of the attached actor
+         * @param y y-coordinate in pixels, relative to the bottom left of the attached actor
+         */
+        @Override
+        public void touchDragged(InputEvent event, float x, float y, int pointer) {
+            if(!(event.getListenerActor() instanceof PieMenu))
+                return;
+            PieMenu pie = (PieMenu)event.getListenerActor();
+
+            pie.highlightChildRegionAtStage(event.getStageX(), event.getStageY());
+            super.touchDragged(event, x, y, pointer);
+        }
+
+        /**
+         * @param x x-coordinate in pixels, relative to the bottom left of the attached actor
+         * @param y y-coordinate in pixels, relative to the bottom left of the attached actor
+         */
+        @Override
+        public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+            if(!(event.getListenerActor() instanceof PieMenu))
+                return;
+            PieMenu pie = (PieMenu)event.getListenerActor();
+
+            if(button != pie.getSelectionButton())
+                return;
+            pie.selectChildRegionAtStage(event.getStageX(), event.getStageY()); // todo: just use highlighted instead of finding index again?
+            super.touchUp(event, x, y, pointer, button);
+        }
+    }
 
 
     private static class HighlightChangeEvent extends Event {
@@ -720,7 +756,7 @@ public class PieMenu extends RadialGroup {
 
     /**
      * Determines which button must be used to interact with the Widget.<br>
-     * If you are not using the {@link PieMenuSuggestedClickListener}, then this
+     * If you are not using the {@link PieMenuClickListener}, then this
      * option will not work "as-is" and you will have to implement it again (if
      * you want to have it).
      *
@@ -816,5 +852,32 @@ public class PieMenu extends RadialGroup {
      */
     public void setHighlightedIndex(int highlightedIndex) {
         this.highlightedIndex = highlightedIndex;
+    }
+
+    /**
+     * @see #pieMenuListener
+     * @return the listener that controls the interactions with the {@link PieMenu}.
+     */
+    public InputListener getPieMenuListener() {
+        return pieMenuListener;
+    }
+
+    /**
+     * By calling this, the previous listener is removed from the widget, and
+     * this new one is added automatically.
+     *
+     * @see #pieMenuListener
+     * @param pieMenuListener the listener that controls the interactions
+     *                        with the {@link PieMenu}.
+     */
+    public void setPieMenuListener(InputListener pieMenuListener) {
+        if(this.pieMenuListener == pieMenuListener)
+            return;
+        if(this.pieMenuListener != null)
+            removeListener(this.pieMenuListener);
+        if(pieMenuListener != null) {
+            this.pieMenuListener = pieMenuListener;
+            addListener(pieMenuListener);
+        }
     }
 }
