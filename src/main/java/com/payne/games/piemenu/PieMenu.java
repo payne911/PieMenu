@@ -46,6 +46,11 @@ public class PieMenu extends RadialGroup {
     private int highlightedIndex = defaultIndex;
 
     /**
+     * Index of the currently highlighted item.
+     */
+    private int hoveredIndex = -1;
+
+    /**
      * Determines whether or not selection should only happen if the mouse is
      * within the radius of the widget.
      */
@@ -71,7 +76,7 @@ public class PieMenu extends RadialGroup {
      * to be able to execute code every time the "currently highlighted" value
      * changes.
      */
-    private HighlightChangeListener highlightChangeListener;
+    private PieMenuAdditionalChangeListener pieMenuAdditionalChangeListener;
 
     /**
      * Determines which button must be used to interact with the Widget.
@@ -344,7 +349,7 @@ public class PieMenu extends RadialGroup {
      * Resets selected and highlighted child.<br>
      * Does <i>not</i> trigger the
      * {@link ChangeListener#changed(ChangeListener.ChangeEvent, Actor)},
-     * nor the {@link HighlightChangeListener#onHighlightChange(int)}
+     * nor the {@link PieMenuAdditionalChangeListener#onHighlightChange(int)}
      * (if you had set it up).
      */
     public void resetSelection() {
@@ -370,7 +375,7 @@ public class PieMenu extends RadialGroup {
         selectedIndex = newIndex;
         highlightedIndex = newIndex;
         if (newIndex != oldHighlightedIndex)
-            fire(new HighlightChangeEvent(newIndex)); // todo: should we really call this?!
+            fire(new PieMenuHighlightChangeEvent(newIndex)); // todo: should we really call this?!
 
         ChangeListener.ChangeEvent changeEvent = Pools.obtain(ChangeListener.ChangeEvent.class);
         if (fire(changeEvent)) {
@@ -393,8 +398,9 @@ public class PieMenu extends RadialGroup {
     }
 
     /**
-     * Called to check if the candidate region should be highlighted (and possibly
-     * selected). If it is the case, will apply the appropriate action.<br>
+     * Called to check if the candidate region is different from the previous
+     * one. If it is, {@link PieMenuAdditionalChangeListener#onHighlightChange(int)}
+     * is called.<br>
      * Indices are based on the order which was used to add child Actors to the
      * Widget. First one added is at index 0, of course, and so on.<br>
      * It would be good practice to use {@link #isValidIndex(int)} to ensure that
@@ -408,21 +414,57 @@ public class PieMenu extends RadialGroup {
         newIndex = mapIndex(newIndex);
         if(newIndex != highlightedIndex) {
             highlightedIndex = newIndex;
-            fire(new HighlightChangeEvent(newIndex));
+            fire(new PieMenuHighlightChangeEvent(newIndex));
         }
     }
 
     /**
      * Called to find the child region that is to be interacted with at the
      * given coordinate. If there is one, checks if the highlighted item should
-     * be highlighted (and possibly selected). If it is the case, will apply
-     * the appropriate action.
+     * be highlighted.<br>
+     * If it is a different index,
+     * {@link PieMenuAdditionalChangeListener#onHighlightChange(int)} is called.<br>
      *
      * @param x x-coordinate in the stage.
      * @param y y-coordinate in the stage.
      */
     public void highlightChildRegionAtStage(float x, float y) {
         highlightIndex(findChildSectorAtStage(x, y));
+    }
+
+    /**
+     * Called to check if the candidate region is different from the previous
+     * one. If it is, the {@link PieMenuAdditionalChangeListener#onHoverChange(int)}
+     * is called.<br>
+     * Indices are based on the order which was used to add child Actors to the
+     * Widget. First one added is at index 0, of course, and so on.<br>
+     * It would be good practice to use {@link #isValidIndex(int)} to ensure that
+     * the index provided to this method is valid.<br>
+     * If the input index is the same as the index of the currently hovered
+     * item, nothing will happen.
+     *
+     * @param newIndex index of the child (and thus region) which was hovered.
+     */
+    public void hoverIndex(int newIndex) {
+        newIndex = mapIndex(newIndex);
+        if(newIndex != hoveredIndex) {
+            hoveredIndex = newIndex;
+            fire(new PieMenuHoverChangeEvent(newIndex));
+        }
+    }
+
+    /**
+     * Called to find the child region that is to be interacted with at the
+     * given coordinate. If there is one, checks if the hovered item is different
+     * from the previous one.
+     * If it is a different index,
+     * {@link PieMenuAdditionalChangeListener#onHoverChange(int)} is called.<br>
+     *
+     * @param x x-coordinate in the stage.
+     * @param y y-coordinate in the stage.
+     */
+    public void hoverChildRegionAtStage(float x, float y) {
+        hoverIndex(findChildSectorAtStage(x, y));
     }
 
     @Override
@@ -579,15 +621,17 @@ public class PieMenu extends RadialGroup {
     public static class PieMenuStyle extends RadialGroupStyle {
 
         /**
-         * <i>Recommended. Optional.</i><br>
-         * Defines the color of the region which is currently selected.
+         * <i><b>Recommended</b>. Optional.</i><br>
+         * Defines the color of the region which is currently selected or highlighted.
          */
         public Color selectedChildRegionColor;
 
 //        /**
-//         * WIP. Not yet implemented!
+//         * <i>Optional.</i><br>
+//         * Defines the color of the region which is currently hovered by the mouse.<br>
+//         * Only works for the desktops.
 //         */
-//        @Deprecated public Color hoveredColor; // todo: integrate hoveredColor?
+//        public Color hoveredChildColor;
 
         /**
          * Encompasses all the characteristics that define the way the
@@ -599,7 +643,7 @@ public class PieMenu extends RadialGroup {
         public PieMenuStyle(PieMenu.PieMenuStyle style) {
             super(style);
             this.selectedChildRegionColor = new Color(style.selectedChildRegionColor);
-//            this.hoveredColor = new Color(style.hoveredColor);
+//            this.hoveredChildColor = new Color(style.hoveredChildColor);
         }
     }
 
@@ -677,39 +721,75 @@ public class PieMenu extends RadialGroup {
             pie.selectChildRegionAtStage(event.getStageX(), event.getStageY()); // todo: just use highlighted instead of finding index again?
             super.touchUp(event, x, y, pointer, button);
         }
+
+        @Override
+        public boolean mouseMoved(InputEvent event, float x, float y) {
+            if(!(event.getListenerActor() instanceof PieMenu))
+                return false;
+            PieMenu pie = (PieMenu)event.getListenerActor();
+
+            int hoveredIndex = pie.findChildSectorAtStage(event.getStageX(), event.getStageY());
+            boolean accepted = pie.isValidIndex(hoveredIndex);
+            if(accepted)
+                pie.hoverChildRegionAtStage(event.getStageX(), event.getStageY());
+            return accepted;
+        }
     }
 
 
-    private static class HighlightChangeEvent extends Event {
+    private static class PieMenuHighlightChangeEvent extends Event {
         private int newIndex;
 
-        public HighlightChangeEvent(int newIndex) {
+        public PieMenuHighlightChangeEvent(int newIndex) {
+            this.newIndex = newIndex;
+        }
+    }
+
+    private static class PieMenuHoverChangeEvent extends Event {
+        private int newIndex;
+
+        public PieMenuHoverChangeEvent(int newIndex) {
             this.newIndex = newIndex;
         }
     }
 
     /**
      * If the {@link ChangeListener} wasn't enough, you can add a
-     * {@link HighlightChangeListener} to be able to execute code every time
-     * the currently-highlighted value changes.<br>
+     * {@link PieMenuAdditionalChangeListener} to be able to execute code every
+     * time the currently-highlighted or currently-hovered value changes.<br>
      * Keep in mind that if you use {@link #resetSelection()} or
      * {@link #setHighlightedIndex(int)}, this callback is not triggered.
      */
-    public abstract static class HighlightChangeListener implements EventListener {
+    public abstract static class PieMenuAdditionalChangeListener implements EventListener {
 
         @Override
         public boolean handle(Event event) {
-            if(event instanceof HighlightChangeEvent)
-                onHighlightChange(((HighlightChangeEvent)event).newIndex);
+            if(event instanceof PieMenuHighlightChangeEvent)
+                onHighlightChange(((PieMenuHighlightChangeEvent)event).newIndex);
+            else if(event instanceof PieMenuHoverChangeEvent)
+                onHoverChange(((PieMenuHoverChangeEvent)event).newIndex);
             return false;
         }
 
         /**
-         * Called every time the "currently highlighted" value changes.
+         * Called every time the "currently highlighted" value changes.<br>
+         * This only applies when a button is down and the mouse (or finger)
+         * is moving. It thus works on desktops and mobiles.
          *
+         * @see PieMenuStyle#selectedChildRegionColor
          * @param highlightedIndex the newly highlighted index.
          */
         public abstract void onHighlightChange(int highlightedIndex);
+
+        /**
+         * Called every time the "currently hovered" value changes.<br>
+         * This only applies when no button is down while the mouse is moving,
+         * and will only work for desktops.
+         *
+         * //todo: color + @see
+         * @param hoveredIndex the newly hovered index.
+         */
+        public abstract void onHoverChange(int hoveredIndex);
     }
 
 
@@ -769,7 +849,6 @@ public class PieMenu extends RadialGroup {
     /**
      * The {@link #infiniteSelectionRange} flag determines whether or not selection
      * should only happen if the mouse is within the radius of the widget.
-     * @see #infiniteSelectionRange
      */
     public boolean isInfiniteSelectionRange() {
         return infiniteSelectionRange;
@@ -843,15 +922,22 @@ public class PieMenu extends RadialGroup {
 
     /**
      * Changes the highlighted index to the desired value, but will not trigger
-     * any callback such as the {@link HighlightChangeListener}. If you want
+     * any callback such as the {@link PieMenuAdditionalChangeListener}. If you want
      * the callback to be trigger, use {@link #highlightIndex(int)} instead.<br>
      * To ensure the index you are giving to this method is valid, use
      * {@link #isValidIndex(int)}.
      *
-     * @param highlightedIndex
+     * @param highlightedIndex the index of the child to be highlighted.
      */
     public void setHighlightedIndex(int highlightedIndex) {
         this.highlightedIndex = highlightedIndex;
+    }
+
+    /**
+     * @return the index of the child that is hovered by the mouse.
+     */
+    public int getHoveredIndex() {
+        return hoveredIndex;
     }
 
     /**

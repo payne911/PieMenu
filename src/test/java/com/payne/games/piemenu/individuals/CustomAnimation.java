@@ -98,10 +98,15 @@ public class CustomAnimation extends ApplicationAdapter {
                 System.out.println("selected: " + pieMenu.getSelectedIndex());
             }
         });
-        pieMenu.addListener(new PieMenu.HighlightChangeListener() {
+        pieMenu.addListener(new PieMenu.PieMenuAdditionalChangeListener() {
             @Override
             public void onHighlightChange(int highlightedIndex) {
                 System.out.println("highlighted: " + highlightedIndex);
+            }
+
+            @Override
+            public void onHoverChange(int hoveredIndex) {
+                System.out.println("hovered: " + hoveredIndex);
             }
         });
 

@@ -73,7 +73,7 @@ public class ClickDrag extends ApplicationAdapter {
         menu.setSelectionButton(Input.Buttons.RIGHT); // right-click for interactions with the widget
 
         /* Setting up listeners. */
-        menu.addListener(new PieMenu.HighlightChangeListener() {
+        menu.addListener(new PieMenu.PieMenuAdditionalChangeListener() {
             @Override
             public void onHighlightChange(int highlightedIndex) {
                 switch(highlightedIndex) {
@@ -98,6 +98,11 @@ public class ClickDrag extends ApplicationAdapter {
                         green = .75f;
                         break;
                 }
+            }
+
+            @Override
+            public void onHoverChange(int hoveredIndex) {
+                // nothing
             }
         });
         menu.addListener(new ChangeListener() {
