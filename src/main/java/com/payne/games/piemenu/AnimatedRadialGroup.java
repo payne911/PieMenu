@@ -69,7 +69,7 @@ public class AnimatedRadialGroup extends RadialGroup {
      * @param style defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      */
     public AnimatedRadialGroup(ShapeDrawer sd, RadialGroupStyle style, float radius,
                                float innerRadius) {
@@ -83,7 +83,7 @@ public class AnimatedRadialGroup extends RadialGroup {
      * @param style defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
@@ -99,7 +99,7 @@ public class AnimatedRadialGroup extends RadialGroup {
      * @param style defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
@@ -129,7 +129,7 @@ public class AnimatedRadialGroup extends RadialGroup {
      * @param skin defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      */
     public AnimatedRadialGroup(ShapeDrawer sd, Skin skin, float radius, float innerRadius) {
         super(sd, skin, radius, innerRadius);
@@ -142,7 +142,7 @@ public class AnimatedRadialGroup extends RadialGroup {
      * @param skin defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
@@ -158,7 +158,7 @@ public class AnimatedRadialGroup extends RadialGroup {
      * @param skin defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
@@ -190,7 +190,7 @@ public class AnimatedRadialGroup extends RadialGroup {
      * @param style the name of the style to be extracted from the skin.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      */
     public AnimatedRadialGroup(ShapeDrawer sd, Skin skin, String style, float radius,
                                float innerRadius) {
@@ -205,7 +205,7 @@ public class AnimatedRadialGroup extends RadialGroup {
      * @param style the name of the style to be extracted from the skin.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
@@ -222,7 +222,7 @@ public class AnimatedRadialGroup extends RadialGroup {
      * @param style the name of the style to be extracted from the skin.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
@@ -248,7 +248,7 @@ public class AnimatedRadialGroup extends RadialGroup {
             float dist = getActorDistanceFromCenter(actor);
             vector2.set(dist, 0);
             vector2.rotate(degreesPerChild*(i + half) + startDegreesOffset);
-            adjustActorSize(actor, degreesPerChild, dist); // overridden by user
+            modifyActor(actor, degreesPerChild, dist); // overridden by user
             actor.setPosition(vector2.x+radius, vector2.y+radius, Align.center);
 
             /* Updating alpha (fade-in animation). */

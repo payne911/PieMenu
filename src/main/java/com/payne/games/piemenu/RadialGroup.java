@@ -41,7 +41,7 @@ public class RadialGroup extends WidgetGroup {
 
     /**
      * <i>Optional.</i><br>
-     * If provided, the {@link RadialGroupStyle#childRegionColor} will only fill
+     * If provided, the {@link RadialGroupStyle#sliceColor} will only fill
      * the region defined between the {@link #radius} and this value. A hole
      * will be left into the middle of the Widget, like a doughnut, and if a
      * {@link RadialGroupStyle#background} or a
@@ -84,7 +84,7 @@ public class RadialGroup extends WidgetGroup {
 
     /* For internal use (optimization). */
     private float lastRadius = 0;
-    protected static final float BG_BUFFER = 1;
+    protected static final float BG_BUFFER = 2;
     protected static final Color TRANSPARENT = new Color(0,0,0,0);
     private static Vector2 vector2 = new Vector2();
     private static Vector2 vector22 = new Vector2();
@@ -155,7 +155,7 @@ public class RadialGroup extends WidgetGroup {
      * @param style defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      */
     public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style, float radius,
                        float innerRadius) {
@@ -171,7 +171,7 @@ public class RadialGroup extends WidgetGroup {
      * @param style defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
@@ -189,7 +189,7 @@ public class RadialGroup extends WidgetGroup {
      * @param style defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
@@ -223,7 +223,7 @@ public class RadialGroup extends WidgetGroup {
      * @param skin defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      */
     public RadialGroup(final ShapeDrawer sd, Skin skin, float radius,
                        float innerRadius) {
@@ -239,7 +239,7 @@ public class RadialGroup extends WidgetGroup {
      * @param skin defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
@@ -257,7 +257,7 @@ public class RadialGroup extends WidgetGroup {
      * @param skin defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
@@ -294,7 +294,7 @@ public class RadialGroup extends WidgetGroup {
      * @param style the name of the style to be extracted from the skin.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      */
     public RadialGroup(final ShapeDrawer sd, Skin skin, String style, float radius,
                        float innerRadius) {
@@ -311,7 +311,7 @@ public class RadialGroup extends WidgetGroup {
      * @param style the name of the style to be extracted from the skin.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
@@ -330,7 +330,7 @@ public class RadialGroup extends WidgetGroup {
      * @param style the name of the style to be extracted from the skin.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
@@ -358,21 +358,25 @@ public class RadialGroup extends WidgetGroup {
 
     @Override
     public float getPrefWidth() {
+//        validate();
         return radius * 2;
     }
 
     @Override
     public float getPrefHeight() {
+//        validate();
         return radius * 2;
     }
 
     @Override
     public float getMinWidth() {
+//        validate();
         return radius * 2;
     }
 
     @Override
     public float getMinHeight() {
+//        validate();
         return radius * 2;
     }
 
@@ -423,17 +427,17 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * Used to change the size of an Actor according to certain rules. By
+     * Used to apply changes to an Actor according to certain rules. By
      * default, there are no changes applied.<br>
      * Override this method when creating your Widget if you want to have control
-     * on how to resize the Actors that get placed within your Widget.<br>
-     * <b>Don't forget to actually call {@link #setSize(float, float)} on the
-     * Actor</b>, else nothing will happen.<br><br>
+     * on how to resize, rotate, etc., the Actors that get placed within your
+     * Widget.<br>
+     * Trying to change the position of the Actor will not work.<br><br>
      * Here is an example:
      * <pre>
      * {@code
      * RadialGroup myWidget = new RadialGroup(shapeDrawer, myStyle, 77) {
-     *     public void adjustActorSize(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
+     *     public void modifyActor(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
      *         float size = getEstimatedRadiusAt(degreesPerChild, actorDistanceFromCenter);
      *         size *= 1.26f; // adjusting the returned value to our likes
      *         actor.setSize(size, size);
@@ -448,7 +452,7 @@ public class RadialGroup extends WidgetGroup {
      * @param actorDistanceFromCenter the distance at which the child Actor is
      *                                positioned from the center of the widget.
      */
-    public void adjustActorSize(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
+    public void modifyActor(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
 
     }
 
@@ -485,6 +489,10 @@ public class RadialGroup extends WidgetGroup {
 
     @Override
     public void layout() {
+
+//        setSize(Math.max(getWidth(), getPrefWidth()), Math.max(getHeight(), getPrefHeight()));
+//        validate();
+
         float degreesPerChild = totalDegreesDrawn / getAmountOfChildren();
         float half = 1f / 2;
         for (int i = 0; i < getAmountOfChildren(); i++) {
@@ -492,7 +500,7 @@ public class RadialGroup extends WidgetGroup {
             float dist = getActorDistanceFromCenter(actor);
             vector2.set(dist, 0);
             vector2.rotate(degreesPerChild*(i + half) + startDegreesOffset);
-            adjustActorSize(actor, degreesPerChild, dist); // overridden by user
+            modifyActor(actor, degreesPerChild, dist); // overridden by user
             actor.setPosition(vector2.x+radius, vector2.y+radius, Align.center);
         }
     }
@@ -530,9 +538,11 @@ public class RadialGroup extends WidgetGroup {
      */
     protected void drawWithShapeDrawer(Batch batch, float parentAlpha, float degreesToDraw) {
 
+//        validate();
+
         /* Pre-calculating */
         float bgRadian = MathUtils.degreesToRadians*degreesToDraw;
-        float tmpOffset = MathUtils.degreesToRadians*startDegreesOffset;
+        float tmpOffset = MathUtils.degreesToRadians*(startDegreesOffset + getRotation());
         final int SIZE = getAmountOfChildren();
         float tmpRad = bgRadian / SIZE;
 
@@ -541,15 +551,20 @@ public class RadialGroup extends WidgetGroup {
             Color bc = batch.getColor();
             float restoreAlpha = bc.a;
             batch.setColor(bc.r, bc.g, bc.b, bc.a * globalAlphaMultiplier);
-            style.background.draw(batch, getX(), getY(), getWidth(), getHeight());
+            // todo: how to rotate this draw using `getRotation()` value?
+            style.background.draw(batch, getX(), getY(), getPrefWidth(), getPrefHeight());
             batch.setColor(bc.r, bc.g, bc.b, restoreAlpha);
         }
 
         /* Rest of background */
         if(style.backgroundColor != null) {
             propagateAlpha(sd, style.backgroundColor);
-            sd.sector(getX()+radius, getY()+radius,
-                    radius-BG_BUFFER, tmpOffset, bgRadian);
+            if(style.circumferenceWidth != 0 && style.circumferenceColor != null)
+                sd.sector(getX()+radius, getY()+radius,
+                        radius-BG_BUFFER, tmpOffset, bgRadian);
+            else
+                sd.sector(getX()+radius, getY()+radius,
+                        radius, tmpOffset, bgRadian);
         }
 
         /* Children */
@@ -576,7 +591,7 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * Determines the color of the region in which resides the Actor designated
+     * Determines the color of the slice in which resides the Actor designated
      * by the {@code index} parameter. By default, the colors come from the way
      * you have set up your Style (anything that extends {@link RadialGroupStyle}).<br>
      * Override this method when creating your Widget if you want to have control
@@ -589,23 +604,23 @@ public class RadialGroup extends WidgetGroup {
      * RadialGroup myWidget = new RadialGroup(shapeDrawer, myStyle, 77) {
      *     public Color getColor(int index) {
      *         Color fader = super.getColor(index);
-     *         // This will fade the regions' alpha value
+     *         // This will fade the slices' alpha value
      *         return new Color(fader.r, fader.g, fader.b, fader.a/index);
      *     }
      * };
      * }
      * </pre>
      *
-     * @param index index of the child whose region is to be drawn with the returned Color.
-     * @return the Color to be used to draw the region of the child with the given index.
+     * @param index index of the child whose slice is to be drawn with the returned Color.
+     * @return the Color to be used to draw the slice of the child with the given index.
      */
     public Color getColor(int index) {
-        if(style.alternateChildRegionColor != null
+        if(style.alternateSliceColor != null
                 && index%2 == 1)
-            return style.alternateChildRegionColor;
+            return style.alternateSliceColor;
 
-        if(style.childRegionColor != null)
-            return style.childRegionColor;
+        if(style.sliceColor != null)
+            return style.sliceColor;
 
         return TRANSPARENT;
     }
@@ -657,7 +672,7 @@ public class RadialGroup extends WidgetGroup {
         if (!isVisible()) return null;
 
         localToStageCoordinates(vector2.set(x,y));
-        int childIndex = findChildSectorAtStage(vector2.x,vector2.y);
+        int childIndex = findChildIndexAtStage(vector2.x,vector2.y);
         if (isValidIndex(childIndex)) {
             Actor child = getChildren().get(childIndex);
             if(child.getTouchable() == Touchable.disabled)
@@ -681,36 +696,52 @@ public class RadialGroup extends WidgetGroup {
      * @return The index of the child at that coordinate.
      *         If there are no child there, the amount of children is returned.
      */
-    public int findChildSectorAtStage(float x, float y) {
-        float angle = angleAtStage(x,y);
-        angle = ((angle - startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
-        int childIndex = MathUtils.floor(angle / totalDegreesDrawn * getAmountOfChildren());
+    public int findChildIndexAtStage(float x, float y) {
+        int childIndex = findIndexFromAngle(angleAtStage(x,y));
         stageToLocalCoordinates(vector2.set(x,y));
-        return isWithinRadii(vector2.x - radius, vector2.y - radius) ? childIndex : getAmountOfChildren(); // size is equivalent to "invalid"
+        return isWithinRadii(vector2.x - radius, vector2.y - radius)
+                ? childIndex
+                : getAmountOfChildren(); // "getAmountOfChildren" is equivalent to "invalid"
     }
 
     /**
-     * Finding the angle, in degrees, compared to the origin (i.e. center) of the Widget.<br>
-     * The output is non-normalized. To get a normalized angle, do:
-     * <pre>
-     * {@code
-     * float angle = angleAtAbsolute(x,y);
-     * angle = ((angle - style.startDegreesOffset) % 360 + 360) % 360;
-     * }
-     * </pre>
+     * Given an angle, find the index of the child (if any).
+     *
+     * @see #isValidIndex(int)
+     * @see #angleAtStage(float, float)
+     * @param angle a normalized angle of the coordinate relative to the center
+     *              of the widget.
+     * @return The index of the child at that coordinate. Not guaranteed to be valid.
+     */
+    public int findIndexFromAngle(float angle) {
+        return MathUtils.floor(angle / totalDegreesDrawn * getAmountOfChildren());
+    }
+
+    /**
+     * Finding the angle, in degrees, compared to the origin (i.e. center) of
+     * the widget. The rotation and {@link #startDegreesOffset} of the widget
+     * are automatically taken in count. The output is normalized.
      *
      * @param x x-coordinate in the Stage.
      * @param y y-coordinate in the Stage.
-     * @return a non-normalized angle of the position of the cursor
+     * @return a normalized angle of the position of the cursor
      *         relative to the origin (i.e. middle) of the widget
      */
     public float angleAtStage(float x, float y) {
-        return MathUtils.radiansToDegrees * MathUtils.atan2(y - (getY() + radius), x - (getX() + radius));
+        return normalizeAngle(
+                MathUtils.radiansToDegrees *
+                        MathUtils.atan2(y - (getY() + radius), x - (getX() + radius))
+                - getRotation() - startDegreesOffset
+        );
+    }
+
+    public float normalizeAngle(float angle) {
+        return ((angle % 360 + 360) % 360);
     }
 
     /**
      * Checks whether or not the input coordinate is in between (inclusively)
-     * the innerRadius and the radius of the widget.
+     * the {@link #innerRadius} and the {@link #radius} of the widget.
      *
      * @param x x-coordinate relative to the center of the widget's
      * @param y y-coordinate relative to the center of the widget's
@@ -765,7 +796,7 @@ public class RadialGroup extends WidgetGroup {
      * highlight or select.
      *
      * @param index an integer that would usually be the output of
-     *              {@link #findChildSectorAtStage(float, float)}.
+     *              {@link #findChildIndexAtStage(float, float)}.
      * @return {@code true} only if the index is linked to a valid child sector.
      */
     public boolean isValidIndex(int index) {
@@ -773,6 +804,12 @@ public class RadialGroup extends WidgetGroup {
     }
 
 
+    public void drawRudimentaryDebug() {
+        debug();
+        for (Actor a : getChildren()) {
+            a.debug();
+        }
+    }
 
 
 
@@ -829,9 +866,9 @@ public class RadialGroup extends WidgetGroup {
         if(style.circumferenceWidth < 0)
             throw new IllegalArgumentException("circumferenceWidth cannot be negative.");
 
-        if(style.childRegionColor == null && style.alternateChildRegionColor != null)
-            throw new IllegalArgumentException("childRegionColor must also be specified if you are defining alternateChildRegionColor. " +
-                    "You can however only specify the childRegionColor, if you want.");
+        if(style.sliceColor == null && style.alternateSliceColor != null)
+            throw new IllegalArgumentException("sliceColor must also be specified if you are defining alternateSliceColor. " +
+                    "You can however only specify the sliceColor, if you want.");
     }
 
     /**
@@ -862,7 +899,7 @@ public class RadialGroup extends WidgetGroup {
          * <i>Recommended. Optional.</i><br>
          * The color used by the separating lines between each item.<br>
          * It is recommended mostly for the case where you are not defining an
-         * {@link #alternateChildRegionColor}.<br>
+         * {@link #alternateSliceColor}.<br>
          * If you do not define a {@link #separatorWidth} along with this value,
          * no lines will be visible.
          */
@@ -874,15 +911,15 @@ public class RadialGroup extends WidgetGroup {
          * Consider using a fairly low alpha value if you are providing a
          * {@link #background} {@link Drawable}.
          */
-        public Color childRegionColor;
+        public Color sliceColor;
 
         /**
          * <i>Optional.</i><br>
          * If this color is set, the "pie sectors" will alternate between the
-         * {@link #childRegionColor} and this one so that their defining region
+         * {@link #sliceColor} and this one so that their defining region
          * is more easily distinguished.
          */
-        public Color alternateChildRegionColor;
+        public Color alternateSliceColor;
 
         /**
          * <i>Optional.</i><br>
@@ -898,7 +935,7 @@ public class RadialGroup extends WidgetGroup {
 
         /**
          * <i>Recommended. Optional.</i><br>
-         * Determines how wide the lines that separate each region will be.<br>
+         * Determines how wide the lines that separate each slice will be.<br>
          * If no {@link #separatorColor} was provided along with this value,
          * no lines will be drawn.
          */
@@ -932,8 +969,8 @@ public class RadialGroup extends WidgetGroup {
             this.circumferenceColor = new Color(style.circumferenceColor);
             this.separatorWidth = style.separatorWidth;
             this.separatorColor = new Color(style.separatorColor);
-            this.childRegionColor = new Color(style.childRegionColor);
-            this.alternateChildRegionColor = new Color(style.alternateChildRegionColor);
+            this.sliceColor = new Color(style.sliceColor);
+            this.alternateSliceColor = new Color(style.alternateSliceColor);
             this.backgroundColor = new Color(style.backgroundColor);
         }
     }
@@ -966,7 +1003,7 @@ public class RadialGroup extends WidgetGroup {
 
     /**
      * @return the multiplier's value which is applied to all the alpha values
-     *         of the things contained by the widget (regions, lines, drawables, etc.)
+     *         of the things contained by the widget (slices, lines, drawables, etc.)
      */
     public float getGlobalAlphaMultiplier() {
         return globalAlphaMultiplier;
@@ -978,7 +1015,7 @@ public class RadialGroup extends WidgetGroup {
      *
      * @param globalAlphaMultiplier this value is multiplied to all of the alpha
      *                              value of the things contained by the widget
-     *                              (regions, lines, drawables, etc.).
+     *                              (slices, lines, drawables, etc.).
      */
     public void setGlobalAlphaMultiplier(float globalAlphaMultiplier) {
         this.globalAlphaMultiplier = globalAlphaMultiplier;
@@ -1009,14 +1046,15 @@ public class RadialGroup extends WidgetGroup {
         if(radius != lastRadius) {
             this.radius = radius;
             lastRadius = radius;
-            setSize(getPrefWidth(), getPrefHeight());
+            setSize(getPrefWidth(), getPrefHeight()); // todo: move out of there
+            setOrigin(radius, radius); // sets the center of the widget for rotations
             invalidateHierarchy();
         }
     }
 
     /**
      * @see #innerRadius
-     * @return How far from the center do the regions start being drawn.
+     * @return How far from the center do the slices start being drawn.
      */
     public float getInnerRadius() {
         return innerRadius;
@@ -1024,8 +1062,8 @@ public class RadialGroup extends WidgetGroup {
 
     /**
      * <i>Optional.</i><br>
-     * If provided, the {@link RadialGroupStyle#childRegionColor} will only fill
-     * the region defined between the {@link #radius} and this value. A hole
+     * If provided, the {@link RadialGroupStyle#sliceColor} will only fill
+     * the slice defined between the {@link #radius} and this value. A hole
      * will be left into the middle of the Widget, like a doughnut, and if a
      * {@link RadialGroupStyle#background} or a
      * {@link RadialGroupStyle#backgroundColor} was provided, it will be visible
@@ -1033,7 +1071,7 @@ public class RadialGroup extends WidgetGroup {
      * Actors inserted into the Widget are placed in the middle between the
      * innerRadius and the {@link #radius}.
      *
-     * @param innerRadius How far from the center do the regions start being
+     * @param innerRadius How far from the center do the slices start being
      *                    drawn.<br>
      *                    The value must be between 0 (inclusive)
      *                    and {@link #radius} (exclusive).

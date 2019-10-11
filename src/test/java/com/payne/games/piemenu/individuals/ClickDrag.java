@@ -64,8 +64,8 @@ public class ClickDrag extends ApplicationAdapter {
         style.separatorWidth = 2;
         style.backgroundColor = new Color(1,1,1,.1f);
         style.separatorColor = new Color(.1f,.1f,.1f,1);
-        style.highlightedChildRegionColor = new Color(.5f,.5f,.5f,1);
-        style.childRegionColor = new Color(.33f,.33f,.33f,1);
+        style.highlightedSliceColor = new Color(.5f,.5f,.5f,1);
+        style.sliceColor = new Color(.33f,.33f,.33f,1);
         menu = new PieMenu(shape, style, 80);
 
         /* Customizing the behavior. */

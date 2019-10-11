@@ -2,7 +2,6 @@ package com.payne.games.piemenu;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -14,7 +13,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 
 /**
  * A PieMenu reuses the {@link RadialGroup}'s functionalities to provide a way
- * to interact with the contained Actors through the "hit-box" of the regions.
+ * to interact with the contained Actors through the "hit-box" of the slices.
  *
  * @author Jérémi Grenier-Berthiaume (aka "payne")
  */
@@ -62,12 +61,12 @@ public class PieMenu extends RadialGroup {
 
 //    /**
 //     * WIP. Not yet implemented!
-//     */ // todo: integrate into drawing so that highlighted region is bigger than others
+//     */ // todo: integrate into drawing so that highlighted slice is bigger than others
 //    protected float highlightedRadius;
 //
 //    /**
 //     * WIP. Not yet implemented!
-//     */ // todo: integrate into drawing so that hovered region is bigger than others
+//     */ // todo: integrate into drawing so that hovered slice is bigger than others
 //    protected float hoveredRadius;
 
     /**
@@ -107,7 +106,7 @@ public class PieMenu extends RadialGroup {
      * @param style defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      */
     public PieMenu(final ShapeDrawer sd, PieMenuStyle style, float radius, float innerRadius) {
         super(sd, radius, innerRadius);
@@ -122,7 +121,7 @@ public class PieMenu extends RadialGroup {
      * @param style defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
@@ -140,7 +139,7 @@ public class PieMenu extends RadialGroup {
      * @param style defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
@@ -174,7 +173,7 @@ public class PieMenu extends RadialGroup {
      * @param skin defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      */
     public PieMenu(final ShapeDrawer sd, Skin skin, float radius, float innerRadius) {
         super(sd, radius, innerRadius);
@@ -189,7 +188,7 @@ public class PieMenu extends RadialGroup {
      * @param skin defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
@@ -207,7 +206,7 @@ public class PieMenu extends RadialGroup {
      * @param skin defines the way the widget looks like.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
@@ -243,7 +242,7 @@ public class PieMenu extends RadialGroup {
      * @param style the name of the style to be extracted from the skin.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      */
     public PieMenu(final ShapeDrawer sd, Skin skin, String style, float radius,
                    float innerRadius) {
@@ -260,7 +259,7 @@ public class PieMenu extends RadialGroup {
      * @param style the name of the style to be extracted from the skin.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
@@ -279,7 +278,7 @@ public class PieMenu extends RadialGroup {
      * @param style the name of the style to be extracted from the skin.
      * @param radius the {@link #radius} that defines the size of the widget.
      * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the regions start.
+     *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
@@ -329,15 +328,14 @@ public class PieMenu extends RadialGroup {
     }
 
     @Override
-    public int findChildSectorAtStage(float x, float y) {
-        float angle = angleAtStage(x,y);
-        angle = ((angle - startDegreesOffset) % 360 + 360) % 360; // normalizing the angle
-        int childIndex = MathUtils.floor(angle / totalDegreesDrawn * getAmountOfChildren());
+    public int findChildIndexAtStage(float x, float y) {
+        int childIndex = findIndexFromAngle(angleAtStage(x,y));
         if(infiniteSelectionRange)
             return childIndex;
         stageToLocalCoordinates(vector2.set(x,y));
         return isWithinRadii(vector2.x - radius, vector2.y - radius)
-                ? childIndex : getAmountOfChildren();
+                ? childIndex
+                : getAmountOfChildren(); // "getAmountOfChildren" is equivalent to "invalid"
     }
 
     /**
@@ -367,7 +365,7 @@ public class PieMenu extends RadialGroup {
         if (!isVisible()) return null;
 
         localToStageCoordinates(vector2.set(x,y));
-        int childIndex = findChildSectorAtStage(vector2.x,vector2.y);
+        int childIndex = findChildIndexAtStage(vector2.x,vector2.y);
         if (isValidIndex(childIndex)) {
             Actor child = getChildren().get(childIndex);
             if(child.getTouchable() == Touchable.disabled)
@@ -388,29 +386,29 @@ public class PieMenu extends RadialGroup {
 
     @Override
     public Color getColor(int index) {
-        if(style.hoveredAndSelectedChildRegionColor != null
+        if(style.hoveredAndSelectedSliceColor != null
                 && index == selectedIndex
                 && index == hoveredIndex)
-            return style.hoveredAndSelectedChildRegionColor;
+            return style.hoveredAndSelectedSliceColor;
 
-        if(style.selectedChildRegionColor != null
+        if(style.selectedSliceColor != null
                 && index == selectedIndex)
-            return style.selectedChildRegionColor;
+            return style.selectedSliceColor;
 
-        if(style.highlightedChildRegionColor != null
+        if(style.highlightedSliceColor != null
                 && index == highlightedIndex)
-            return style.highlightedChildRegionColor;
+            return style.highlightedSliceColor;
 
-        if(style.hoveredChildRegionColor != null
+        if(style.hoveredSliceColor != null
                 && index == hoveredIndex)
-            return style.hoveredChildRegionColor;
+            return style.hoveredSliceColor;
 
-        if(style.alternateChildRegionColor != null
+        if(style.alternateSliceColor != null
                 && index%2 == 1)
-            return style.alternateChildRegionColor;
+            return style.alternateSliceColor;
 
-        if(style.childRegionColor != null)
-            return style.childRegionColor;
+        if(style.sliceColor != null)
+            return style.sliceColor;
 
         return TRANSPARENT;
     }
@@ -451,10 +449,10 @@ public class PieMenu extends RadialGroup {
      * @param style a style class you want to check properties of.
      */
     protected void checkStyle(PieMenuStyle style) {
-        if(style.hoveredAndSelectedChildRegionColor != null
-                && (style.hoveredChildRegionColor == null || style.selectedChildRegionColor == null))
-            throw new IllegalArgumentException("hoveredAndSelectedChildRegionColor cannot be set " +
-                    "if hoveredChildRegionColor or selectedChildRegionColor is null.");
+        if(style.hoveredAndSelectedSliceColor != null
+                && (style.hoveredSliceColor == null || style.selectedSliceColor == null))
+            throw new IllegalArgumentException("hoveredAndSelectedSliceColor cannot be set " +
+                    "if hoveredSliceColor or selectedSliceColor is null.");
 
 //        if(style.highlightedRadius < 0)
 //            throw new IllegalArgumentException("selectedRadius cannot be negative.");
@@ -471,16 +469,16 @@ public class PieMenu extends RadialGroup {
 
         /**
          * <i>Recommended. Optional.</i><br>
-         * Defines the color of the region which is currently selected.
+         * Defines the color of the slice which is currently selected.
          *
          * @see #selectionButton
          * @see #selectedIndex
          */
-        public Color selectedChildRegionColor;
+        public Color selectedSliceColor;
 
         /**
          * <i>Recommended. Optional.</i><br>
-         * Defines the color of the region which is currently highlighted.<br>
+         * Defines the color of the slice which is currently highlighted.<br>
          * Highlights come from dragging the mouse over the {@link PieMenu} while
          * pressing down a mouse-button. The mobile-equivalent is of having your
          * finger pressing down on the PieMenu and dragging it around without
@@ -489,26 +487,26 @@ public class PieMenu extends RadialGroup {
          * @see #selectionButton
          * @see #highlightedIndex
          */
-        public Color highlightedChildRegionColor;
+        public Color highlightedSliceColor;
 
         /**
          * <i>Recommended. Optional.</i><br>
-         * Defines the color of the region which is currently hovered by the mouse.<br>
+         * Defines the color of the slice which is currently hovered by the mouse.<br>
          * Only works for the desktops.
          *
          * @see #selectionButton
          * @see #highlightedIndex
          */
-        public Color hoveredChildRegionColor;
+        public Color hoveredSliceColor;
 
         /**
          * <i>Recommended. Optional.</i><br>
-         * Defines the color of the region which is currently hovered by the mouse
-         * when this region was also a highlighted region.<br>
-         * Both {@link #hoveredChildRegionColor} and {@link #selectedChildRegionColor}
+         * Defines the color of the slice which is currently hovered by the mouse
+         * when this slice was also a highlighted slice.<br>
+         * Both {@link #hoveredSliceColor} and {@link #selectedSliceColor}
          * must be defined for this attribute to be allowed to be set.
          */
-        public Color hoveredAndSelectedChildRegionColor;
+        public Color hoveredAndSelectedSliceColor;
 
         /**
          * Encompasses the characteristics that define the style of the Widget
@@ -525,10 +523,10 @@ public class PieMenu extends RadialGroup {
          */
         public PieMenuStyle(PieMenu.PieMenuStyle style) {
             super(style);
-            this.selectedChildRegionColor = new Color(style.selectedChildRegionColor);
-            this.highlightedChildRegionColor = new Color(style.highlightedChildRegionColor);
-            this.hoveredChildRegionColor = new Color(style.hoveredChildRegionColor);
-            this.hoveredAndSelectedChildRegionColor = new Color(style.hoveredAndSelectedChildRegionColor);
+            this.selectedSliceColor = new Color(style.selectedSliceColor);
+            this.highlightedSliceColor = new Color(style.highlightedSliceColor);
+            this.hoveredSliceColor = new Color(style.hoveredSliceColor);
+            this.hoveredAndSelectedSliceColor = new Color(style.hoveredAndSelectedSliceColor);
         }
     }
 
@@ -553,7 +551,7 @@ public class PieMenu extends RadialGroup {
      * It would be good practice to use {@link #isValidIndex(int)} to ensure that
      * the index provided to this method is valid.
      *
-     * @param newIndex index of the child (and thus region) which was selected.
+     * @param newIndex index of the child (and thus slice) which was selected.
      */
     public void selectIndex(int newIndex) {
         newIndex = mapIndex(newIndex);
@@ -574,19 +572,19 @@ public class PieMenu extends RadialGroup {
     }
 
     /**
-     * Checks the input coordinate for a candidate child region. Will take the
+     * Checks the input coordinate for a candidate  slice. Will take the
      * appropriate action to select it or not based on the configuration of the
      * Widget.
      *
      * @param x x-coordinate in the Stage.
      * @param y y-coordinate in the Stage.
      */
-    public void selectChildRegionAtStage(float x, float y) {
-        selectIndex(findChildSectorAtStage(x, y));
+    public void selectSliceAtStage(float x, float y) {
+        selectIndex(findChildIndexAtStage(x, y));
     }
 
     /**
-     * Called to check if the candidate region is different from the previous
+     * Called to check if the candidate slice is different from the previous
      * one. If it is, {@link PieMenuCallbacks#onHighlightChange(int)}
      * is called.<br>
      * Indices are based on the order which was used to add child Actors to the
@@ -596,7 +594,7 @@ public class PieMenu extends RadialGroup {
      * If the input index is the same as the index of the currently highlighted
      * item, nothing will happen.
      *
-     * @param newIndex index of the child (and thus region) which was highlighted.
+     * @param newIndex index of the child (and thus slice) which was highlighted.
      */
     public void highlightIndex(int newIndex) {
         newIndex = mapIndex(newIndex);
@@ -608,7 +606,7 @@ public class PieMenu extends RadialGroup {
     }
 
     /**
-     * Called to find the child region that is to be interacted with at the
+     * Called to find the slice that is to be interacted with at the
      * given coordinate. If there is one, checks if the highlighted item should
      * be highlighted.<br>
      * If it is a different index,
@@ -617,12 +615,12 @@ public class PieMenu extends RadialGroup {
      * @param x x-coordinate in the stage.
      * @param y y-coordinate in the stage.
      */
-    public void highlightChildRegionAtStage(float x, float y) {
-        highlightIndex(findChildSectorAtStage(x, y));
+    public void highlightSliceAtStage(float x, float y) {
+        highlightIndex(findChildIndexAtStage(x, y));
     }
 
     /**
-     * Called to check if the candidate region is different from the previous
+     * Called to check if the candidate slice is different from the previous
      * one. If it is, the {@link PieMenuCallbacks#onHoverChange(int)}
      * is called.<br>
      * Indices are based on the order which was used to add child Actors to the
@@ -632,7 +630,7 @@ public class PieMenu extends RadialGroup {
      * If the input index is the same as the index of the currently hovered
      * item, nothing will happen.
      *
-     * @param newIndex index of the child (and thus region) which was hovered.
+     * @param newIndex index of the child (and thus slice) which was hovered.
      */
     public void hoverIndex(int newIndex) {
         newIndex = mapIndex(newIndex);
@@ -643,7 +641,7 @@ public class PieMenu extends RadialGroup {
     }
 
     /**
-     * Called to find the child region that is to be interacted with at the
+     * Called to find the slice that is to be interacted with at the
      * given coordinate. If there is one, checks if the hovered item is different
      * from the previous one.
      * If it is a different index,
@@ -652,8 +650,8 @@ public class PieMenu extends RadialGroup {
      * @param x x-coordinate in the stage.
      * @param y y-coordinate in the stage.
      */
-    public void hoverChildRegionAtStage(float x, float y) {
-        hoverIndex(findChildSectorAtStage(x, y));
+    public void hoverSliceAtStage(float x, float y) {
+        hoverIndex(findChildIndexAtStage(x, y));
     }
 
 
@@ -686,7 +684,7 @@ public class PieMenu extends RadialGroup {
 
             boolean accepted = (button == pie.getSelectionButton());
             if(accepted)
-                pie.highlightChildRegionAtStage(event.getStageX(), event.getStageY());
+                pie.highlightSliceAtStage(event.getStageX(), event.getStageY());
             return accepted;
         }
 
@@ -700,7 +698,7 @@ public class PieMenu extends RadialGroup {
                 return;
             PieMenu pie = (PieMenu)event.getListenerActor();
 
-            pie.highlightChildRegionAtStage(event.getStageX(), event.getStageY());
+            pie.highlightSliceAtStage(event.getStageX(), event.getStageY());
             super.touchDragged(event, x, y, pointer);
         }
 
@@ -716,7 +714,7 @@ public class PieMenu extends RadialGroup {
 
             if(button != pie.getSelectionButton())
                 return;
-            pie.selectChildRegionAtStage(event.getStageX(), event.getStageY()); // todo: just use highlighted instead of finding index again?
+            pie.selectSliceAtStage(event.getStageX(), event.getStageY()); // todo: just use highlighted instead of finding index again?
             super.touchUp(event, x, y, pointer, button);
         }
 
@@ -730,7 +728,7 @@ public class PieMenu extends RadialGroup {
                 return false;
             PieMenu pie = (PieMenu)event.getListenerActor();
 
-            pie.hoverChildRegionAtStage(event.getStageX(), event.getStageY());
+            pie.hoverSliceAtStage(event.getStageX(), event.getStageY());
             return true;
         }
 
@@ -795,7 +793,7 @@ public class PieMenu extends RadialGroup {
          * This only applies when a button is down and the mouse (or finger)
          * is moving. It thus works on desktops and mobiles.
          *
-         * @see PieMenuStyle#selectedChildRegionColor
+         * @see PieMenuStyle#selectedSliceColor
          * @param highlightedIndex the newly highlighted index.
          */
         public void onHighlightChange(int highlightedIndex){
@@ -807,7 +805,7 @@ public class PieMenu extends RadialGroup {
          * This only applies when no button is down while the mouse is moving,
          * and will only work for desktops.
          *
-         * @see PieMenuStyle#hoveredChildRegionColor
+         * @see PieMenuStyle#hoveredSliceColor
          * @param hoveredIndex the newly hovered index.
          */
         public void onHoverChange(int hoveredIndex) {

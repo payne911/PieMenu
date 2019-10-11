@@ -66,10 +66,10 @@ public class ButtonBound extends ApplicationAdapter {
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.backgroundColor = new Color(1,1,1,.3f);
-        style.selectedChildRegionColor = new Color(.7f,.3f,.5f,1);
-        style.highlightedChildRegionColor = new Color(.7f,.3f,.5f,1);
-        style.childRegionColor = new Color(0,.7f,0,1);
-        style.alternateChildRegionColor = new Color(.7f,0,0,1);
+        style.selectedSliceColor = new Color(.7f,.3f,.5f,1);
+        style.highlightedSliceColor = new Color(.7f,.3f,.5f,1);
+        style.sliceColor = new Color(0,.7f,0,1);
+        style.alternateSliceColor = new Color(.7f,0,0,1);
         menu = new AnimatedPieMenu(shape, style, 130, 50, 180, 320);
 
         /* Customizing the behavior. */

@@ -63,7 +63,7 @@ public class ButtonToggle extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         RadialGroup.RadialGroupStyle style = new RadialGroup.RadialGroupStyle();
-        style.childRegionColor = new Color(1,1,1,.2f);
+        style.sliceColor = new Color(1,1,1,.2f);
         style.separatorWidth = 2;
         style.circumferenceWidth = 2;
         style.circumferenceColor = Color.BLACK;

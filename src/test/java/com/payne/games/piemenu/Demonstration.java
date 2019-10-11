@@ -98,8 +98,8 @@ public class Demonstration extends ApplicationAdapter {
         /* Setting up and creating the widget. */
         RadialGroup.RadialGroupStyle style = new RadialGroup.RadialGroupStyle();
         style.backgroundColor = new Color(1,1,1,1);
-        style.childRegionColor = new Color(.4f,.4f,.4f,1);
-        style.alternateChildRegionColor = new Color(.6f,0,0,1);
+        style.sliceColor = new Color(.4f,.4f,.4f,1);
+        style.alternateSliceColor = new Color(.6f,0,0,1);
         radial = new AnimatedRadialGroup(shape, style, 100, 50, 0, 180);
 
         /* Populating the widget. */
@@ -131,10 +131,10 @@ public class Demonstration extends ApplicationAdapter {
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.backgroundColor = new Color(1,1,1,.3f);
-        style.selectedChildRegionColor = new Color(.7f,.3f,.5f,1);
-        style.highlightedChildRegionColor = new Color(.7f,.3f,.5f,1);
-        style.childRegionColor = new Color(0,.7f,0,1);
-        style.alternateChildRegionColor = new Color(.7f,0,0,1);
+        style.selectedSliceColor = new Color(.7f,.3f,.5f,1);
+        style.highlightedSliceColor = new Color(.7f,.3f,.5f,1);
+        style.sliceColor = new Color(0,.7f,0,1);
+        style.alternateSliceColor = new Color(.7f,0,0,1);
         dragPie = new AnimatedPieMenu(shape, style, 130, 50, 180, 320);
 
         /* Customizing the behavior. */
@@ -210,8 +210,8 @@ public class Demonstration extends ApplicationAdapter {
         style.separatorWidth = 2;
         style.backgroundColor = new Color(1,1,1,.1f);
         style.separatorColor = new Color(.1f,.1f,.1f,1);
-        style.highlightedChildRegionColor = new Color(.5f,.5f,.5f,1);
-        style.childRegionColor = new Color(.33f,.33f,.33f,1);
+        style.highlightedSliceColor = new Color(.5f,.5f,.5f,1);
+        style.sliceColor = new Color(.33f,.33f,.33f,1);
         rightMousePie = new PieMenu(shape, style, 80);
 
         /* Customizing the behavior. */
@@ -269,13 +269,13 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         midStyle1 = new PieMenu.PieMenuStyle();
-        midStyle1.selectedChildRegionColor = new Color(1,.5f,.5f,.5f);
-        midStyle1.highlightedChildRegionColor = new Color(1,.5f,.5f,.5f);
+        midStyle1.selectedSliceColor = new Color(1,.5f,.5f,.5f);
+        midStyle1.highlightedSliceColor = new Color(1,.5f,.5f,.5f);
         midStyle1.background = new Image(new Texture(Gdx.files.internal("rael_pie.png"))).getDrawable();
         middleMousePie = new PieMenu(shape, midStyle1, 80, midStyle1InnerRadius, 30) {
             /* Since we are using Images, we want to resize them to fit within each sector. */
             @Override
-            public void adjustActorSize(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
+            public void modifyActor(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
                 float size = getEstimatedRadiusAt(degreesPerChild, actorDistanceFromCenter);
                 size *= 1.26f; // adjusting the returned value to our likes
                 actor.setSize(size, size);
@@ -309,10 +309,10 @@ public class Demonstration extends ApplicationAdapter {
         /* Creating an alternate skin, just for showing off */
         midStyle2 = new PieMenu.PieMenuStyle();
         midStyle2.separatorWidth = 2;
-        midStyle2.selectedChildRegionColor = new Color(1,.5f,.5f,.5f);
-        midStyle2.highlightedChildRegionColor = new Color(1,.5f,.5f,.5f);
+        midStyle2.selectedSliceColor = new Color(1,.5f,.5f,.5f);
+        midStyle2.highlightedSliceColor = new Color(1,.5f,.5f,.5f);
         midStyle2.separatorColor = new Color(.1f,.1f,.1f,.5f);
-        midStyle2.childRegionColor = new Color(.73f,.33f,.33f,.1f);
+        midStyle2.sliceColor = new Color(.73f,.33f,.33f,.1f);
         midStyle2.background = new Image(new Texture(Gdx.files.internal("disc.png"))).getDrawable();
     }
 
@@ -322,9 +322,9 @@ public class Demonstration extends ApplicationAdapter {
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.circumferenceWidth = 1;
         style.backgroundColor = backgroundColor;
-        style.highlightedChildRegionColor = new Color(.5f,.5f,.5f,1);
-        style.childRegionColor = new Color(.33f,.33f,.33f,1);
-        style.alternateChildRegionColor = new Color(.25f,.25f,.25f,1);
+        style.highlightedSliceColor = new Color(.5f,.5f,.5f,1);
+        style.sliceColor = new Color(.33f,.33f,.33f,1);
+        style.alternateSliceColor = new Color(.25f,.25f,.25f,1);
         style.circumferenceColor = new Color(0,0,0,1);
         permaPie = new PieMenu(shape, style, 80, 20, 0 ,180);
 
