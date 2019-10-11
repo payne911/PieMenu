@@ -406,7 +406,7 @@ public class RadialGroup extends WidgetGroup {
      *     public float getActorDistanceFromCenter(Actor actor) {
      *         // We want the Actors to be placed closer to the edge than the default value
      *         return getAmountOfChildren() > 1
-     *                 ? getStyle().radius - getChild(0).getWidth()
+     *                 ? getRadius() - getChild(0).getWidth()
      *                 : 0;
      *     }
      * };
@@ -576,9 +576,9 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * Determines the color of the region in which the actor designated by the
-     * {@code index} parameter. By default, the colors come from the way you
-     * have set up your Style (anything that extends {@link RadialGroupStyle}).<br>
+     * Determines the color of the region in which resides the Actor designated
+     * by the {@code index} parameter. By default, the colors come from the way
+     * you have set up your Style (anything that extends {@link RadialGroupStyle}).<br>
      * Override this method when creating your Widget if you want to have control
      * over those colors.<br>
      * <b>Do not</b> set the color of the {@link ShapeDrawer} in there: that is
@@ -587,8 +587,10 @@ public class RadialGroup extends WidgetGroup {
      * <pre>
      * {@code
      * RadialGroup myWidget = new RadialGroup(shapeDrawer, myStyle, 77) {
-     *     public float getColor(int index) {
-     *         return new Color(1f/index, 1f/index, .5f, 1);
+     *     public Color getColor(int index) {
+     *         Color fader = super.getColor(index);
+     *         // This will fade the regions' alpha value
+     *         return new Color(fader.r, fader.g, fader.b, fader.a/index);
      *     }
      * };
      * }
@@ -738,11 +740,18 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
+     * Positions the Widget's center right in the middle of the current screen size.
+     */
+    public void centerOnScreen() {
+        setPosition(Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f, Align.center);
+    }
+
+    /**
      * Centers the Widget on the center point of the provided Actor.<br>
      * Will not follow this Actor: it just sets the position of the center of
      * the Widget to the center position of that Actor at that specific time.
      *
-     * @param actor the Actor to center on.
+     * @param actor the Actor to center on. If {@code null}, nothing happens.
      */
     public void centerOnActor(Actor actor) {
         if(actor == null)
@@ -826,12 +835,13 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * Encompasses all the characteristics that define the way the Widget will be drawn.
+     * Encompasses the characteristics that define the style of the Widget
+     * to be drawn.
      */
     public static class RadialGroupStyle {
 
         /**
-         * <i><b>Recommended</b>. Optional.</i><br>
+         * <i>Recommended. Optional.</i><br>
          * A background that will be drawn behind everything else within the Widget.<br>
          * Be mindful of the fact that this is unaffected by any of the other
          * variables: it will be resized to fit in the whole region that
@@ -849,18 +859,20 @@ public class RadialGroup extends WidgetGroup {
         public Color backgroundColor;
 
         /**
-         * <i><b>Recommended</b>. Optional.</i><br>
+         * <i>Recommended. Optional.</i><br>
          * The color used by the separating lines between each item.<br>
+         * It is recommended mostly for the case where you are not defining an
+         * {@link #alternateChildRegionColor}.<br>
          * If you do not define a {@link #separatorWidth} along with this value,
          * no lines will be visible.
          */
         public Color separatorColor;
 
         /**
-         * <i><b>Recommended</b>. Optional.</i><br>
+         * <i>Recommended. Optional.</i><br>
          * The color used to fill the "pie sectors" of each item.<br>
-         * Consider using a fairly high alpha value if you are providing a
-         * {@link #background} drawable.
+         * Consider using a fairly low alpha value if you are providing a
+         * {@link #background} {@link Drawable}.
          */
         public Color childRegionColor;
 
@@ -877,13 +889,15 @@ public class RadialGroup extends WidgetGroup {
          * The color used for the line that defines the circumference of the
          * Widget. If the Widget is not a complete a circle, this will only be
          * applied along the partial circumference.<br>
+         * If you have set a non-zero {@link #innerRadius} value, this will
+         * also apply to the "inner radius" of your Widget.<br>
          * If you do not define a {@link #circumferenceWidth} along with this
          * value, no circumference will be visible.
          */
         public Color circumferenceColor;
 
         /**
-         * <i><b>Recommended</b>. Optional.</i><br>
+         * <i>Recommended. Optional.</i><br>
          * Determines how wide the lines that separate each region will be.<br>
          * If no {@link #separatorColor} was provided along with this value,
          * no lines will be drawn.
@@ -900,15 +914,15 @@ public class RadialGroup extends WidgetGroup {
 
 
         /**
-         * Encompasses all the characteristics that define the way the Widget
-         * will be drawn.
+         * Encompasses the characteristics that define the style of the Widget
+         * to be drawn.
          */
         public RadialGroupStyle() {
         }
 
         /**
-         * Encompasses all the characteristics that define the way the Widget
-         * will be drawn.
+         * Encompasses the characteristics that define the style of the Widget
+         * to be drawn.
          *
          * @param style a Style to copy the parameters from.
          */

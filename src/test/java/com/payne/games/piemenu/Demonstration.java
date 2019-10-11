@@ -219,7 +219,7 @@ public class Demonstration extends ApplicationAdapter {
         rightMousePie.setSelectionButton(Input.Buttons.RIGHT);
 
         /* Setting up listeners. */
-        rightMousePie.addListener(new PieMenu.PieMenuAdditionalChangeListener() {
+        rightMousePie.addListener(new PieMenu.PieMenuCallbacks() {
             @Override
             public void onHighlightChange(int highlightedIndex) {
                 switch(highlightedIndex) {
@@ -244,11 +244,6 @@ public class Demonstration extends ApplicationAdapter {
                         green = .75f;
                         break;
                 }
-            }
-
-            @Override
-            public void onHoverChange(int hoveredIndex) {
-                // nothing
             }
         });
         rightMousePie.addListener(new ChangeListener() {
@@ -350,7 +345,6 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Customizing the behavior. */
         permaPie.setDefaultIndex(2);
-        permaPie.selectIndex(permaPie.getDefaultIndex());
 
         /* Including the Widget at some absolute coordinate in the World. */
         permaPie.setPosition(Gdx.graphics.getWidth()/2f,0, Align.center);

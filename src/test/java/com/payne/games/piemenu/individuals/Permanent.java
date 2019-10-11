@@ -82,7 +82,6 @@ public class Permanent extends ApplicationAdapter {
 
         /* Customizing the behavior. */
         menu.setDefaultIndex(2);
-        menu.selectIndex(menu.getDefaultIndex());
 
         /* Including the Widget at some absolute coordinate in the World. */
         menu.setPosition(Gdx.graphics.getWidth()/2f,0, Align.center); // positioning along the edge

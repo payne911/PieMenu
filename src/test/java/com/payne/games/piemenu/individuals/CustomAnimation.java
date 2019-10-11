@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -56,7 +55,7 @@ public class CustomAnimation extends ApplicationAdapter {
 
                 /* We want the Labels to be placed closer to the edge than the default value. */
                 return getAmountOfChildren() > 1
-                        ? radius - getChild(0).getWidth()
+                        ? getRadius() - getChild(0).getWidth()
                         : 0;
             }
 
@@ -68,7 +67,7 @@ public class CustomAnimation extends ApplicationAdapter {
                 time += delta*5;
                 pieMenu.setStartDegreesOffset((time * 10) % 360);
                 pieMenu.setRadius(MathUtils.sin(time) * 20 + BASE_RADIUS);
-                pieMenu.setPosition(Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f, Align.center);
+                pieMenu.centerOnScreen();
             }
         };
 
@@ -101,7 +100,7 @@ public class CustomAnimation extends ApplicationAdapter {
                 System.out.println("selected: " + pieMenu.getSelectedIndex());
             }
         });
-        pieMenu.addListener(new PieMenu.PieMenuAdditionalChangeListener() {
+        pieMenu.addListener(new PieMenu.PieMenuCallbacks() {
             @Override
             public void onHighlightChange(int highlightedIndex) {
                 System.out.println("highlighted: " + highlightedIndex);
