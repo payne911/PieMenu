@@ -58,6 +58,7 @@ public class Demonstration extends ApplicationAdapter {
         Table root = new Table();
         root.setFillParent(true);
         stage.addActor(root);
+//        stage.setDebugAll(true);
 
         /* Controls and instructions. */
         root.add(new Label("R: restart\n" +
@@ -75,14 +76,13 @@ public class Demonstration extends ApplicationAdapter {
         tmpTex = new Texture(pixmap);
         pixmap.dispose();
         // ideally, you would extract such a pixel from your Atlas instead
-        shape = new ShapeDrawer(batch, new TextureRegion(tmpTex));
-        /* If you want smoother edges, you can do this instead, but it might affect performances. */
-//        shape = new ShapeDrawer(batch, new TextureRegion(tmpTex)) {
-//            @Override
-//            protected int estimateSidesRequired(float radiusX, float radiusY) {
-//                return 2*super.estimateSidesRequired(radiusX, radiusY);
-//            }
-//        };
+        shape = new ShapeDrawer(batch, new TextureRegion(tmpTex)) {
+            /* OPTIONAL: If you want smoother edges, but it might affect performances. */
+            @Override
+            protected int estimateSidesRequired(float radiusX, float radiusY) {
+                return 4*super.estimateSidesRequired(radiusX, radiusY);
+            }
+        };
 
         /* Adding the demo widgets. */
         setUpButtonDragPieMenu(root);
@@ -114,7 +114,7 @@ public class Demonstration extends ApplicationAdapter {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 radial.toggleVisibility(.9f);
-                radial.setPosition(textButton.getX() + textButton.getWidth()/2,
+                radial.setPosition(textButton.getX(Align.center),
                         textButton.getTop() + 15, Align.center);
             }
         });

@@ -1004,7 +1004,9 @@ public class PieMenu extends RadialGroup {
 
     /**
      * By calling this, the previous listener is removed from the widget, and
-     * this new one is added automatically.
+     * this new one is added automatically.<br>
+     * The initial "previous" listener associated with this variable is the
+     * {@link PieMenuClickListener}.
      *
      * @see #pieMenuListener
      * @param pieMenuListener the listener that controls the interactions

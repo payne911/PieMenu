@@ -17,7 +17,7 @@ import com.payne.games.piemenu.PieMenu;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
-public class ActorContainerWidget extends ApplicationAdapter {
+public class DifferentActorsWidget extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
     private Texture tmpTex;

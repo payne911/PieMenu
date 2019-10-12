@@ -12,9 +12,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.Layout;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -27,7 +24,7 @@ public class FillParentStageWidget extends ApplicationAdapter {
     private PolygonSpriteBatch batch;
     private ShapeDrawer shape;
 
-    private PieMenu menu1;
+    private PieMenu menu;
 
     @Override
     public void create () {
@@ -37,6 +34,7 @@ public class FillParentStageWidget extends ApplicationAdapter {
         batch = new PolygonSpriteBatch();
         stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
+        stage.setDebugAll(true);
 
         /* Setting up the ShapeDrawer. */
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -44,35 +42,40 @@ public class FillParentStageWidget extends ApplicationAdapter {
         pixmap.fill();
         tmpTex = new Texture(pixmap);
         pixmap.dispose();
-        shape = new ShapeDrawer(batch, new TextureRegion(tmpTex));
+        shape = new ShapeDrawer(batch, new TextureRegion(tmpTex)) {
+            @Override
+            protected int estimateSidesRequired(float radiusX, float radiusY) {
+                return 4*super.estimateSidesRequired(radiusX, radiusY);
+            }
+        };
 
 
 
 
 
         /* Adding the demo widgets. */
-        PieMenu.PieMenuStyle style1 = new PieMenu.PieMenuStyle();
-        style1.hoveredSliceColor = Color.RED;
-        style1.highlightedSliceColor = Color.BLUE;
-        style1.selectedSliceColor = Color.BLUE;
-        style1.backgroundColor = Color.ORANGE;
-        menu1 = new PieMenu(shape, style1, 80);
+        PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
+        style.hoveredSliceColor = Color.RED;
+        style.highlightedSliceColor = Color.BLUE;
+        style.selectedSliceColor = Color.BLUE;
+        style.backgroundColor = Color.ORANGE;
+        menu = new PieMenu(shape, style, 80);
 
         for(int i=0 ; i<5 ; i++)
-            menu1.addActor(new Label("menu " + i, skin));
+            menu.addActor(new Label("menu " + i, skin));
 
-        menu1.addListener(new PieMenu.PieMenuCallbacks() {
+        menu.addListener(new PieMenu.PieMenuCallbacks() {
             @Override
             public void onHoverChange(int hoveredIndex) {
-                System.out.println("hov: " + hoveredIndex);
+                System.out.println("hovered: " + hoveredIndex);
             }
         });
 
 
-        stage.addActor(menu1);
-//        menu1.centerOnScreen();
-        menu1.drawRudimentaryDebug();
-        menu1.setFillParent(true);
+        stage.addActor(menu);
+//        menu.centerOnScreen();
+//        menu.drawRudimentaryDebug();
+        menu.setFillParent(true);
     }
 
     @Override
@@ -87,8 +90,8 @@ public class FillParentStageWidget extends ApplicationAdapter {
         stage.draw();
 
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            menu1.rotateBy(Gdx.graphics.getDeltaTime() * 100);
-            System.out.println(menu1.getRotation());
+            menu.rotateBy(Gdx.graphics.getDeltaTime() * 100);
+            System.out.println(menu.getRotation());
         }
 
     }

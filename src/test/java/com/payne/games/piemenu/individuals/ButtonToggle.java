@@ -82,8 +82,8 @@ public class ButtonToggle extends ApplicationAdapter {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 radGroup.toggleVisibility(.9f); // 0.9 seconds animation
-                radGroup.setPosition(textButton.getX() + textButton.getWidth()/2,
-                        textButton.getY() + textButton.getHeight()/2 - 5, Align.center);
+                radGroup.setPosition(textButton.getX(Align.center),
+                        textButton.getY(Align.center) - 5, Align.center);
             }
         });
         root.add(textButton).expand().bottom();

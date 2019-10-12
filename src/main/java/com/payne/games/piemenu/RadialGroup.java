@@ -35,7 +35,7 @@ public class RadialGroup extends WidgetGroup {
     /**
      * <i>Required.</i><br>
      * The radius that defines how big the Widget will be.<br>
-     * It must be bigger than {@value #BG_BUFFER}.
+     * It must be bigger than {@value #BUFFER}.
      */
     protected float radius;
 
@@ -84,7 +84,7 @@ public class RadialGroup extends WidgetGroup {
 
     /* For internal use (optimization). */
     private float lastRadius = 0;
-    protected static final float BG_BUFFER = 2;
+    protected static final float BUFFER = 1;
     protected static final Color TRANSPARENT = new Color(0,0,0,0);
     private static Vector2 vector2 = new Vector2();
     private static Vector2 vector22 = new Vector2();
@@ -489,10 +489,6 @@ public class RadialGroup extends WidgetGroup {
 
     @Override
     public void layout() {
-
-//        setSize(Math.max(getWidth(), getPrefWidth()), Math.max(getHeight(), getPrefHeight()));
-//        validate();
-
         float degreesPerChild = totalDegreesDrawn / getAmountOfChildren();
         float half = 1f / 2;
         for (int i = 0; i < getAmountOfChildren(); i++) {
@@ -503,6 +499,11 @@ public class RadialGroup extends WidgetGroup {
             modifyActor(actor, degreesPerChild, dist); // overridden by user
             actor.setPosition(vector2.x+radius, vector2.y+radius, Align.center);
         }
+    }
+
+    @Override
+    protected void positionChanged() {
+        setOrigin(getX(Align.center), getY(Align.center)); // to support rotations around the center
     }
 
     @Override
@@ -538,7 +539,7 @@ public class RadialGroup extends WidgetGroup {
      */
     protected void drawWithShapeDrawer(Batch batch, float parentAlpha, float degreesToDraw) {
 
-//        validate();
+        validate();
 
         /* Pre-calculating */
         float bgRadian = MathUtils.degreesToRadians*degreesToDraw;
@@ -552,23 +553,19 @@ public class RadialGroup extends WidgetGroup {
             float restoreAlpha = bc.a;
             batch.setColor(bc.r, bc.g, bc.b, bc.a * globalAlphaMultiplier);
             // todo: how to rotate this draw using `getRotation()` value?
-            style.background.draw(batch, getX(), getY(), getPrefWidth(), getPrefHeight());
+            style.background.draw(batch, getX(Align.left), getY(Align.bottom), getPrefWidth(), getPrefHeight());
             batch.setColor(bc.r, bc.g, bc.b, restoreAlpha);
         }
 
         /* Rest of background */
         if(style.backgroundColor != null) {
             propagateAlpha(sd, style.backgroundColor);
-            if(style.circumferenceWidth != 0 && style.circumferenceColor != null)
-                sd.sector(getX()+radius, getY()+radius,
-                        radius-BG_BUFFER, tmpOffset, bgRadian);
-            else
-                sd.sector(getX()+radius, getY()+radius,
-                        radius, tmpOffset, bgRadian);
+            sd.sector(getX(Align.center), getY(Align.center),
+                    radius-BUFFER, tmpOffset, bgRadian); // buffer to prevent bg from sticking out from below children
         }
 
         /* Children */
-        vector2.set(getX()+radius, getY()+radius); // center of widget
+        vector2.set(getX(Align.center), getY(Align.center));
         for(int i=0; i<SIZE; i++) {
             float tmp = tmpOffset + i*tmpRad;
             drawChild(vector2, i, tmp, tmpRad);
@@ -582,7 +579,7 @@ public class RadialGroup extends WidgetGroup {
     }
 
     protected void drawChildSeparator(Vector2 vector2, float drawnRadianAngle) {
-        if(getAmountOfChildren() > 1 && style.separatorColor != null) {
+        if(hasChildren() && style.separatorColor != null && style.separatorWidth > 0) {
             propagateAlpha(sd, style.separatorColor);
             sd.line(pointAtAngle(vector22, vector2, innerRadius, drawnRadianAngle),
                     pointAtAngle(vector23, vector2, radius, drawnRadianAngle),
@@ -626,11 +623,12 @@ public class RadialGroup extends WidgetGroup {
     }
 
     protected void drawChild(Vector2 vector2, int index, float startAngle, float radian) {
+        // todo: possibly integrate buffer here too since Background has one? (or remove from bg, and do +BUFFER here?)
         propagateAlpha(sd, getColor(index));
         sd.arc(vector2.x, vector2.y, (radius+innerRadius)/2,
                 startAngle, radian, radius-innerRadius);
 
-        /* Circumference */
+        /* Circumferences */
         drawChildCircumference(vector2, startAngle, radian, radius - style.circumferenceWidth/2);
         if(innerRadius > 0)
             drawChildCircumference(vector2, startAngle, radian, innerRadius + style.circumferenceWidth/2);
@@ -730,7 +728,7 @@ public class RadialGroup extends WidgetGroup {
     public float angleAtStage(float x, float y) {
         return normalizeAngle(
                 MathUtils.radiansToDegrees *
-                        MathUtils.atan2(y - (getY() + radius), x - (getX() + radius))
+                        MathUtils.atan2(y - (getY(Align.center)), x - (getX(Align.center)))
                 - getRotation() - startDegreesOffset
         );
     }
@@ -787,8 +785,7 @@ public class RadialGroup extends WidgetGroup {
     public void centerOnActor(Actor actor) {
         if(actor == null)
             return;
-        setPosition(actor.getX() + actor.getWidth()/2,
-                actor.getY() + actor.getHeight()/2, Align.center);
+        setPosition(actor.getX(Align.center), actor.getY(Align.center), Align.center);
     }
 
     /**
@@ -1034,20 +1031,25 @@ public class RadialGroup extends WidgetGroup {
      * <i>Required.</i><br>
      * The radius that defines how big the Widget will be.
      *
-     * @param radius The value must be bigger than {@value #BG_BUFFER}.
+     * @param radius The value must be bigger than {@value #BUFFER}.
      *               If the value is smaller than the current {@link #innerRadius}
      *               then the {@link #innerRadius} is set to a smaller value.
      */
     public void setRadius(float radius) {
-        if(radius < BG_BUFFER)
-            throw new IllegalArgumentException("radius cannot be smaller than " + BG_BUFFER + ".");
+        if(radius < BUFFER)
+            throw new IllegalArgumentException("radius cannot be smaller than " + BUFFER + ".");
         if(radius < innerRadius)
             setInnerRadius(radius - 1);
         if(radius != lastRadius) {
             this.radius = radius;
             lastRadius = radius;
-            setSize(getPrefWidth(), getPrefHeight()); // todo: move out of there
-            setOrigin(radius, radius); // sets the center of the widget for rotations
+
+            /* Update widget's boundaries and position. */
+            float preX = getX(Align.center);
+            float preY = getY(Align.center);
+            setSize(getPrefWidth(), getPrefHeight()); // for orphan widgets (no parent)
+            setPosition(preX, preY, Align.center); // to immediately recenter widget to where it was todo: messes with setFillParent(true)
+
             invalidateHierarchy();
         }
     }
