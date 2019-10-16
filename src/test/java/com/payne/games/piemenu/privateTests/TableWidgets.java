@@ -9,9 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -71,7 +69,7 @@ public class TableWidgets extends ApplicationAdapter {
 //        menu1.setPosition(stage.getWidth()/2 + 100, stage.getHeight()/2, Align.center);
 //        stage.addActor(menu1);
         menu1.drawRudimentaryDebug();
-        root.add(menu1);
+        root.add(menu1).fill();
 
         /* Adding the demo widgets. */
         PieMenu.PieMenuStyle style2 = new PieMenu.PieMenuStyle();
@@ -79,7 +77,7 @@ public class TableWidgets extends ApplicationAdapter {
         style2.highlightedSliceColor = Color.BLUE;
         style2.selectedSliceColor = Color.BLUE;
         style2.backgroundColor = Color.ORANGE;
-        PieMenu menu2 = new PieMenu(shape, style2, 100);
+        PieMenu menu2 = new PieMenu(shape, style2, 120);
 
         for(int i=0 ; i<5 ; i++)
             menu2.addActor(new Label("menu " + i, skin));
@@ -107,6 +105,16 @@ public class TableWidgets extends ApplicationAdapter {
 //        stage.addActor(menu3);
         menu3.drawRudimentaryDebug();
         root.add(menu3);
+
+
+
+        /* Some buttons, for comparison. */
+        root.row().padLeft(50);
+        Button b1 = new Button(skin);
+        Button b2 = new TextButton("textBtn", skin);
+        Button b3 = new ImageTextButton("imgTxt", skin);
+
+        root.add(b1,b2,b3);
     }
 
     @Override

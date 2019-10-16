@@ -2,7 +2,6 @@
 - `ChildRegion` is now referred to as `Slice` throughout the API
 - `setDefaultIndex` now changes the `selectedIndex` if it isn't a valid index.
 - The complementary callbacks (highlight and hover) are now regrouped within `PieMenuCallbacks`.
-- Increased the radius buffer-size to prevent overflowing past the circumference.
 - Integrated rotations: scene2d's `rotateBy()` method is now supported.
 
 [3.0.0-rc1]

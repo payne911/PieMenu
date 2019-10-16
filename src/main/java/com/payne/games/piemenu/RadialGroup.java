@@ -97,14 +97,14 @@ public class RadialGroup extends WidgetGroup {
     protected RadialGroup(final ShapeDrawer sd, float radius) {
         this.sd = sd;
         setRadius(radius);
+        constructorsCommon();
     }
 
     /**
      * Used internally for the shared properties among constructors of RadialWidgets.
      */
     protected RadialGroup(final ShapeDrawer sd, float radius, float innerRadius) {
-        this.sd = sd;
-        setRadius(radius);
+        this(sd, radius);
         setInnerRadius(innerRadius);
     }
 
@@ -113,9 +113,7 @@ public class RadialGroup extends WidgetGroup {
      */
     protected RadialGroup(final ShapeDrawer sd, float radius, float innerRadius,
                           float startDegreesOffset) {
-        this.sd = sd;
-        setRadius(radius);
-        setInnerRadius(innerRadius);
+        this(sd, radius, innerRadius);
         setStartDegreesOffset(startDegreesOffset);
     }
 
@@ -124,14 +122,11 @@ public class RadialGroup extends WidgetGroup {
      */
     protected RadialGroup(final ShapeDrawer sd, float radius, float innerRadius,
                           float startDegreesOffset, float totalDegreesDrawn) {
-        this.sd = sd;
-        setRadius(radius);
-        setInnerRadius(innerRadius);
-        setStartDegreesOffset(startDegreesOffset);
+        this(sd, radius, innerRadius, startDegreesOffset);
         setTotalDegreesDrawn(totalDegreesDrawn);
     }
 
-    private void constructorsCommon() {
+    protected void constructorsCommon() {
         setTouchable(Touchable.childrenOnly);
     }
 
@@ -145,7 +140,6 @@ public class RadialGroup extends WidgetGroup {
     public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style, float radius) {
         this(sd, radius);
         setStyle(style);
-        constructorsCommon();
     }
 
     /**
@@ -161,7 +155,6 @@ public class RadialGroup extends WidgetGroup {
                        float innerRadius) {
         this(sd, radius, innerRadius);
         setStyle(style);
-        constructorsCommon();
     }
 
     /**
@@ -179,7 +172,6 @@ public class RadialGroup extends WidgetGroup {
                        float innerRadius, float startDegreesOffset) {
         this(sd, radius, innerRadius, startDegreesOffset);
         setStyle(style);
-        constructorsCommon();
     }
 
     /**
@@ -200,7 +192,6 @@ public class RadialGroup extends WidgetGroup {
                        float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
         this(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
         setStyle(style);
-        constructorsCommon();
     }
 
     /**
@@ -213,7 +204,6 @@ public class RadialGroup extends WidgetGroup {
     public RadialGroup(final ShapeDrawer sd, Skin skin, float radius) {
         this(sd, radius);
         setStyle(skin.get(RadialGroupStyle.class));
-        constructorsCommon();
     }
 
     /**
@@ -229,7 +219,6 @@ public class RadialGroup extends WidgetGroup {
                        float innerRadius) {
         this(sd, radius, innerRadius);
         setStyle(skin.get(RadialGroupStyle.class));
-        constructorsCommon();
     }
 
     /**
@@ -247,7 +236,6 @@ public class RadialGroup extends WidgetGroup {
                        float innerRadius, float startDegreesOffset) {
         this(sd, radius, innerRadius, startDegreesOffset);
         setStyle(skin.get(RadialGroupStyle.class));
-        constructorsCommon();
     }
 
     /**
@@ -268,7 +256,6 @@ public class RadialGroup extends WidgetGroup {
                        float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
         this(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
         setStyle(skin.get(RadialGroupStyle.class));
-        constructorsCommon();
     }
 
     /**
@@ -282,7 +269,6 @@ public class RadialGroup extends WidgetGroup {
     public RadialGroup(final ShapeDrawer sd, Skin skin, String style, float radius) {
         this(sd, radius);
         setStyle(skin.get(style, RadialGroupStyle.class));
-        constructorsCommon();
     }
 
 
@@ -300,7 +286,6 @@ public class RadialGroup extends WidgetGroup {
                        float innerRadius) {
         this(sd, radius, innerRadius);
         setStyle(skin.get(style, RadialGroupStyle.class));
-        constructorsCommon();
     }
 
     /**
@@ -319,7 +304,6 @@ public class RadialGroup extends WidgetGroup {
                        float innerRadius, float startDegreesOffset) {
         this(sd, radius, innerRadius, startDegreesOffset);
         setStyle(skin.get(style, RadialGroupStyle.class));
-        constructorsCommon();
     }
 
     /**
@@ -341,7 +325,6 @@ public class RadialGroup extends WidgetGroup {
                        float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
         this(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
         setStyle(skin.get(style, RadialGroupStyle.class));
-        constructorsCommon();
     }
 
 
@@ -358,25 +341,25 @@ public class RadialGroup extends WidgetGroup {
 
     @Override
     public float getPrefWidth() {
-//        validate();
+//        validate(); todo
         return radius * 2;
     }
 
     @Override
     public float getPrefHeight() {
-//        validate();
+//        validate(); todo
         return radius * 2;
     }
 
     @Override
     public float getMinWidth() {
-//        validate();
+//        validate(); todo
         return radius * 2;
     }
 
     @Override
     public float getMinHeight() {
-//        validate();
+//        validate(); todo
         return radius * 2;
     }
 
@@ -497,7 +480,7 @@ public class RadialGroup extends WidgetGroup {
             vector2.set(dist, 0);
             vector2.rotate(degreesPerChild*(i + half) + startDegreesOffset);
             modifyActor(actor, degreesPerChild, dist); // overridden by user
-            actor.setPosition(vector2.x+radius, vector2.y+radius, Align.center);
+            actor.setPosition(vector2.x + getWidth()/2, vector2.y + getHeight()/2, Align.center);
         }
     }
 
@@ -519,10 +502,10 @@ public class RadialGroup extends WidgetGroup {
 
     /**
      * Used to propagate the parent's alpha value to the children.<br>
-     * Changes the ShapeDrawer's color.
+     * Changes the {@link ShapeDrawer}'s color.
      *
-     * @param sd the ShapeDrawer whose color will be changed.
-     * @param input the Color to be copying RGB values from.
+     * @param sd the {@link ShapeDrawer} whose color will be changed.
+     * @param input the {@link Color} to be copying RGB values from.
      */
     protected void propagateAlpha(ShapeDrawer sd, Color input) {
         sd.setColor(input.r, input.g, input.b, input.a * globalAlphaMultiplier);
@@ -539,7 +522,7 @@ public class RadialGroup extends WidgetGroup {
      */
     protected void drawWithShapeDrawer(Batch batch, float parentAlpha, float degreesToDraw) {
 
-        validate();
+        validate(); // todo: useful?
 
         /* Pre-calculating */
         float bgRadian = MathUtils.degreesToRadians*degreesToDraw;
@@ -552,7 +535,7 @@ public class RadialGroup extends WidgetGroup {
             Color bc = batch.getColor();
             float restoreAlpha = bc.a;
             batch.setColor(bc.r, bc.g, bc.b, bc.a * globalAlphaMultiplier);
-            // todo: how to rotate this draw using `getRotation()` value?
+            // todo: how to rotate this draw using `getRotation()` value? ---
             style.background.draw(batch, getX(Align.left), getY(Align.bottom), getPrefWidth(), getPrefHeight());
             batch.setColor(bc.r, bc.g, bc.b, restoreAlpha);
         }
@@ -1048,7 +1031,7 @@ public class RadialGroup extends WidgetGroup {
             float preX = getX(Align.center);
             float preY = getY(Align.center);
             setSize(getPrefWidth(), getPrefHeight()); // for orphan widgets (no parent)
-            setPosition(preX, preY, Align.center); // to immediately recenter widget to where it was todo: messes with setFillParent(true)
+            setPosition(preX, preY, Align.center); // to immediately recenter widget to where it was todo: messes with setFillParent(true)---
 
             invalidateHierarchy();
         }

@@ -458,7 +458,7 @@ public class AnimatedRadialGroup extends RadialGroup {
      */
     public void setCurrentAngle(float currentAngle) {
         if(currentAngle >= totalDegreesDrawn || currentAngle <= 0)
-            throw new IllegalArgumentException("currentAngle must be between 0 and `style.totalDegreesDrawn`.");
+            throw new IllegalArgumentException("currentAngle must be between 0 and totalDegreesDrawn.");
         this.currentAngle = currentAngle;
     }
 }

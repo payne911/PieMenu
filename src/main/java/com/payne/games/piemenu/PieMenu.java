@@ -24,7 +24,7 @@ public class PieMenu extends RadialGroup {
      * It defaults to being a {@link PieMenuClickListener} but can be changed
      * to your own implementation by calling {@link #setPieMenuListener(InputListener)}.
      */
-    private InputListener pieMenuListener = new PieMenuClickListener();
+    private InputListener pieMenuListener;
 
     /**
      * The index that is used as a fallback value whenever a processed
@@ -81,7 +81,12 @@ public class PieMenu extends RadialGroup {
 
 
 
-    private void constructorsCommon() {
+
+
+    @Override
+    protected void constructorsCommon() {
+        super.constructorsCommon();
+        this.pieMenuListener = new PieMenuClickListener();
         addListener(pieMenuListener);
         setTouchable(Touchable.enabled);
     }
@@ -96,7 +101,6 @@ public class PieMenu extends RadialGroup {
     public PieMenu(final ShapeDrawer sd, PieMenuStyle style, float radius) {
         super(sd, radius);
         setStyle(style);
-        constructorsCommon();
     }
 
     /**
@@ -111,7 +115,6 @@ public class PieMenu extends RadialGroup {
     public PieMenu(final ShapeDrawer sd, PieMenuStyle style, float radius, float innerRadius) {
         super(sd, radius, innerRadius);
         setStyle(style);
-        constructorsCommon();
     }
 
     /**
@@ -129,7 +132,6 @@ public class PieMenu extends RadialGroup {
                    float startDegreesOffset) {
         super(sd, radius, innerRadius, startDegreesOffset);
         setStyle(style);
-        constructorsCommon();
     }
 
     /**
@@ -150,7 +152,6 @@ public class PieMenu extends RadialGroup {
                    float startDegreesOffset, float totalDegreesDrawn) {
         super(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
         setStyle(style);
-        constructorsCommon();
     }
 
     /**
@@ -163,7 +164,6 @@ public class PieMenu extends RadialGroup {
     public PieMenu(final ShapeDrawer sd, Skin skin, float radius) {
         super(sd, radius);
         setStyle(skin.get(PieMenuStyle.class));
-        constructorsCommon();
     }
 
     /**
@@ -178,7 +178,6 @@ public class PieMenu extends RadialGroup {
     public PieMenu(final ShapeDrawer sd, Skin skin, float radius, float innerRadius) {
         super(sd, radius, innerRadius);
         setStyle(skin.get(PieMenuStyle.class));
-        constructorsCommon();
     }
 
     /**
@@ -196,7 +195,6 @@ public class PieMenu extends RadialGroup {
                    float startDegreesOffset) {
         super(sd, radius, innerRadius, startDegreesOffset);
         setStyle(skin.get(PieMenuStyle.class));
-        constructorsCommon();
     }
 
     /**
@@ -217,7 +215,6 @@ public class PieMenu extends RadialGroup {
                    float startDegreesOffset, float totalDegreesDrawn) {
         super(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
         setStyle(skin.get(PieMenuStyle.class));
-        constructorsCommon();
     }
 
     /**
@@ -231,7 +228,6 @@ public class PieMenu extends RadialGroup {
     public PieMenu(final ShapeDrawer sd, Skin skin, String style, float radius) {
         super(sd, radius);
         setStyle(skin.get(style, PieMenuStyle.class));
-        constructorsCommon();
     }
 
     /**
@@ -248,7 +244,6 @@ public class PieMenu extends RadialGroup {
                    float innerRadius) {
         super(sd, radius, innerRadius);
         setStyle(skin.get(style, PieMenuStyle.class));
-        constructorsCommon();
     }
 
     /**
@@ -267,7 +262,6 @@ public class PieMenu extends RadialGroup {
                    float innerRadius, float startDegreesOffset) {
         super(sd, radius, innerRadius, startDegreesOffset);
         setStyle(skin.get(style, PieMenuStyle.class));
-        constructorsCommon();
     }
 
     /**
@@ -289,7 +283,6 @@ public class PieMenu extends RadialGroup {
                    float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
         super(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
         setStyle(skin.get(style, PieMenuStyle.class));
-        constructorsCommon();
     }
 
 
