@@ -56,9 +56,8 @@ public class ClickToggle extends ApplicationAdapter {
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.background = new Image(new Texture(Gdx.files.internal("rael_pie.png"))).getDrawable(); // image background!
-        style.selectedSliceColor = new Color(1,.5f,.5f,.5f);
-        style.highlightedSliceColor = new Color(1,.5f,.5f,.5f);
-        menu = new PieMenu(shape, style, 80, 24, 30) {
+        style.selectedColor = new Color(1,.5f,.5f,.5f);
+        menu = new PieMenu(shape, style, 80, 24f/80, 30) {
             /* Since we are using Images, we want to resize them to fit within each sector. */
             @Override
             public void modifyActor(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {

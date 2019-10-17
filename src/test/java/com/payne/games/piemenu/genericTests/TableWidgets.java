@@ -1,4 +1,4 @@
-package com.payne.games.piemenu.privateTests;
+package com.payne.games.piemenu.genericTests;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -49,7 +49,12 @@ public class TableWidgets extends ApplicationAdapter {
         pixmap.fill();
         tmpTex = new Texture(pixmap);
         pixmap.dispose();
-        shape = new ShapeDrawer(batch, new TextureRegion(tmpTex));
+        shape = new ShapeDrawer(batch, new TextureRegion(tmpTex)) {
+            @Override
+            protected int estimateSidesRequired(float radiusX, float radiusY) {
+                return 4*super.estimateSidesRequired(radiusX, radiusY);
+            }
+        };
 
 
 
@@ -57,9 +62,8 @@ public class TableWidgets extends ApplicationAdapter {
 
         /* Adding the demo widgets. */
         PieMenu.PieMenuStyle style1 = new PieMenu.PieMenuStyle();
-        style1.hoveredSliceColor = Color.RED;
-        style1.highlightedSliceColor = Color.BLUE;
-        style1.selectedSliceColor = Color.BLUE;
+        style1.hoverColor = Color.RED;
+        style1.selectedColor = Color.BLUE;
         style1.backgroundColor = Color.ORANGE;
         PieMenu menu1 = new PieMenu(shape, style1, 80);
 
@@ -73,9 +77,8 @@ public class TableWidgets extends ApplicationAdapter {
 
         /* Adding the demo widgets. */
         PieMenu.PieMenuStyle style2 = new PieMenu.PieMenuStyle();
-        style2.hoveredSliceColor = Color.RED;
-        style2.highlightedSliceColor = Color.BLUE;
-        style2.selectedSliceColor = Color.BLUE;
+        style2.hoverColor = Color.RED;
+        style2.selectedColor = Color.BLUE;
         style2.backgroundColor = Color.ORANGE;
         PieMenu menu2 = new PieMenu(shape, style2, 120);
 
@@ -92,9 +95,8 @@ public class TableWidgets extends ApplicationAdapter {
 
         /* Adding the demo widgets. */
         PieMenu.PieMenuStyle style3 = new PieMenu.PieMenuStyle();
-        style3.hoveredSliceColor = Color.RED;
-        style3.highlightedSliceColor = Color.BLUE;
-        style3.selectedSliceColor = Color.BLUE;
+        style3.hoverColor = Color.RED;
+        style3.selectedColor = Color.BLUE;
         style3.backgroundColor = Color.ORANGE;
         PieMenu menu3 = new PieMenu(shape, style3, 40);
 
@@ -114,7 +116,8 @@ public class TableWidgets extends ApplicationAdapter {
         Button b2 = new TextButton("textBtn", skin);
         Button b3 = new ImageTextButton("imgTxt", skin);
 
-        root.add(b1,b2,b3);
+        root.add(b1).fill();
+        root.add(b2,b3);
     }
 
     @Override

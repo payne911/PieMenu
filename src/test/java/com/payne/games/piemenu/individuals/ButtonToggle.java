@@ -68,7 +68,7 @@ public class ButtonToggle extends ApplicationAdapter {
         style.circumferenceWidth = 2;
         style.circumferenceColor = Color.BLACK;
         style.separatorColor = style.circumferenceColor;
-        radGroup = new AnimatedRadialGroup(shape, style, 110, 50, 315, 270);
+        radGroup = new AnimatedRadialGroup(shape, style, 110, 50f/110, 315, 270);
 
         /* Populating the widget. */
         for (int i = 0; i < 8; i++) {

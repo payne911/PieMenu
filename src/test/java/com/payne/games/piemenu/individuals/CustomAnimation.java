@@ -45,17 +45,17 @@ public class CustomAnimation extends ApplicationAdapter {
 
         /* Setting up the Widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.selectedSliceColor = new Color(1,0,0,.5f);
-        style.highlightedSliceColor = new Color(1,.05f,.05f,.4f);
-        style.hoveredSliceColor = new Color(.8f,.8f,.8f,.05f);
-        style.hoveredAndSelectedSliceColor = new Color(1,.2f,.2f,.55f);
+        style.selectedColor = new Color(1,0,0,.5f);
+        style.downColor = new Color(1,.05f,.05f,.4f);
+        style.hoverColor = new Color(.8f,.8f,.8f,.05f);
+        style.hoverSelectedColor = new Color(1,.2f,.2f,.55f);
         pieMenu = new PieMenu(sd, style, BASE_RADIUS) {
             @Override
             public float getActorDistanceFromCenter(Actor actor) {
 
                 /* We want the Labels to be placed closer to the edge than the default value. */
                 return getAmountOfChildren() > 1
-                        ? getRadius() - getChild(0).getWidth()
+                        ? getMaxRadius() - getChild(0).getWidth()
                         : 0;
             }
 
@@ -66,7 +66,8 @@ public class CustomAnimation extends ApplicationAdapter {
                 /* Our custom animation! */
                 time += delta*5;
                 pieMenu.setStartDegreesOffset((time * 10) % 360);
-                pieMenu.setRadius(MathUtils.sin(time) * 20 + BASE_RADIUS);
+                pieMenu.setMinRadius(MathUtils.sin(time) * 20 + BASE_RADIUS);
+//                pieMenu.setInnerRadius(Math.abs(MathUtils.sin(time)/(float)Math.PI +.1f));
                 pieMenu.centerOnScreen();
             }
         };

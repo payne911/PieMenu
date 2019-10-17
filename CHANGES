@@ -1,8 +1,13 @@
 [3.0.0-rc2]
-- `ChildRegion` is now referred to as `Slice` throughout the API
+- `ChildRegion` is now referred to as `Slice` throughout the API.
+- Style variables now have shorter names that resemble the `ButtonStyle` naming.
 - `setDefaultIndex` now changes the `selectedIndex` if it isn't a valid index.
 - The complementary callbacks (highlight and hover) are now regrouped within `PieMenuCallbacks`.
 - Integrated rotations: scene2d's `rotateBy()` method is now supported.
+- `radius` has been renamed to `minRadius` since it is now a suggested radius for the minimal radius value. In case `setFillParent(true)` or other size-changing methods are used (Table's `fill`, for example), the widget will now expand as a scene2d user would expect it to.
+- `innerRadius` now designates a percentage of the radius, instead of an amount of pixels.
+- Fixed the flicker resulting from hovering out of a contained Actor.
+- `selectedColor` now used by default if no `downColor` was set: this is to prevent a flicker when clicking.
 
 [3.0.0-rc1]
 - Refactored the Style so that most of the `float` values (`radius` and the likes) have become class-attributes instead.

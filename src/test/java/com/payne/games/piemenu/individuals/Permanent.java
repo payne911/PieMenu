@@ -59,11 +59,11 @@ public class Permanent extends ApplicationAdapter {
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.circumferenceWidth = 1;
         style.backgroundColor = backgroundColor;
-        style.highlightedSliceColor = new Color(.5f,.5f,.5f,1);
+        style.downColor = new Color(.5f,.5f,.5f,1);
         style.sliceColor = new Color(.33f,.33f,.33f,1);
         style.alternateSliceColor = new Color(.25f,.25f,.25f,1);
         style.circumferenceColor = new Color(0,0,0,1);
-        menu = new PieMenu(shape, style, 100, 30, 0 ,180);
+        menu = new PieMenu(shape, style, 100, 30f/100, 0 ,180);
 
         /* Adding a selection-listener. */
         menu.addListener(new ChangeListener() {

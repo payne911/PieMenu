@@ -96,7 +96,7 @@ public class PieMenu extends RadialGroup {
      *
      * @param sd used to draw everything but the contained actors.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param radius the {@link #minRadius} that defines the size of the widget.
      */
     public PieMenu(final ShapeDrawer sd, PieMenuStyle style, float radius) {
         super(sd, radius);
@@ -108,11 +108,12 @@ public class PieMenu extends RadialGroup {
      *
      * @param sd used to draw everything but the contained actors.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      */
-    public PieMenu(final ShapeDrawer sd, PieMenuStyle style, float radius, float innerRadius) {
+    public PieMenu(final ShapeDrawer sd, PieMenuStyle style, float radius,
+                   float innerRadius) {
         super(sd, radius, innerRadius);
         setStyle(style);
     }
@@ -122,14 +123,14 @@ public class PieMenu extends RadialGroup {
      *
      * @param sd used to draw everything but the contained actors.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
-    public PieMenu(final ShapeDrawer sd, PieMenuStyle style, float radius, float innerRadius,
-                   float startDegreesOffset) {
+    public PieMenu(final ShapeDrawer sd, PieMenuStyle style, float radius,
+                   float innerRadius, float startDegreesOffset) {
         super(sd, radius, innerRadius, startDegreesOffset);
         setStyle(style);
     }
@@ -139,8 +140,8 @@ public class PieMenu extends RadialGroup {
      *
      * @param sd used to draw everything but the contained actors.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
@@ -148,8 +149,8 @@ public class PieMenu extends RadialGroup {
      *                          many degrees the widget will span, starting from
      *                          its {@link #startDegreesOffset}.
      */
-    public PieMenu(final ShapeDrawer sd, PieMenuStyle style, float radius, float innerRadius,
-                   float startDegreesOffset, float totalDegreesDrawn) {
+    public PieMenu(final ShapeDrawer sd, PieMenuStyle style, float radius,
+                   float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
         super(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
         setStyle(style);
     }
@@ -159,7 +160,7 @@ public class PieMenu extends RadialGroup {
      *
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param radius the {@link #minRadius} that defines the size of the widget.
      */
     public PieMenu(final ShapeDrawer sd, Skin skin, float radius) {
         super(sd, radius);
@@ -171,11 +172,12 @@ public class PieMenu extends RadialGroup {
      *
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      */
-    public PieMenu(final ShapeDrawer sd, Skin skin, float radius, float innerRadius) {
+    public PieMenu(final ShapeDrawer sd, Skin skin, float radius,
+                   float innerRadius) {
         super(sd, radius, innerRadius);
         setStyle(skin.get(PieMenuStyle.class));
     }
@@ -185,14 +187,14 @@ public class PieMenu extends RadialGroup {
      *
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
-    public PieMenu(final ShapeDrawer sd, Skin skin, float radius, float innerRadius,
-                   float startDegreesOffset) {
+    public PieMenu(final ShapeDrawer sd, Skin skin, float radius,
+                   float innerRadius, float startDegreesOffset) {
         super(sd, radius, innerRadius, startDegreesOffset);
         setStyle(skin.get(PieMenuStyle.class));
     }
@@ -202,8 +204,8 @@ public class PieMenu extends RadialGroup {
      *
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
@@ -211,8 +213,8 @@ public class PieMenu extends RadialGroup {
      *                          many degrees the widget will span, starting from
      *                          its {@link #startDegreesOffset}.
      */
-    public PieMenu(final ShapeDrawer sd, Skin skin, float radius, float innerRadius,
-                   float startDegreesOffset, float totalDegreesDrawn) {
+    public PieMenu(final ShapeDrawer sd, Skin skin, float radius,
+                   float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
         super(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
         setStyle(skin.get(PieMenuStyle.class));
     }
@@ -223,7 +225,7 @@ public class PieMenu extends RadialGroup {
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param radius the {@link #minRadius} that defines the size of the widget.
      */
     public PieMenu(final ShapeDrawer sd, Skin skin, String style, float radius) {
         super(sd, radius);
@@ -236,8 +238,8 @@ public class PieMenu extends RadialGroup {
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      */
     public PieMenu(final ShapeDrawer sd, Skin skin, String style, float radius,
@@ -252,8 +254,8 @@ public class PieMenu extends RadialGroup {
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
@@ -270,8 +272,8 @@ public class PieMenu extends RadialGroup {
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
@@ -326,7 +328,7 @@ public class PieMenu extends RadialGroup {
         if(infiniteSelectionRange)
             return childIndex;
         stageToLocalCoordinates(vector2.set(x,y));
-        return isWithinRadii(vector2.x - radius, vector2.y - radius)
+        return isWithinRadii(vector2.x - getWidth()/2, vector2.y - getHeight()/2)
                 ? childIndex
                 : getAmountOfChildren(); // "getAmountOfChildren" is equivalent to "invalid"
     }
@@ -379,22 +381,27 @@ public class PieMenu extends RadialGroup {
 
     @Override
     public Color getColor(int index) {
-        if(style.hoveredAndSelectedSliceColor != null
+        if(style.hoverSelectedColor != null
                 && index == selectedIndex
                 && index == hoveredIndex)
-            return style.hoveredAndSelectedSliceColor;
+            return style.hoverSelectedColor;
 
-        if(style.selectedSliceColor != null
+        if(style.selectedColor != null
                 && index == selectedIndex)
-            return style.selectedSliceColor;
+            return style.selectedColor;
 
-        if(style.highlightedSliceColor != null
+        if(style.downColor != null
                 && index == highlightedIndex)
-            return style.highlightedSliceColor;
+            return style.downColor;
 
-        if(style.hoveredSliceColor != null
+        if(style.downColor == null
+                && style.selectedColor != null
+                && index == highlightedIndex)
+            return style.selectedColor;
+
+        if(style.hoverColor != null
                 && index == hoveredIndex)
-            return style.hoveredSliceColor;
+            return style.hoverColor;
 
         if(style.alternateSliceColor != null
                 && index%2 == 1)
@@ -442,8 +449,8 @@ public class PieMenu extends RadialGroup {
      * @param style a style class you want to check properties of.
      */
     protected void checkStyle(PieMenuStyle style) {
-        if(style.hoveredAndSelectedSliceColor != null
-                && (style.hoveredSliceColor == null || style.selectedSliceColor == null))
+        if(style.hoverSelectedColor != null
+                && (style.hoverColor == null || style.selectedColor == null))
             throw new IllegalArgumentException("hoveredAndSelectedSliceColor cannot be set " +
                     "if hoveredSliceColor or selectedSliceColor is null.");
 
@@ -462,25 +469,32 @@ public class PieMenu extends RadialGroup {
 
         /**
          * <i>Recommended. Optional.</i><br>
-         * Defines the color of the slice which is currently selected.
+         * Defines the color of the slice which is currently selected.<br>
+         * If you have no {@link #downColor} set, this color will also be used
+         * for when the user is pressing down on a slice and hasn't released
+         * the press yet.
          *
          * @see #selectionButton
          * @see #selectedIndex
          */
-        public Color selectedSliceColor;
+        public Color selectedColor;
 
         /**
          * <i>Recommended. Optional.</i><br>
-         * Defines the color of the slice which is currently highlighted.<br>
+         * Defines the color of the slice which is currently highlighted
+         * (i.e. pressed).<br>
          * Highlights come from dragging the mouse over the {@link PieMenu} while
          * pressing down a mouse-button. The mobile-equivalent is of having your
          * finger pressing down on the PieMenu and dragging it around without
-         * releasing.
+         * releasing.<br>
+         * If you are setting a {@link #selectedColor} value, then you do not
+         * need to bother with this one unless you want those colors to be
+         * different.
          *
          * @see #selectionButton
          * @see #highlightedIndex
          */
-        public Color highlightedSliceColor;
+        public Color downColor;
 
         /**
          * <i>Recommended. Optional.</i><br>
@@ -490,16 +504,16 @@ public class PieMenu extends RadialGroup {
          * @see #selectionButton
          * @see #highlightedIndex
          */
-        public Color hoveredSliceColor;
+        public Color hoverColor;
 
         /**
          * <i>Recommended. Optional.</i><br>
          * Defines the color of the slice which is currently hovered by the mouse
          * when this slice was also a highlighted slice.<br>
-         * Both {@link #hoveredSliceColor} and {@link #selectedSliceColor}
+         * Both {@link #hoverColor} and {@link #selectedColor}
          * must be defined for this attribute to be allowed to be set.
          */
-        public Color hoveredAndSelectedSliceColor;
+        public Color hoverSelectedColor;
 
         /**
          * Encompasses the characteristics that define the style of the Widget
@@ -516,10 +530,10 @@ public class PieMenu extends RadialGroup {
          */
         public PieMenuStyle(PieMenu.PieMenuStyle style) {
             super(style);
-            this.selectedSliceColor = new Color(style.selectedSliceColor);
-            this.highlightedSliceColor = new Color(style.highlightedSliceColor);
-            this.hoveredSliceColor = new Color(style.hoveredSliceColor);
-            this.hoveredAndSelectedSliceColor = new Color(style.hoveredAndSelectedSliceColor);
+            this.selectedColor = new Color(style.selectedColor);
+            this.downColor = new Color(style.downColor);
+            this.hoverColor = new Color(style.hoverColor);
+            this.hoverSelectedColor = new Color(style.hoverSelectedColor);
         }
     }
 
@@ -735,9 +749,8 @@ public class PieMenu extends RadialGroup {
                 return;
             PieMenu pie = (PieMenu)event.getListenerActor();
 
-            // todo: for each child : if targetActor.isDescendantOf(child) ... (true even when targetActor is child)
             /* Reset the hover only when the mouse exits the PieMenu. */
-            if(toActor != pie && (toActor == null || !(pie == toActor.getParent())))
+            if(toActor != pie && (toActor == null || !(event.getTarget().isDescendantOf(pie))))
                 pie.hoverIndex(-1);
             super.exit(event, x, y, pointer, toActor);
         }
@@ -786,7 +799,7 @@ public class PieMenu extends RadialGroup {
          * This only applies when a button is down and the mouse (or finger)
          * is moving. It thus works on desktops and mobiles.
          *
-         * @see PieMenuStyle#selectedSliceColor
+         * @see PieMenuStyle#selectedColor
          * @param highlightedIndex the newly highlighted index.
          */
         public void onHighlightChange(int highlightedIndex){
@@ -798,7 +811,7 @@ public class PieMenu extends RadialGroup {
          * This only applies when no button is down while the mouse is moving,
          * and will only work for desktops.
          *
-         * @see PieMenuStyle#hoveredSliceColor
+         * @see PieMenuStyle#hoverColor
          * @param hoveredIndex the newly hovered index.
          */
         public void onHoverChange(int hoveredIndex) {

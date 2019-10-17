@@ -56,7 +56,7 @@ public class AnimatedPieMenu extends PieMenu {
      *
      * @param sd used to draw everything but the contained actors.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param radius the {@link #minRadius} that defines the size of the widget.
      */
     public AnimatedPieMenu(ShapeDrawer sd, PieMenuStyle style, float radius) {
         super(sd, style, radius);
@@ -67,8 +67,8 @@ public class AnimatedPieMenu extends PieMenu {
      *
      * @param sd used to draw everything but the contained actors.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      */
     public AnimatedPieMenu(ShapeDrawer sd, PieMenuStyle style, float radius,
@@ -81,8 +81,8 @@ public class AnimatedPieMenu extends PieMenu {
      *
      * @param sd used to draw everything but the contained actors.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
@@ -97,8 +97,8 @@ public class AnimatedPieMenu extends PieMenu {
      *
      * @param sd used to draw everything but the contained actors.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
@@ -116,7 +116,7 @@ public class AnimatedPieMenu extends PieMenu {
      *
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param radius the {@link #minRadius} that defines the size of the widget.
      */
     public AnimatedPieMenu(ShapeDrawer sd, Skin skin, float radius) {
         super(sd, skin, radius);
@@ -127,8 +127,8 @@ public class AnimatedPieMenu extends PieMenu {
      *
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      */
     public AnimatedPieMenu(ShapeDrawer sd, Skin skin, float radius, float innerRadius) {
@@ -140,8 +140,8 @@ public class AnimatedPieMenu extends PieMenu {
      *
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
@@ -156,8 +156,8 @@ public class AnimatedPieMenu extends PieMenu {
      *
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
@@ -176,7 +176,7 @@ public class AnimatedPieMenu extends PieMenu {
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param radius the {@link #minRadius} that defines the size of the widget.
      */
     public AnimatedPieMenu(ShapeDrawer sd, Skin skin, String style, float radius) {
         super(sd, skin, style, radius);
@@ -188,8 +188,8 @@ public class AnimatedPieMenu extends PieMenu {
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      */
     public AnimatedPieMenu(ShapeDrawer sd, Skin skin, String style, float radius,
@@ -203,8 +203,8 @@ public class AnimatedPieMenu extends PieMenu {
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
@@ -220,8 +220,8 @@ public class AnimatedPieMenu extends PieMenu {
      * @param sd used to draw everything but the contained actors.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
+     * @param radius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadius the {@link #innerRadiusPercent} that defines how far from the
      *                    center should the slices start.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
@@ -239,6 +239,8 @@ public class AnimatedPieMenu extends PieMenu {
 
     @Override
     public void layout() {
+        updateOrigin(); // for rotations to happen around the actual center
+
         boolean notAnimated = !isCurrentlyAnimated() && !originalColors.isEmpty();
         float openingPercentage = currentAngle / totalDegreesDrawn;
         float degreesPerChild = currentAngle / getAmountOfChildren();
@@ -250,7 +252,7 @@ public class AnimatedPieMenu extends PieMenu {
             vector2.set(dist, 0);
             vector2.rotate(degreesPerChild*(i + half) + startDegreesOffset);
             modifyActor(actor, degreesPerChild, dist); // overridden by user
-            actor.setPosition(vector2.x+radius, vector2.y+radius, Align.center);
+            actor.setPosition(vector2.x+getMaxRadius(), vector2.y+getMaxRadius(), Align.center);
 
             /* Updating alpha (fade-in animation). */
             if(isCurrentlyAnimated()) {
