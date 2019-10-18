@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -13,16 +14,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
-import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class DifferentActorsWidget extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
     private Texture tmpTex;
-    private PolygonSpriteBatch batch;
-    private ShapeDrawer shape;
-
+    private Batch batch;
     private PieMenu menu;
 
     @Override
@@ -34,20 +32,20 @@ public class DifferentActorsWidget extends ApplicationAdapter {
         stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
 
-        /* Setting up the ShapeDrawer. */
+        /* Setting up the WhitePixel. */
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(1,1,1,1);
         pixmap.fill();
         tmpTex = new Texture(pixmap);
         pixmap.dispose();
-        shape = new ShapeDrawer(batch, new TextureRegion(tmpTex));
+        TextureRegion whitePixel = new TextureRegion(tmpTex);
 
         /* Adding the demo widgets. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.hoverColor = Color.RED;
         style.selectedColor = Color.BLUE;
         style.backgroundColor = Color.ORANGE;
-        menu = new PieMenu(shape, style, 400) {
+        menu = new PieMenu(batch, whitePixel, style, 400) {
             @Override
             public float getActorDistanceFromCenter(Actor actor) {
                 invalidate();
@@ -120,6 +118,7 @@ public class DifferentActorsWidget extends ApplicationAdapter {
 
         /* Disposing is good practice! */
         skin.dispose();
+        batch.dispose();
         stage.dispose();
         tmpTex.dispose();
     }

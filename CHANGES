@@ -8,6 +8,9 @@
 - `innerRadius` now designates a percentage of the radius, instead of an amount of pixels.
 - Fixed the flicker resulting from hovering out of a contained Actor.
 - `selectedColor` now used by default if no `downColor` was set: this is to prevent a flicker when clicking.
+- Fixed a few `Animated` constructors.
+- The `ShapeDrawer` is now instantiated internally.
+- The default rules used by `ShapeDrawer` to determine the amount of sides to draw is now internally overridden with an improved algorithm.
 
 [3.0.0-rc1]
 - Refactored the Style so that most of the `float` values (`radius` and the likes) have become class-attributes instead.

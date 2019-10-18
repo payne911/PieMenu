@@ -7,23 +7,22 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
-import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class FillParentStageWidget extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
     private Texture tmpTex;
-    private PolygonSpriteBatch batch;
-    private ShapeDrawer shape;
-
+    private Batch batch;
     private PieMenu menu;
 
     @Override
@@ -36,13 +35,13 @@ public class FillParentStageWidget extends ApplicationAdapter {
         Gdx.input.setInputProcessor(stage);
         stage.setDebugAll(true);
 
-        /* Setting up the ShapeDrawer. */
+        /* Setting up the WhitePixel. */
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(1,1,1,1);
         pixmap.fill();
         tmpTex = new Texture(pixmap);
         pixmap.dispose();
-        shape = new ShapeDrawer(batch, new TextureRegion(tmpTex));
+        TextureRegion whitePixel = new TextureRegion(tmpTex);
 
 
 
@@ -52,10 +51,11 @@ public class FillParentStageWidget extends ApplicationAdapter {
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.hoverColor = Color.RED;
         style.selectedColor = Color.BLUE;
-        style.backgroundColor = Color.ORANGE;
-        menu = new PieMenu(shape, style, 80);
+        style.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("rael_pie.png")));
+        menu = new PieMenu(batch, whitePixel, style, 80, 24f/80, 30);
+        menu.setGlobalAlphaMultiplier(.5f);
 
-        for(int i=0 ; i<5 ; i++)
+        for(int i=0 ; i<6 ; i++)
             menu.addActor(new Label("menu " + i, skin));
 
         menu.addListener(new PieMenu.PieMenuCallbacks() {
@@ -68,6 +68,7 @@ public class FillParentStageWidget extends ApplicationAdapter {
 
         stage.addActor(menu);
         menu.setFillParent(true);
+        menu.drawRudimentaryDebug();
     }
 
     @Override
@@ -99,6 +100,7 @@ public class FillParentStageWidget extends ApplicationAdapter {
         /* Disposing is good practice! */
         skin.dispose();
         stage.dispose();
+        batch.dispose();
         tmpTex.dispose();
     }
 }

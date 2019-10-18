@@ -4,11 +4,13 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
@@ -19,6 +21,7 @@ import space.earlygrey.shapedrawer.scene2d.ShapeDrawerDrawable;
 public class CustomAnimation extends ApplicationAdapter {
     private Stage stage;
     private Skin skin;
+    private Batch batch;
     private PieMenu pieMenu;
     private ShapeDrawer sd;
 
@@ -31,11 +34,11 @@ public class CustomAnimation extends ApplicationAdapter {
     public void create() {
 
         /* Basic setup. */
-        PolygonSpriteBatch batch = new PolygonSpriteBatch();
+        batch = new PolygonSpriteBatch();
         skin = new Skin(Gdx.files.internal("skin.json"));
         stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
-        sd = new ShapeDrawer(batch, skin.getRegion("white")) {
+        sd = new ShapeDrawer(stage.getBatch(), skin.getRegion("white")) {
             /* OPTIONAL: Increasing the precision (at the possible cost of performance). */
             @Override
             protected int estimateSidesRequired(float radiusX, float radiusY) {
@@ -49,7 +52,7 @@ public class CustomAnimation extends ApplicationAdapter {
         style.downColor = new Color(1,.05f,.05f,.4f);
         style.hoverColor = new Color(.8f,.8f,.8f,.05f);
         style.hoverSelectedColor = new Color(1,.2f,.2f,.55f);
-        pieMenu = new PieMenu(sd, style, BASE_RADIUS) {
+        pieMenu = new PieMenu(batch, skin.getRegion("white"), style, BASE_RADIUS) {
             @Override
             public float getActorDistanceFromCenter(Actor actor) {
 
@@ -130,5 +133,14 @@ public class CustomAnimation extends ApplicationAdapter {
         /* Updating and drawing the Stage. */
         stage.act();
         stage.draw();
+    }
+
+    @Override
+    public void dispose () {
+
+        /* Disposing is good practice! */
+        batch.dispose();
+        stage.dispose();
+        skin.dispose();
     }
 }

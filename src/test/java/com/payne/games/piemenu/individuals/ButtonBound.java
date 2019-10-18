@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -21,14 +22,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.AnimatedPieMenu;
 import com.payne.games.piemenu.PieMenu;
-import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class ButtonBound extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
     private Texture tmpTex;
-    private PolygonSpriteBatch batch;
+    private Batch batch;
     private AnimatedPieMenu menu;
 
 
@@ -53,9 +53,7 @@ public class ButtonBound extends ApplicationAdapter {
         pixmap.fill();
         tmpTex = new Texture(pixmap);
         pixmap.dispose();
-
-        /* Setting up the ShapeDrawer. */
-        ShapeDrawer shape = new ShapeDrawer(batch, new TextureRegion(tmpTex));
+        TextureRegion whitePixel = new TextureRegion(tmpTex);
 
 
 
@@ -69,7 +67,7 @@ public class ButtonBound extends ApplicationAdapter {
         style.selectedColor = new Color(.7f,.3f,.5f,1);
         style.sliceColor = new Color(0,.7f,0,1);
         style.alternateSliceColor = new Color(.7f,0,0,1);
-        menu = new AnimatedPieMenu(shape, style, 130, 50f/130, 180, 320);
+        menu = new AnimatedPieMenu(batch, whitePixel, style, 130, 50f/130, 180, 320);
 
         /* Customizing the behavior. */
         menu.setInfiniteSelectionRange(true);
@@ -155,6 +153,7 @@ public class ButtonBound extends ApplicationAdapter {
     public void dispose () {
 
         /* Disposing is good practice! */
+        stage.dispose();
         batch.dispose();
         tmpTex.dispose();
         skin.dispose();

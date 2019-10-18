@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -19,14 +20,13 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.AnimatedRadialGroup;
 import com.payne.games.piemenu.RadialGroup;
-import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class ButtonToggle extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
     private Texture tmpTex;
-    private PolygonSpriteBatch batch;
+    private Batch batch;
     private AnimatedRadialGroup radGroup;
 
 
@@ -51,9 +51,7 @@ public class ButtonToggle extends ApplicationAdapter {
         pixmap.fill();
         tmpTex = new Texture(pixmap);
         pixmap.dispose();
-
-        /* Setting up the ShapeDrawer. */
-        ShapeDrawer shape = new ShapeDrawer(batch, new TextureRegion(tmpTex));
+        TextureRegion whitePixel = new TextureRegion(tmpTex);
 
 
 
@@ -68,7 +66,7 @@ public class ButtonToggle extends ApplicationAdapter {
         style.circumferenceWidth = 2;
         style.circumferenceColor = Color.BLACK;
         style.separatorColor = style.circumferenceColor;
-        radGroup = new AnimatedRadialGroup(shape, style, 110, 50f/110, 315, 270);
+        radGroup = new AnimatedRadialGroup(batch, whitePixel, style, 110, 50f/110, 315, 270);
 
         /* Populating the widget. */
         for (int i = 0; i < 8; i++) {
@@ -111,6 +109,7 @@ public class ButtonToggle extends ApplicationAdapter {
     public void dispose () {
 
         /* Disposing is good practice! */
+        stage.dispose();
         batch.dispose();
         tmpTex.dispose();
         skin.dispose();

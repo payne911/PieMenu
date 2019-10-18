@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -14,17 +15,17 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
-import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class ClickToggle extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
     private Texture tmpTex;
-    private PolygonSpriteBatch batch;
+    private Batch batch;
     private PieMenu menu;
 
 
@@ -43,9 +44,7 @@ public class ClickToggle extends ApplicationAdapter {
         pixmap.fill();
         tmpTex = new Texture(pixmap);
         pixmap.dispose();
-
-        /* Setting up the ShapeDrawer. */
-        ShapeDrawer shape = new ShapeDrawer(batch, new TextureRegion(tmpTex));
+        TextureRegion whitePixel = new TextureRegion(tmpTex);
 
 
 
@@ -55,9 +54,9 @@ public class ClickToggle extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.background = new Image(new Texture(Gdx.files.internal("rael_pie.png"))).getDrawable(); // image background!
+        style.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("rael_pie.png"))); // image background!
         style.selectedColor = new Color(1,.5f,.5f,.5f);
-        menu = new PieMenu(shape, style, 80, 24f/80, 30) {
+        menu = new PieMenu(batch, whitePixel, style, 80, 24f/80, 30) {
             /* Since we are using Images, we want to resize them to fit within each sector. */
             @Override
             public void modifyActor(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
@@ -125,6 +124,7 @@ public class ClickToggle extends ApplicationAdapter {
         /* Disposing is good practice! */
         batch.dispose();
         tmpTex.dispose();
+        stage.dispose();
         skin.dispose();
     }
 }

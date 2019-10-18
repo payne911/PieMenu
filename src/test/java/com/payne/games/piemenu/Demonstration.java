@@ -7,25 +7,29 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class Demonstration extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
     private Texture tmpTex;
-    private PolygonSpriteBatch batch;
-    private ShapeDrawer shape;
+    private Batch batch;
+    private TextureRegion whitePixel;
 
     private AnimatedPieMenu dragPie;
     private PieMenu permaPie;
@@ -69,20 +73,14 @@ public class Demonstration extends ApplicationAdapter {
                 "Middle-click / Right-click: try it out!", skin)).colspan(2).padTop(25);
         root.row().padBottom(150).uniform();
 
-        /* Setting up the ShapeDrawer. */
+        /* Setting up the WhitePixel. */
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(1,1,1,1);
         pixmap.fill();
         tmpTex = new Texture(pixmap);
         pixmap.dispose();
         // ideally, you would extract such a pixel from your Atlas instead
-        shape = new ShapeDrawer(batch, new TextureRegion(tmpTex)) {
-            /* OPTIONAL: If you want smoother edges, but it might affect performances. */
-            @Override
-            protected int estimateSidesRequired(float radiusX, float radiusY) {
-                return 4*super.estimateSidesRequired(radiusX, radiusY);
-            }
-        };
+        whitePixel = new TextureRegion(tmpTex);
 
         /* Adding the demo widgets. */
         setUpButtonDragPieMenu(root);
@@ -100,7 +98,7 @@ public class Demonstration extends ApplicationAdapter {
         style.backgroundColor = new Color(1,1,1,1);
         style.sliceColor = new Color(.4f,.4f,.4f,1);
         style.alternateSliceColor = new Color(.6f,0,0,1);
-        radial = new AnimatedRadialGroup(shape, style, 100, .5f, 0, 180);
+        radial = new AnimatedRadialGroup(batch, whitePixel, style, 100, .5f, 0, 180);
 
         /* Populating the widget. */
         for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
@@ -134,7 +132,7 @@ public class Demonstration extends ApplicationAdapter {
         style.selectedColor = new Color(.7f,.3f,.5f,1);
         style.sliceColor = new Color(0,.7f,0,1);
         style.alternateSliceColor = new Color(.7f,0,0,1);
-        dragPie = new AnimatedPieMenu(shape, style, 130, 50f/130, 180, 320);
+        dragPie = new AnimatedPieMenu(batch, whitePixel, style, 130, 50f/130, 180, 320);
 
         /* Customizing the behavior. */
         dragPie.setInfiniteSelectionRange(true);
@@ -211,7 +209,7 @@ public class Demonstration extends ApplicationAdapter {
         style.separatorColor = new Color(.1f,.1f,.1f,1);
         style.downColor = new Color(.5f,.5f,.5f,1);
         style.sliceColor = new Color(.33f,.33f,.33f,1);
-        rightMousePie = new PieMenu(shape, style, 80);
+        rightMousePie = new PieMenu(batch, whitePixel, style, 80);
 
         /* Customizing the behavior. */
         rightMousePie.setInfiniteSelectionRange(true);
@@ -269,8 +267,8 @@ public class Demonstration extends ApplicationAdapter {
         /* Setting up and creating the widget. */
         midStyle1 = new PieMenu.PieMenuStyle();
         midStyle1.selectedColor = new Color(1,.5f,.5f,.5f);
-        midStyle1.background = new Image(new Texture(Gdx.files.internal("rael_pie.png"))).getDrawable();
-        middleMousePie = new PieMenu(shape, midStyle1, 80, midStyle1InnerRadius, 30) {
+        midStyle1.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("rael_pie.png")));
+        middleMousePie = new PieMenu(batch, whitePixel, midStyle1, 80, midStyle1InnerRadius, 30) {
             /* Since we are using Images, we want to resize them to fit within each sector. */
             @Override
             public void modifyActor(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
@@ -310,7 +308,7 @@ public class Demonstration extends ApplicationAdapter {
         midStyle2.selectedColor = new Color(1,.5f,.5f,.5f);
         midStyle2.separatorColor = new Color(.1f,.1f,.1f,.5f);
         midStyle2.sliceColor = new Color(.73f,.33f,.33f,.1f);
-        midStyle2.background = new Image(new Texture(Gdx.files.internal("disc.png"))).getDrawable();
+        midStyle2.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("disc.png")));
     }
 
     private void setUpPermaPieMenu() {
@@ -323,7 +321,7 @@ public class Demonstration extends ApplicationAdapter {
         style.sliceColor = new Color(.33f,.33f,.33f,1);
         style.alternateSliceColor = new Color(.25f,.25f,.25f,1);
         style.circumferenceColor = new Color(0,0,0,1);
-        permaPie = new PieMenu(shape, style, 80, 20f/80, 0 ,180);
+        permaPie = new PieMenu(batch, whitePixel, style, 80, 20f/80, 0 ,180);
 
         /* Adding a selection-listener. */
         permaPie.addListener(new ChangeListener() {
