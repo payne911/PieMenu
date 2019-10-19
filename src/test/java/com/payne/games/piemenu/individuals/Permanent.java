@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -17,14 +18,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
-import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class Permanent extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
     private Texture tmpTex;
-    private PolygonSpriteBatch batch;
+    private Batch batch;
     private PieMenu menu;
 
     /* For the demonstration's purposes. */
@@ -45,9 +45,7 @@ public class Permanent extends ApplicationAdapter {
         pixmap.fill();
         tmpTex = new Texture(pixmap);
         pixmap.dispose();
-
-        /* Setting up the ShapeDrawer. */
-        ShapeDrawer shape = new ShapeDrawer(batch, new TextureRegion(tmpTex));
+        TextureRegion whitePixel = new TextureRegion(tmpTex);
 
 
 
@@ -59,11 +57,11 @@ public class Permanent extends ApplicationAdapter {
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.circumferenceWidth = 1;
         style.backgroundColor = backgroundColor;
-        style.highlightedSliceColor = new Color(.5f,.5f,.5f,1);
+        style.downColor = new Color(.5f,.5f,.5f,1);
         style.sliceColor = new Color(.33f,.33f,.33f,1);
         style.alternateSliceColor = new Color(.25f,.25f,.25f,1);
         style.circumferenceColor = new Color(0,0,0,1);
-        menu = new PieMenu(shape, style, 100, 30, 0 ,180);
+        menu = new PieMenu(batch, whitePixel, style, 100, 30f/100, 0 ,180);
 
         /* Adding a selection-listener. */
         menu.addListener(new ChangeListener() {
@@ -108,6 +106,7 @@ public class Permanent extends ApplicationAdapter {
         /* Disposing is good practice! */
         batch.dispose();
         tmpTex.dispose();
+        stage.dispose();
         skin.dispose();
     }
 }

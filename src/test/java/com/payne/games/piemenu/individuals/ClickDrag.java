@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -18,14 +19,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
-import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class ClickDrag extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
     private Texture tmpTex;
-    private PolygonSpriteBatch batch;
+    private Batch batch;
     private PieMenu menu;
 
     /* For the demonstration's purposes. Not actually necessary. */
@@ -49,9 +49,7 @@ public class ClickDrag extends ApplicationAdapter {
         pixmap.fill();
         tmpTex = new Texture(pixmap);
         pixmap.dispose();
-
-        /* Setting up the ShapeDrawer. */
-        ShapeDrawer shape = new ShapeDrawer(batch, new TextureRegion(tmpTex));
+        TextureRegion whitePixel = new TextureRegion(tmpTex);
 
 
 
@@ -64,9 +62,9 @@ public class ClickDrag extends ApplicationAdapter {
         style.separatorWidth = 2;
         style.backgroundColor = new Color(1,1,1,.1f);
         style.separatorColor = new Color(.1f,.1f,.1f,1);
-        style.highlightedSliceColor = new Color(.5f,.5f,.5f,1);
+        style.downColor = new Color(.5f,.5f,.5f,1);
         style.sliceColor = new Color(.33f,.33f,.33f,1);
-        menu = new PieMenu(shape, style, 80);
+        menu = new PieMenu(batch, whitePixel, style, 80);
 
         /* Customizing the behavior. */
         menu.setInfiniteSelectionRange(true);
@@ -169,6 +167,7 @@ public class ClickDrag extends ApplicationAdapter {
         /* Disposing is good practice! */
         batch.dispose();
         tmpTex.dispose();
+        stage.dispose();
         skin.dispose();
     }
 }

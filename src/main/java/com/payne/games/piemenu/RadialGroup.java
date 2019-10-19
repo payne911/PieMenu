@@ -3,6 +3,7 @@ package com.payne.games.piemenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable;
 import com.badlogic.gdx.utils.Align;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
@@ -34,23 +36,28 @@ public class RadialGroup extends WidgetGroup {
 
     /**
      * <i>Required.</i><br>
-     * The radius that defines how big the Widget will be.<br>
+     * The radius that defines how big the Widget will be (in terms of scene2d,
+     * this is actually half the "minimal size" this widget will ever take).<br>
      * It must be bigger than {@value #BUFFER}.
      */
-    protected float radius;
+    protected float minRadius;
 
     /**
      * <i>Optional.</i><br>
      * If provided, the {@link RadialGroupStyle#sliceColor} will only fill
-     * the region defined between the {@link #radius} and this value. A hole
-     * will be left into the middle of the Widget, like a doughnut, and if a
-     * {@link RadialGroupStyle#background} or a
+     * the region defined between the {@link #minRadius} and its percentage
+     * value coming from this.<br>
+     * For example, having a {@link #minRadius} of 80 and a
+     * {@link #innerRadiusPercent} of 0.5 will mean that the inner-radius will
+     * stand at 40 pixels from the center.<br>
+     * A hole will be left into the middle of the Widget, like a doughnut, and
+     * if a {@link RadialGroupStyle#background} or a
      * {@link RadialGroupStyle#backgroundColor} was provided, it will be visible
      * in the middle.<br>
      * Actors inserted into the Widget are placed in the middle between the
-     * innerRadius and the {@link #radius}.
+     * inner-radius and the {@link #minRadius}.
      */
-    protected float innerRadius;
+    protected float innerRadiusPercent;
 
     /**
      * <i>Optional.</i><br>
@@ -91,239 +98,284 @@ public class RadialGroup extends WidgetGroup {
     private static Vector2 vector23 = new Vector2();
 
 
-    /**
-     * Used internally for the shared properties among constructors of RadialWidgets.
-     */
-    protected RadialGroup(final ShapeDrawer sd, float radius) {
-        this.sd = sd;
-        setRadius(radius);
-        constructorsCommon();
-    }
 
-    /**
-     * Used internally for the shared properties among constructors of RadialWidgets.
-     */
-    protected RadialGroup(final ShapeDrawer sd, float radius, float innerRadius) {
-        this(sd, radius);
-        setInnerRadius(innerRadius);
-    }
 
-    /**
-     * Used internally for the shared properties among constructors of RadialWidgets.
-     */
-    protected RadialGroup(final ShapeDrawer sd, float radius, float innerRadius,
-                          float startDegreesOffset) {
-        this(sd, radius, innerRadius);
-        setStartDegreesOffset(startDegreesOffset);
-    }
 
-    /**
-     * Used internally for the shared properties among constructors of RadialWidgets.
-     */
-    protected RadialGroup(final ShapeDrawer sd, float radius, float innerRadius,
-                          float startDegreesOffset, float totalDegreesDrawn) {
-        this(sd, radius, innerRadius, startDegreesOffset);
-        setTotalDegreesDrawn(totalDegreesDrawn);
-    }
 
     protected void constructorsCommon() {
         setTouchable(Touchable.childrenOnly);
     }
 
     /**
+     * Used internally for the shared properties among constructors of RadialWidgets.
+     */
+    protected RadialGroup(final Batch batch, final TextureRegion whitePixel, float minRadius) {
+        this.sd = new ShapeDrawer(batch, whitePixel) {
+            /* OPTIONAL: Ensuring a certain smoothness. */
+            @Override
+            protected int estimateSidesRequired(float radiusX, float radiusY) {
+                return 200;
+            }
+        };
+        setMinRadius(minRadius);
+        constructorsCommon();
+    }
+
+    /**
+     * Used internally for the shared properties among constructors of RadialWidgets.
+     */
+    protected RadialGroup(final Batch batch, final TextureRegion whitePixel,
+                          float minRadius, float innerRadiusPercent) {
+        this(batch, whitePixel, minRadius);
+        setInnerRadiusPercent(innerRadiusPercent);
+    }
+
+    /**
+     * Used internally for the shared properties among constructors of RadialWidgets.
+     */
+    protected RadialGroup(final Batch batch, final TextureRegion whitePixel,
+                          float minRadius, float innerRadiusPercent, float startDegreesOffset) {
+        this(batch, whitePixel, minRadius, innerRadiusPercent);
+        setStartDegreesOffset(startDegreesOffset);
+    }
+
+    /**
+     * Used internally for the shared properties among constructors of RadialWidgets.
+     */
+    protected RadialGroup(final Batch batch, final TextureRegion whitePixel,
+                          float minRadius, float innerRadiusPercent,
+                          float startDegreesOffset, float totalDegreesDrawn) {
+        this(batch, whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
+        setTotalDegreesDrawn(totalDegreesDrawn);
+    }
+
+    /**
      * See {@link RadialGroup} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
      */
-    public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style, float radius) {
-        this(sd, radius);
+    public RadialGroup(final Batch batch, final TextureRegion whitePixel,
+                       RadialGroupStyle style, float minRadius) {
+        this(batch, whitePixel, minRadius);
         setStyle(style);
     }
 
     /**
      * See {@link RadialGroup} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
      */
-    public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style, float radius,
-                       float innerRadius) {
-        this(sd, radius, innerRadius);
+    public RadialGroup(final Batch batch, final TextureRegion whitePixel,
+                       RadialGroupStyle style, float minRadius,
+                       float innerRadiusPercent) {
+        this(batch, whitePixel, minRadius, innerRadiusPercent);
         setStyle(style);
     }
 
     /**
      * See {@link RadialGroup} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
-    public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style, float radius,
-                       float innerRadius, float startDegreesOffset) {
-        this(sd, radius, innerRadius, startDegreesOffset);
+    public RadialGroup(final Batch batch, final TextureRegion whitePixel,
+                       RadialGroupStyle style, float minRadius,
+                       float innerRadiusPercent, float startDegreesOffset) {
+        this(batch, whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
         setStyle(style);
     }
 
     /**
      * See {@link RadialGroup} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
      *                          many degrees the widget will span, starting from
      *                          its {@link #startDegreesOffset}.
      */
-    public RadialGroup(final ShapeDrawer sd, RadialGroupStyle style, float radius,
-                       float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
-        this(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
+    public RadialGroup(final Batch batch, final TextureRegion whitePixel,
+                       RadialGroupStyle style, float minRadius,
+                       float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
+        this(batch, whitePixel, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
         setStyle(style);
     }
 
     /**
      * See {@link RadialGroup} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
      */
-    public RadialGroup(final ShapeDrawer sd, Skin skin, float radius) {
-        this(sd, radius);
+    public RadialGroup(final Batch batch, final TextureRegion whitePixel,
+                       Skin skin, float minRadius) {
+        this(batch, whitePixel, minRadius);
         setStyle(skin.get(RadialGroupStyle.class));
     }
 
     /**
      * See {@link RadialGroup} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
      */
-    public RadialGroup(final ShapeDrawer sd, Skin skin, float radius,
-                       float innerRadius) {
-        this(sd, radius, innerRadius);
+    public RadialGroup(final Batch batch, final TextureRegion whitePixel,
+                       Skin skin, float minRadius,
+                       float innerRadiusPercent) {
+        this(batch, whitePixel, minRadius, innerRadiusPercent);
         setStyle(skin.get(RadialGroupStyle.class));
     }
 
     /**
      * See {@link RadialGroup} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
-    public RadialGroup(final ShapeDrawer sd, Skin skin, float radius,
-                       float innerRadius, float startDegreesOffset) {
-        this(sd, radius, innerRadius, startDegreesOffset);
+    public RadialGroup(final Batch batch, final TextureRegion whitePixel,
+                       Skin skin, float minRadius,
+                       float innerRadiusPercent, float startDegreesOffset) {
+        this(batch, whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
         setStyle(skin.get(RadialGroupStyle.class));
     }
 
     /**
      * See {@link RadialGroup} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
-     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
-     *                           how far from the origin the drawing begins.
-     * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
-     *                          many degrees the widget will span, starting from
-     *                          its {@link #startDegreesOffset}.
-     */
-    public RadialGroup(final ShapeDrawer sd, Skin skin, float radius,
-                       float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
-        this(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
-        setStyle(skin.get(RadialGroupStyle.class));
-    }
-
-    /**
-     * See {@link RadialGroup} for a description.
-     *
-     * @param sd used to draw everything but the contained actors.
-     * @param skin defines the way the widget looks like.
-     * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     */
-    public RadialGroup(final ShapeDrawer sd, Skin skin, String style, float radius) {
-        this(sd, radius);
-        setStyle(skin.get(style, RadialGroupStyle.class));
-    }
-
-
-    /**
-     * See {@link RadialGroup} for a description.
-     *
-     * @param sd used to draw everything but the contained actors.
-     * @param skin defines the way the widget looks like.
-     * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
-     */
-    public RadialGroup(final ShapeDrawer sd, Skin skin, String style, float radius,
-                       float innerRadius) {
-        this(sd, radius, innerRadius);
-        setStyle(skin.get(style, RadialGroupStyle.class));
-    }
-
-    /**
-     * See {@link RadialGroup} for a description.
-     *
-     * @param sd used to draw everything but the contained actors.
-     * @param skin defines the way the widget looks like.
-     * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
-     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
-     *                           how far from the origin the drawing begins.
-     */
-    public RadialGroup(final ShapeDrawer sd, Skin skin, String style, float radius,
-                       float innerRadius, float startDegreesOffset) {
-        this(sd, radius, innerRadius, startDegreesOffset);
-        setStyle(skin.get(style, RadialGroupStyle.class));
-    }
-
-    /**
-     * See {@link RadialGroup} for a description.
-     *
-     * @param sd used to draw everything but the contained actors.
-     * @param skin defines the way the widget looks like.
-     * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
      *                          many degrees the widget will span, starting from
      *                          its {@link #startDegreesOffset}.
      */
-    public RadialGroup(final ShapeDrawer sd, Skin skin, String style, float radius,
-                       float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
-        this(sd, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
+    public RadialGroup(final Batch batch, final TextureRegion whitePixel,
+                       Skin skin, float minRadius,
+                       float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
+        this(batch, whitePixel, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+        setStyle(skin.get(RadialGroupStyle.class));
+    }
+
+    /**
+     * See {@link RadialGroup} for a description.
+     *
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     */
+    public RadialGroup(final Batch batch, final TextureRegion whitePixel,
+                       Skin skin, String style, float minRadius) {
+        this(batch, whitePixel, minRadius);
+        setStyle(skin.get(style, RadialGroupStyle.class));
+    }
+
+
+    /**
+     * See {@link RadialGroup} for a description.
+     *
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
+     */
+    public RadialGroup(final Batch batch, final TextureRegion whitePixel,
+                       Skin skin, String style, float minRadius,
+                       float innerRadiusPercent) {
+        this(batch, whitePixel, minRadius, innerRadiusPercent);
+        setStyle(skin.get(style, RadialGroupStyle.class));
+    }
+
+    /**
+     * See {@link RadialGroup} for a description.
+     *
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     */
+    public RadialGroup(final Batch batch, final TextureRegion whitePixel,
+                       Skin skin, String style, float minRadius,
+                       float innerRadiusPercent, float startDegreesOffset) {
+        this(batch, whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
+        setStyle(skin.get(style, RadialGroupStyle.class));
+    }
+
+    /**
+     * See {@link RadialGroup} for a description.
+     *
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
+     *                          many degrees the widget will span, starting from
+     *                          its {@link #startDegreesOffset}.
+     */
+    public RadialGroup(final Batch batch, final TextureRegion whitePixel,
+                       Skin skin, String style, float minRadius,
+                       float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
+        this(batch, whitePixel, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
         setStyle(skin.get(style, RadialGroupStyle.class));
     }
 
@@ -338,29 +390,44 @@ public class RadialGroup extends WidgetGroup {
 
 
 
+    /**
+     * The current diameter of the widget.<br>
+     * This might not be twice the {@link #minRadius}.
+     *
+     * @return {@code Math.min(getWidth(), getHeight())}
+     */
+    protected float getMaxDiameter() {
+        return Math.min(getWidth(), getHeight());
+    }
+
+    /**
+     * The current radius of the widget.<br>
+     * This might not be {@link #minRadius}.
+     *
+     * @return {@code Math.min(getWidth(), getHeight()) / 2}
+     */
+    protected float getMaxRadius() {
+        return getMaxDiameter()/2;
+    }
 
     @Override
     public float getPrefWidth() {
-//        validate(); todo
-        return radius * 2;
+        return getMaxDiameter();
     }
 
     @Override
     public float getPrefHeight() {
-//        validate(); todo
-        return radius * 2;
+        return getMaxDiameter();
     }
 
     @Override
     public float getMinWidth() {
-//        validate(); todo
-        return radius * 2;
+        return minRadius * 2;
     }
 
     @Override
     public float getMinHeight() {
-//        validate(); todo
-        return radius * 2;
+        return minRadius * 2;
     }
 
     @Override
@@ -381,7 +448,7 @@ public class RadialGroup extends WidgetGroup {
 
     /**
      * Determines how far from the center the contained child Actors should be.
-     * By default, the value is {@code (style.radius+style.innerRadius)/2}.<br>
+     * By default, the value is {@code (getMaxRadius() + getInnerRadiusLength())/2}.<br>
      * Override this method when creating your Widget if you want to have control
      * on where the Actors get placed.<br>
      * <b>Do not</b> position the Actor directly in this method: that is handled
@@ -406,7 +473,7 @@ public class RadialGroup extends WidgetGroup {
      * @return distance of this Actor's center from the center of the widget.
      */
     public float getActorDistanceFromCenter(Actor actor) {
-        return (radius+innerRadius)/2;
+        return (getMaxRadius() + getInnerRadiusLength())/2;
     }
 
     /**
@@ -449,8 +516,8 @@ public class RadialGroup extends WidgetGroup {
      * <pre>
      * {@code
      * float tmp1 = actorDistanceFromCenter * MathUtils.sinDeg(degreesPerChild/2);
-     * float tmp2 = style.radius - actorDistanceFromCenter;
-     * float tmp3 = actorDistanceFromCenter - style.innerRadius;
+     * float tmp2 = getMaxRadius() - actorDistanceFromCenter;
+     * float tmp3 = actorDistanceFromCenter - getInnerRadiusLength();
      * return Math.min(tmp1, tmp2, tmp3); // pseudo-code for clarity
      * }
      * </pre>
@@ -465,15 +532,18 @@ public class RadialGroup extends WidgetGroup {
      */
     public float getEstimatedRadiusAt(float degreesPerChild, float actorDistanceFromCenter) {
         float tmp1 = actorDistanceFromCenter * MathUtils.sinDeg(degreesPerChild/2);
-        float tmp2 = radius - actorDistanceFromCenter;
-        float tmp3 = actorDistanceFromCenter - innerRadius;
+        float tmp2 = getMaxRadius() - actorDistanceFromCenter;
+        float tmp3 = actorDistanceFromCenter - getInnerRadiusLength();
         return Math.min(Math.min(tmp1, tmp2), tmp3);
     }
 
     @Override
     public void layout() {
+        updateOrigin(); // for rotations to happen around the actual center
+
         float degreesPerChild = totalDegreesDrawn / getAmountOfChildren();
         float half = 1f / 2;
+
         for (int i = 0; i < getAmountOfChildren(); i++) {
             Actor actor = getChildren().get(i);
             float dist = getActorDistanceFromCenter(actor);
@@ -486,7 +556,15 @@ public class RadialGroup extends WidgetGroup {
 
     @Override
     protected void positionChanged() {
-        setOrigin(getX(Align.center), getY(Align.center)); // to support rotations around the center
+        updateOrigin();
+    }
+
+    /**
+     * Used to properly set the origin's value to the center so that rotations
+     * happen around the good point.
+     */
+    protected void updateOrigin() {
+        setOrigin(getWidth()/2, getHeight()/2); // to support rotations around the center
     }
 
     @Override
@@ -522,21 +600,23 @@ public class RadialGroup extends WidgetGroup {
      */
     protected void drawWithShapeDrawer(Batch batch, float parentAlpha, float degreesToDraw) {
 
-        validate(); // todo: useful?
-
         /* Pre-calculating */
-        float bgRadian = MathUtils.degreesToRadians*degreesToDraw;
+        float bgRadian  = MathUtils.degreesToRadians*degreesToDraw;
         float tmpOffset = MathUtils.degreesToRadians*(startDegreesOffset + getRotation());
-        final int SIZE = getAmountOfChildren();
-        float tmpRad = bgRadian / SIZE;
+        final int SIZE  = getAmountOfChildren();
+        float tmpRad    = bgRadian / SIZE;
 
         /* Background image */
         if(style.background != null) {
             Color bc = batch.getColor();
             float restoreAlpha = bc.a;
             batch.setColor(bc.r, bc.g, bc.b, bc.a * globalAlphaMultiplier);
-            // todo: how to rotate this draw using `getRotation()` value? ---
-            style.background.draw(batch, getX(Align.left), getY(Align.bottom), getPrefWidth(), getPrefHeight());
+            style.background.draw(batch,
+                    getX(Align.center) - getMaxRadius(), getY(Align.center) - getMaxRadius(),
+                    getMaxRadius(), getMaxRadius(),
+                    getMaxDiameter(), getMaxDiameter(),
+                    getScaleX(), getScaleY(),
+                    getRotation());
             batch.setColor(bc.r, bc.g, bc.b, restoreAlpha);
         }
 
@@ -544,7 +624,7 @@ public class RadialGroup extends WidgetGroup {
         if(style.backgroundColor != null) {
             propagateAlpha(sd, style.backgroundColor);
             sd.sector(getX(Align.center), getY(Align.center),
-                    radius-BUFFER, tmpOffset, bgRadian); // buffer to prevent bg from sticking out from below children
+                    getMaxRadius()-BUFFER, tmpOffset, bgRadian); // buffer to prevent bg from sticking out from below children
         }
 
         /* Children */
@@ -564,8 +644,8 @@ public class RadialGroup extends WidgetGroup {
     protected void drawChildSeparator(Vector2 vector2, float drawnRadianAngle) {
         if(hasChildren() && style.separatorColor != null && style.separatorWidth > 0) {
             propagateAlpha(sd, style.separatorColor);
-            sd.line(pointAtAngle(vector22, vector2, innerRadius, drawnRadianAngle),
-                    pointAtAngle(vector23, vector2, radius, drawnRadianAngle),
+            sd.line(pointAtAngle(vector22, vector2, getInnerRadiusLength(), drawnRadianAngle),
+                    pointAtAngle(vector23, vector2, getMaxRadius(), drawnRadianAngle),
                     style.separatorWidth);
         }
     }
@@ -606,15 +686,14 @@ public class RadialGroup extends WidgetGroup {
     }
 
     protected void drawChild(Vector2 vector2, int index, float startAngle, float radian) {
-        // todo: possibly integrate buffer here too since Background has one? (or remove from bg, and do +BUFFER here?)
         propagateAlpha(sd, getColor(index));
-        sd.arc(vector2.x, vector2.y, (radius+innerRadius)/2,
-                startAngle, radian, radius-innerRadius);
+        sd.arc(vector2.x, vector2.y, (getMaxRadius()+ getInnerRadiusLength())/2,
+                startAngle, radian, getMaxRadius()- getInnerRadiusLength());
 
         /* Circumferences */
-        drawChildCircumference(vector2, startAngle, radian, radius - style.circumferenceWidth/2);
-        if(innerRadius > 0)
-            drawChildCircumference(vector2, startAngle, radian, innerRadius + style.circumferenceWidth/2);
+        drawChildCircumference(vector2, startAngle, radian, getMaxRadius() - style.circumferenceWidth/2);
+        if(innerRadiusPercent > 0)
+            drawChildCircumference(vector2, startAngle, radian, getInnerRadiusLength() + style.circumferenceWidth/2);
     }
 
     protected void drawChildCircumference(Vector2 vector2, float startAngle, float radian, float radius) {
@@ -680,7 +759,7 @@ public class RadialGroup extends WidgetGroup {
     public int findChildIndexAtStage(float x, float y) {
         int childIndex = findIndexFromAngle(angleAtStage(x,y));
         stageToLocalCoordinates(vector2.set(x,y));
-        return isWithinRadii(vector2.x - radius, vector2.y - radius)
+        return isWithinRadii(vector2.x - getMaxRadius(), vector2.y - getMaxRadius())
                 ? childIndex
                 : getAmountOfChildren(); // "getAmountOfChildren" is equivalent to "invalid"
     }
@@ -710,19 +789,27 @@ public class RadialGroup extends WidgetGroup {
      */
     public float angleAtStage(float x, float y) {
         return normalizeAngle(
-                MathUtils.radiansToDegrees *
-                        MathUtils.atan2(y - (getY(Align.center)), x - (getX(Align.center)))
+                MathUtils.radiansToDegrees
+                        * MathUtils.atan2(y - (getY(Align.center)), x - (getX(Align.center)))
                 - getRotation() - startDegreesOffset
         );
     }
 
+    /**
+     * Used to ensure an angle is in between 0 and 360.
+     *
+     * @param angle to angle to normalize.
+     * @return a normalized angle.
+     */
     public float normalizeAngle(float angle) {
         return ((angle % 360 + 360) % 360);
     }
 
     /**
      * Checks whether or not the input coordinate is in between (inclusively)
-     * the {@link #innerRadius} and the {@link #radius} of the widget.
+     * the inner-radius and the current radius of the widget (which can
+     * be bigger than {@link #minRadius} if you use {@link #setFillParent(boolean)},
+     * for example).
      *
      * @param x x-coordinate relative to the center of the widget's
      * @param y y-coordinate relative to the center of the widget's
@@ -730,8 +817,8 @@ public class RadialGroup extends WidgetGroup {
      */
     public boolean isWithinRadii(float x, float y) {
         float distance = pow2(x) + pow2(y);
-        float innerRadSquared = pow2(innerRadius);
-        float radSquared = pow2(radius);
+        float innerRadSquared = pow2(getInnerRadiusLength());
+        float radSquared = pow2(getMaxRadius());
         return distance >= innerRadSquared && distance <= radSquared;
     }
 
@@ -864,7 +951,7 @@ public class RadialGroup extends WidgetGroup {
          * variables: it will be resized to fit in the whole region that
          * represents the position, width and height of the widget.
          */
-        public Drawable background;
+        public TransformDrawable background;
 
         /**
          * <i>Optional.</i><br>
@@ -887,7 +974,7 @@ public class RadialGroup extends WidgetGroup {
 
         /**
          * <i>Recommended. Optional.</i><br>
-         * The color used to fill the "pie sectors" of each item.<br>
+         * The color used to fill the "pie sectors" (i.e. slice) of each item.<br>
          * Consider using a fairly low alpha value if you are providing a
          * {@link #background} {@link Drawable}.
          */
@@ -906,7 +993,7 @@ public class RadialGroup extends WidgetGroup {
          * The color used for the line that defines the circumference of the
          * Widget. If the Widget is not a complete a circle, this will only be
          * applied along the partial circumference.<br>
-         * If you have set a non-zero {@link #innerRadius} value, this will
+         * If you have set a non-zero {@link #innerRadiusPercent} value, this will
          * also apply to the "inner radius" of your Widget.<br>
          * If you do not define a {@link #circumferenceWidth} along with this
          * value, no circumference will be visible.
@@ -982,6 +1069,21 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
+     * You probably shouldn't be messing with this, but it's provided for
+     * convenience reasons.<br>
+     * For example, it's possible that your widget will be <i>so</i> big that
+     * the {@link ShapeDrawer} will crash with an Exception while trying to
+     * draw it. You would then want to use this setter to provide a brand new
+     * instance which didn't override the {@code estimateSidesRequired(float, float)}
+     * method to try to increase the smoothness of the curves.
+     *
+     * @param sd the new instance of {@link ShapeDrawer} that you want to use.
+     */
+    public void setShapeDrawer(ShapeDrawer sd) {
+        this.sd = sd;
+    }
+
+    /**
      * @return the multiplier's value which is applied to all the alpha values
      *         of the things contained by the widget (slices, lines, drawables, etc.)
      */
@@ -1003,71 +1105,84 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * @see #radius
+     * @see #minRadius
      * @return The radius that defines how big the Widget will be.
      */
-    public float getRadius() {
-        return radius;
+    public float getMinRadius() {
+        return minRadius;
     }
 
     /**
      * <i>Required.</i><br>
-     * The radius that defines how big the Widget will be.
+     * The radius that defines how big the Widget will be.<br>
+     * This is used as the minimal radius value if anything such as a
+     * {@link com.badlogic.gdx.scenes.scene2d.ui.Table} ends up modifying the
+     * size of the widget. {@link #setFillParent(boolean)} will also end up
+     * using that radius value as a minimum.
      *
-     * @param radius The value must be bigger than {@value #BUFFER}.
-     *               If the value is smaller than the current {@link #innerRadius}
-     *               then the {@link #innerRadius} is set to a smaller value.
+     * @param minRadius The value must be bigger than {@value #BUFFER}.
+     *                  If the value is smaller than the current
+     *                  {@link #innerRadiusPercent} then the
+     *                  {@link #innerRadiusPercent} is set to a smaller value.
      */
-    public void setRadius(float radius) {
-        if(radius < BUFFER)
+    public void setMinRadius(float minRadius) {
+        if(minRadius < BUFFER)
             throw new IllegalArgumentException("radius cannot be smaller than " + BUFFER + ".");
-        if(radius < innerRadius)
-            setInnerRadius(radius - 1);
-        if(radius != lastRadius) {
-            this.radius = radius;
-            lastRadius = radius;
+        if(minRadius != lastRadius) {
+            this.minRadius = minRadius;
+            lastRadius = minRadius;
 
-            /* Update widget's boundaries and position. */
-            float preX = getX(Align.center);
-            float preY = getY(Align.center);
-            setSize(getPrefWidth(), getPrefHeight()); // for orphan widgets (no parent)
-            setPosition(preX, preY, Align.center); // to immediately recenter widget to where it was todo: messes with setFillParent(true)---
+            setSize(getMinWidth(), getMinHeight()); // for orphan widgets (no parent)
 
             invalidateHierarchy();
         }
     }
 
     /**
-     * @see #innerRadius
+     * The percentage of the radius that is taken out of the slice, starting
+     * from the center of the widget.
+     *
+     * @see #innerRadiusPercent
      * @return How far from the center do the slices start being drawn.
      */
-    public float getInnerRadius() {
-        return innerRadius;
+    public float getInnerRadiusPercent() {
+        return innerRadiusPercent;
+    }
+
+    /**
+     * The amount of pixels that are truncated from the radius.
+     *
+     * @return {@code minRadius * innerRadiusPercent}.
+     */
+    public float getInnerRadiusLength() {
+        return getMaxRadius() * innerRadiusPercent;
     }
 
     /**
      * <i>Optional.</i><br>
      * If provided, the {@link RadialGroupStyle#sliceColor} will only fill
-     * the slice defined between the {@link #radius} and this value. A hole
-     * will be left into the middle of the Widget, like a doughnut, and if a
-     * {@link RadialGroupStyle#background} or a
+     * the slice defined between the {@link #minRadius} and its percentage
+     * value coming from this. A hole will be left into the middle of the Widget,
+     * like a doughnut, and if a {@link RadialGroupStyle#background} or a
      * {@link RadialGroupStyle#backgroundColor} was provided, it will be visible
      * in the middle.<br>
      * Actors inserted into the Widget are placed in the middle between the
-     * innerRadius and the {@link #radius}.
+     * innerRadius and the {@link #minRadius}. That is only the default behavior,
+     * if you want to change that, see {@link #getActorDistanceFromCenter(Actor)}.
      *
-     * @param innerRadius How far from the center do the slices start being
-     *                    drawn.<br>
-     *                    The value must be between 0 (inclusive)
-     *                    and {@link #radius} (exclusive).
+     * @param innerRadiusPercent How far from the center do the slices start
+     *                           being drawn, in terms of percentage of the
+     *                           {@link #minRadius}.<br>
+     *                           The value must be between 0 (inclusive)
+     *                           and 1 (exclusive).
      */
-    public void setInnerRadius(float innerRadius) {
-        if(innerRadius < 0)
+    public void setInnerRadiusPercent(float innerRadiusPercent) {
+        if(innerRadiusPercent < 0)
             throw new IllegalArgumentException("innerRadius cannot be negative.");
-        if(innerRadius >= radius)
-            throw new IllegalArgumentException("innerRadius must be smaller than the radius.");
-        if(this.innerRadius != innerRadius) {
-            this.innerRadius = innerRadius;
+        if(innerRadiusPercent >= 1)
+            throw new IllegalArgumentException("innerRadius must be smaller than 1.");
+        if(this.innerRadiusPercent != innerRadiusPercent) {
+            this.innerRadiusPercent = innerRadiusPercent;
             invalidate();
         }
     }

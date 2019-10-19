@@ -2,11 +2,11 @@ package com.payne.games.piemenu;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
-import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.HashMap;
 
@@ -50,195 +50,232 @@ public class AnimatedPieMenu extends PieMenu {
 
 
 
-
     /**
      * See {@link AnimatedPieMenu} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
      */
-    public AnimatedPieMenu(ShapeDrawer sd, PieMenuStyle style, float radius) {
-        super(sd, style, radius);
+    public AnimatedPieMenu(final Batch batch, final TextureRegion whitePixel,
+                           PieMenuStyle style, float minRadius) {
+        super(batch, whitePixel, style, minRadius);
     }
 
     /**
      * See {@link AnimatedPieMenu} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
      */
-    public AnimatedPieMenu(ShapeDrawer sd, PieMenuStyle style, float radius,
-                               float innerRadius) {
-        super(sd, style, radius, innerRadius);
+    public AnimatedPieMenu(final Batch batch, final TextureRegion whitePixel,
+                           PieMenuStyle style, float minRadius,
+                               float innerRadiusPercent) {
+        super(batch, whitePixel, style, minRadius, innerRadiusPercent);
     }
 
     /**
      * See {@link AnimatedPieMenu} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
-    public AnimatedPieMenu(ShapeDrawer sd, PieMenuStyle style, float radius,
-                               float innerRadius, float startDegreesOffset) {
-        super(sd, style, radius, innerRadius, startDegreesOffset);
+    public AnimatedPieMenu(final Batch batch, final TextureRegion whitePixel,
+                           PieMenuStyle style, float minRadius,
+                           float innerRadiusPercent, float startDegreesOffset) {
+        super(batch, whitePixel, style, minRadius, innerRadiusPercent, startDegreesOffset);
     }
 
     /**
      * See {@link AnimatedPieMenu} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
      *                          many degrees the widget will span, starting from
      *                          its {@link #startDegreesOffset}.
      */
-    public AnimatedPieMenu(ShapeDrawer sd, PieMenuStyle style, float radius,
-                               float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
-        super(sd, style, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
+    public AnimatedPieMenu(final Batch batch, final TextureRegion whitePixel,
+                           PieMenuStyle style, float minRadius,
+                           float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
+        super(batch, whitePixel, style, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
     }
 
     /**
      * See {@link AnimatedPieMenu} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
      */
-    public AnimatedPieMenu(ShapeDrawer sd, Skin skin, float radius) {
-        super(sd, skin, radius);
+    public AnimatedPieMenu(final Batch batch, final TextureRegion whitePixel,
+                           Skin skin, float minRadius) {
+        super(batch, whitePixel, skin, minRadius);
     }
 
     /**
      * See {@link AnimatedPieMenu} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
      */
-    public AnimatedPieMenu(ShapeDrawer sd, Skin skin, float radius, float innerRadius) {
-        super(sd, skin, radius, innerRadius);
+    public AnimatedPieMenu(final Batch batch, final TextureRegion whitePixel,
+                           Skin skin, float minRadius, float innerRadiusPercent) {
+        super(batch, whitePixel, skin, minRadius, innerRadiusPercent);
     }
 
     /**
      * See {@link AnimatedPieMenu} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
-    public AnimatedPieMenu(ShapeDrawer sd, Skin skin, float radius, float innerRadius,
-                               float startDegreesOffset) {
-        super(sd, skin, radius, innerRadius, startDegreesOffset);
+    public AnimatedPieMenu(final Batch batch, final TextureRegion whitePixel,
+                           Skin skin, float minRadius, float innerRadiusPercent,
+                           float startDegreesOffset) {
+        super(batch, whitePixel, skin, minRadius, innerRadiusPercent, startDegreesOffset);
     }
 
     /**
      * See {@link AnimatedPieMenu} for a description.
      *
-     * @param sd used to draw everything but the contained actors.
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
-     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
-     *                           how far from the origin the drawing begins.
-     * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
-     *                          many degrees the widget will span, starting from
-     *                          its {@link #startDegreesOffset}.
-     */
-    public AnimatedPieMenu(ShapeDrawer sd, Skin skin, float radius, float innerRadius,
-                               float startDegreesOffset, float totalDegreesDrawn) {
-        super(sd, skin, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
-    }
-
-    /**
-     * See {@link AnimatedPieMenu} for a description.
-     *
-     * @param sd used to draw everything but the contained actors.
-     * @param skin defines the way the widget looks like.
-     * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     */
-    public AnimatedPieMenu(ShapeDrawer sd, Skin skin, String style, float radius) {
-        super(sd, skin, style, radius);
-    }
-
-    /**
-     * See {@link AnimatedPieMenu} for a description.
-     *
-     * @param sd used to draw everything but the contained actors.
-     * @param skin defines the way the widget looks like.
-     * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
-     */
-    public AnimatedPieMenu(ShapeDrawer sd, Skin skin, String style, float radius,
-                               float innerRadius) {
-        super(sd, skin, radius, innerRadius);
-    }
-
-    /**
-     * See {@link AnimatedPieMenu} for a description.
-     *
-     * @param sd used to draw everything but the contained actors.
-     * @param skin defines the way the widget looks like.
-     * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
-     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
-     *                           how far from the origin the drawing begins.
-     */
-    public AnimatedPieMenu(ShapeDrawer sd, Skin skin, String style, float radius,
-                               float innerRadius, float startDegreesOffset) {
-        super(sd, skin, radius, innerRadius, startDegreesOffset);
-    }
-
-    /**
-     * See {@link AnimatedPieMenu} for a description.
-     *
-     * @param sd used to draw everything but the contained actors.
-     * @param skin defines the way the widget looks like.
-     * @param style the name of the style to be extracted from the skin.
-     * @param radius the {@link #radius} that defines the size of the widget.
-     * @param innerRadius the {@link #innerRadius} that defines how far from the
-     *                    center should the slices start.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
      *                          many degrees the widget will span, starting from
      *                          its {@link #startDegreesOffset}.
      */
-    public AnimatedPieMenu(ShapeDrawer sd, Skin skin, String style, float radius,
-                               float innerRadius, float startDegreesOffset, float totalDegreesDrawn) {
-        super(sd, skin, radius, innerRadius, startDegreesOffset, totalDegreesDrawn);
+    public AnimatedPieMenu(final Batch batch, final TextureRegion whitePixel,
+                           Skin skin, float minRadius, float innerRadiusPercent,
+                           float startDegreesOffset, float totalDegreesDrawn) {
+        super(batch, whitePixel, skin, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
     }
+
+    /**
+     * See {@link AnimatedPieMenu} for a description.
+     *
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     */
+    public AnimatedPieMenu(final Batch batch, final TextureRegion whitePixel,
+                           Skin skin, String style, float minRadius) {
+        super(batch, whitePixel, skin, style, minRadius);
+    }
+
+    /**
+     * See {@link AnimatedPieMenu} for a description.
+     *
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
+     */
+    public AnimatedPieMenu(final Batch batch, final TextureRegion whitePixel,
+                           Skin skin, String style, float minRadius,
+                               float innerRadiusPercent) {
+        super(batch, whitePixel, skin, style, minRadius, innerRadiusPercent);
+    }
+
+    /**
+     * See {@link AnimatedPieMenu} for a description.
+     *
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     */
+    public AnimatedPieMenu(final Batch batch, final TextureRegion whitePixel,
+                           Skin skin, String style, float minRadius,
+                           float innerRadiusPercent, float startDegreesOffset) {
+        super(batch, whitePixel, skin, style, minRadius, innerRadiusPercent, startDegreesOffset);
+    }
+
+    /**
+     * See {@link AnimatedPieMenu} for a description.
+     *
+     * @param batch used to draw everything but the contained actors.
+     * @param whitePixel a 1x1 white pixel.
+     * @param skin defines the way the widget looks like.
+     * @param style the name of the style to be extracted from the skin.
+     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
+     *                           the percentage of the radius that is cut off,
+     *                           starting from the center of the widget.
+     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
+     *                           how far from the origin the drawing begins.
+     * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
+     *                          many degrees the widget will span, starting from
+     *                          its {@link #startDegreesOffset}.
+     */
+    public AnimatedPieMenu(final Batch batch, final TextureRegion whitePixel,
+                           Skin skin, String style, float minRadius,
+                           float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
+        super(batch, whitePixel, skin, style, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+    }
+
+
+
 
 
 
 
     @Override
     public void layout() {
+        updateOrigin(); // for rotations to happen around the actual center
+
         boolean notAnimated = !isCurrentlyAnimated() && !originalColors.isEmpty();
         float openingPercentage = currentAngle / totalDegreesDrawn;
         float degreesPerChild = currentAngle / getAmountOfChildren();
@@ -250,7 +287,7 @@ public class AnimatedPieMenu extends PieMenu {
             vector2.set(dist, 0);
             vector2.rotate(degreesPerChild*(i + half) + startDegreesOffset);
             modifyActor(actor, degreesPerChild, dist); // overridden by user
-            actor.setPosition(vector2.x+radius, vector2.y+radius, Align.center);
+            actor.setPosition(vector2.x+getMaxRadius(), vector2.y+getMaxRadius(), Align.center);
 
             /* Updating alpha (fade-in animation). */
             if(isCurrentlyAnimated()) {

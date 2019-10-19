@@ -1,4 +1,4 @@
-package com.payne.games.piemenu.privateTests;
+package com.payne.games.piemenu.genericTests;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -6,21 +6,20 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
-import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class TableWidgets extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
+    private Batch batch;
     private Texture tmpTex;
-    private PolygonSpriteBatch batch;
-    private ShapeDrawer shape;
 
     @Override
     public void create () {
@@ -43,13 +42,13 @@ public class TableWidgets extends ApplicationAdapter {
 		/* New row. */
 		root.row().padBottom(20).uniform();
 
-        /* Setting up the ShapeDrawer. */
+        /* Setting up the WhitePixel. */
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(1,1,1,1);
         pixmap.fill();
         tmpTex = new Texture(pixmap);
         pixmap.dispose();
-        shape = new ShapeDrawer(batch, new TextureRegion(tmpTex));
+        TextureRegion whitePixel = new TextureRegion(tmpTex);
 
 
 
@@ -57,11 +56,10 @@ public class TableWidgets extends ApplicationAdapter {
 
         /* Adding the demo widgets. */
         PieMenu.PieMenuStyle style1 = new PieMenu.PieMenuStyle();
-        style1.hoveredSliceColor = Color.RED;
-        style1.highlightedSliceColor = Color.BLUE;
-        style1.selectedSliceColor = Color.BLUE;
+        style1.hoverColor = Color.RED;
+        style1.selectedColor = Color.BLUE;
         style1.backgroundColor = Color.ORANGE;
-        PieMenu menu1 = new PieMenu(shape, style1, 80);
+        PieMenu menu1 = new PieMenu(batch, whitePixel, style1, 80);
 
         for(int i=0 ; i<5 ; i++)
             menu1.addActor(new Label("menu " + i, skin));
@@ -73,11 +71,10 @@ public class TableWidgets extends ApplicationAdapter {
 
         /* Adding the demo widgets. */
         PieMenu.PieMenuStyle style2 = new PieMenu.PieMenuStyle();
-        style2.hoveredSliceColor = Color.RED;
-        style2.highlightedSliceColor = Color.BLUE;
-        style2.selectedSliceColor = Color.BLUE;
+        style2.hoverColor = Color.RED;
+        style2.selectedColor = Color.BLUE;
         style2.backgroundColor = Color.ORANGE;
-        PieMenu menu2 = new PieMenu(shape, style2, 120);
+        PieMenu menu2 = new PieMenu(batch, whitePixel, style2, 120);
 
         for(int i=0 ; i<5 ; i++)
             menu2.addActor(new Label("menu " + i, skin));
@@ -92,11 +89,10 @@ public class TableWidgets extends ApplicationAdapter {
 
         /* Adding the demo widgets. */
         PieMenu.PieMenuStyle style3 = new PieMenu.PieMenuStyle();
-        style3.hoveredSliceColor = Color.RED;
-        style3.highlightedSliceColor = Color.BLUE;
-        style3.selectedSliceColor = Color.BLUE;
+        style3.hoverColor = Color.RED;
+        style3.selectedColor = Color.BLUE;
         style3.backgroundColor = Color.ORANGE;
-        PieMenu menu3 = new PieMenu(shape, style3, 40);
+        PieMenu menu3 = new PieMenu(batch, whitePixel, style3, 40);
 
         for(int i=0 ; i<5 ; i++)
             menu3.addActor(new Label("menu " + i, skin));
@@ -114,7 +110,8 @@ public class TableWidgets extends ApplicationAdapter {
         Button b2 = new TextButton("textBtn", skin);
         Button b3 = new ImageTextButton("imgTxt", skin);
 
-        root.add(b1,b2,b3);
+        root.add(b1).fill();
+        root.add(b2,b3);
     }
 
     @Override
@@ -140,6 +137,7 @@ public class TableWidgets extends ApplicationAdapter {
 
         /* Disposing is good practice! */
         skin.dispose();
+        batch.dispose();
         stage.dispose();
         tmpTex.dispose();
     }

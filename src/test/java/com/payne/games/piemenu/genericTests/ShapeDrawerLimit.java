@@ -1,4 +1,4 @@
-package com.payne.games.piemenu.privateTests;
+package com.payne.games.piemenu.genericTests;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -17,17 +18,15 @@ import com.payne.games.piemenu.PieMenu;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
-public class FillParentStageWidget extends ApplicationAdapter {
+public class ShapeDrawerLimit extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
     private Texture tmpTex;
-    private PolygonSpriteBatch batch;
-    private ShapeDrawer shape;
-
+    private Batch batch;
     private PieMenu menu;
 
     @Override
-    public void create () {
+    public void create() {
 
         /* Setting up the Stage. */
         skin = new Skin(Gdx.files.internal("skin.json"));
@@ -36,60 +35,48 @@ public class FillParentStageWidget extends ApplicationAdapter {
         Gdx.input.setInputProcessor(stage);
         stage.setDebugAll(true);
 
-        /* Setting up the ShapeDrawer. */
+        /* Setting up the WhitePixel. */
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(1,1,1,1);
+        pixmap.setColor(1, 1, 1, 1);
         pixmap.fill();
         tmpTex = new Texture(pixmap);
         pixmap.dispose();
-        shape = new ShapeDrawer(batch, new TextureRegion(tmpTex)) {
-            @Override
-            protected int estimateSidesRequired(float radiusX, float radiusY) {
-                return 4*super.estimateSidesRequired(radiusX, radiusY);
-            }
-        };
+        TextureRegion whitePixel = new TextureRegion(tmpTex);
 
 
 
 
 
         /* Adding the demo widgets. */
-        PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.hoveredSliceColor = Color.RED;
-        style.highlightedSliceColor = Color.BLUE;
-        style.selectedSliceColor = Color.BLUE;
-        style.backgroundColor = Color.ORANGE;
-        menu = new PieMenu(shape, style, 80);
+        PieMenu.PieMenuStyle style1 = new PieMenu.PieMenuStyle();
+        style1.hoverColor = Color.RED;
+        style1.selectedColor = Color.BLUE;
+        style1.backgroundColor = Color.ORANGE;
+        menu = new PieMenu(batch, whitePixel, style1, 512); // at "513" it crashes
 
         for(int i=0 ; i<5 ; i++)
             menu.addActor(new Label("menu " + i, skin));
 
-        menu.addListener(new PieMenu.PieMenuCallbacks() {
-            @Override
-            public void onHoverChange(int hoveredIndex) {
-                System.out.println("hovered: " + hoveredIndex);
-            }
-        });
 
+        menu.setShapeDrawer(new ShapeDrawer(batch, whitePixel)); // default "estimateSidesRequired"
 
         stage.addActor(menu);
-//        menu.centerOnScreen();
-//        menu.drawRudimentaryDebug();
-        menu.setFillParent(true);
+        menu.setPosition(180,180);
+        menu.drawRudimentaryDebug();
     }
 
     @Override
-    public void render () {
+    public void render() {
 
         /* Clearing the screen and filling up the background. */
-        Gdx.gl.glClearColor(.4f,.4f,.4f, 1);
+        Gdx.gl.glClearColor(.4f, .4f, .4f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         /* Updating and drawing the Stage. */
         stage.act();
         stage.draw();
 
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             menu.rotateBy(Gdx.graphics.getDeltaTime() * 100);
             System.out.println(menu.getRotation());
         }
@@ -102,11 +89,12 @@ public class FillParentStageWidget extends ApplicationAdapter {
     }
 
     @Override
-    public void dispose () {
+    public void dispose() {
 
         /* Disposing is good practice! */
         skin.dispose();
         stage.dispose();
+        batch.dispose();
         tmpTex.dispose();
     }
 }
