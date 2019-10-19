@@ -61,6 +61,7 @@ public class KeyMap extends ApplicationAdapter {
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("rael_pie.png"))); // image background!
         style.selectedColor = new Color(1,.5f,.5f,.5f);
+        style.downColor = new Color(1,.8f,.8f,.5f);
         menu = new PieMenu(batch, whitePixel, style, 80, 24f/80, 30) {
             /* Since we are using Images, we want to resize them to fit within each sector. */
             @Override
@@ -72,6 +73,8 @@ public class KeyMap extends ApplicationAdapter {
         };
 
         /* Customizing the behavior. */
+        menu.setMiddleCancel(true);
+        menu.setDefaultIndex(2);
         menu.setInfiniteSelectionRange(true);
         menu.setPieMenuListener(new PieMenu.PieMenuClickListener() {
 
@@ -148,6 +151,9 @@ public class KeyMap extends ApplicationAdapter {
         imgs.add(getNewStack("coffee-mug.png", Integer.toString(key++)));
         for (int i = 0; i < imgs.size; i++)
             menu.addActor(imgs.get(i));
+
+
+        menu.selectIndex(menu.getDefaultIndex()); // because we would like to trigger that index
     }
 
     private Stack getNewStack(String img, String key) {
@@ -179,7 +185,6 @@ public class KeyMap extends ApplicationAdapter {
         if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
             stage.addActor(menu);
             menu.centerOnMouse();
-            menu.resetSelection();
             stage.setKeyboardFocus(menu);
             menu.setVisible(true);
         }

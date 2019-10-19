@@ -807,7 +807,7 @@ public class RadialGroup extends WidgetGroup {
 
     /**
      * Checks whether or not the input coordinate is in between (inclusively)
-     * the {@link #innerRadiusPercent} and the current radius of the widget (which can
+     * the inner-radius and the current radius of the widget (which can
      * be bigger than {@link #minRadius} if you use {@link #setFillParent(boolean)},
      * for example).
      *

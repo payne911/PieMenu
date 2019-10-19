@@ -55,6 +55,15 @@ public class PieMenu extends RadialGroup {
      */
     private boolean infiniteSelectionRange = false;
 
+
+    /**
+     * Determines whether or not releasing a click within the inner-radius
+     * should cancel the selection.
+     * If {@code true} a release in the middle, even if {@link #infiniteSelectionRange}
+     * is set to {@code true}, will trigger a selection of the {@link #defaultIndex}.
+     */
+    private boolean middleCancel = false;
+
     /**
      * Defines the way the Widget looks.
      */
@@ -359,12 +368,33 @@ public class PieMenu extends RadialGroup {
     @Override
     public int findChildIndexAtStage(float x, float y) {
         int childIndex = findIndexFromAngle(angleAtStage(x,y));
-        if(infiniteSelectionRange)
-            return childIndex;
         stageToLocalCoordinates(vector2.set(x,y));
+        if(infiniteSelectionRange) {
+            if(middleCancel)
+                return isWithinInnerRadius(vector2.x - getWidth()/2, vector2.y - getHeight()/2)
+                        ? getAmountOfChildren() // "getAmountOfChildren" is equivalent to "invalid"
+                        : childIndex;
+            else
+                return childIndex;
+        }
         return isWithinRadii(vector2.x - getWidth()/2, vector2.y - getHeight()/2)
                 ? childIndex
                 : getAmountOfChildren(); // "getAmountOfChildren" is equivalent to "invalid"
+    }
+
+    /**
+     * Checks whether or not the input coordinate is within (exclusively)
+     * the inner-radius.
+     *
+     * @param x x-coordinate relative to the center of the widget's
+     * @param y y-coordinate relative to the center of the widget's
+     * @return 'true' only if the coordinates fall within the widget's
+     *         inner radius.
+     */
+    public boolean isWithinInnerRadius(float x, float y) {
+        float distance = pow2(x) + pow2(y);
+        float innerRadSquared = pow2(getInnerRadiusLength());
+        return distance < innerRadSquared;
     }
 
     /**
@@ -918,10 +948,30 @@ public class PieMenu extends RadialGroup {
     /**
      * Determines whether or not selection should only happen if the mouse is
      * within the radius of the widget.
-     * @see #infiniteSelectionRange
+     * @see #middleCancel
      */
     public void setInfiniteSelectionRange(boolean infiniteSelectionRange) {
         this.infiniteSelectionRange = infiniteSelectionRange;
+    }
+
+    /**
+     * Determines whether or not releasing a click within the inner-radius
+     * should cancel the selection.
+     * If {@code true} a release in the middle, even if {@link #infiniteSelectionRange}
+     * is set to {@code true}, will trigger a selection of the {@link #defaultIndex}.
+     */
+    public boolean isMiddleCancel() {
+        return middleCancel;
+    }
+
+    /**
+     * Determines whether or not releasing a click within the inner-radius
+     * should cancel the selection.
+     * If {@code true} a release in the middle, even if {@link #infiniteSelectionRange}
+     * is set to {@code true}, will trigger a selection of the {@link #defaultIndex}.
+     */
+    public void setMiddleCancel(boolean middleCancel) {
+        this.middleCancel = middleCancel;
     }
 
     /**
