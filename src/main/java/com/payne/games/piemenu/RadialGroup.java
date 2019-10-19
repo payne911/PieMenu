@@ -564,7 +564,7 @@ public class RadialGroup extends WidgetGroup {
      * happen around the good point.
      */
     protected void updateOrigin() {
-        setOrigin(getX(Align.center), getY(Align.center)); // to support rotations around the center
+        setOrigin(getWidth()/2, getHeight()/2); // to support rotations around the center
     }
 
     @Override
