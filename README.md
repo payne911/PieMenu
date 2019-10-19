@@ -63,7 +63,7 @@ allprojects {
 
     ext {
     	...
-        pieMenuVersion = '3.0.0-rc1'
+        pieMenuVersion = '3.0.0-rc2'
     }
     
     repositories {
@@ -98,8 +98,8 @@ The basic idea looks like this:
 ```java
 /* Setting up and creating the widget. */
 PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-style.highlightedChildRegionColor = new Color(.7f,.3f,.5f,1); // "style" variables affect the way the widget looks
-PieMenu menu = new PieMenu(shape, style, 80); // "shape" is an instance of a ShapeDrawer, "80" is the radius
+style.sliceColor = new Color(.33f,.33f,.33f,1); // "style" variables affect the way the widget looks
+PieMenu menu = new PieMenu(batch, skin.getRegion("white"), style, 80); // "white" would be a 1x1 white pixel
 
 /* Adding a listener. */
 menu.addListener(new ChangeListener() {
@@ -114,7 +114,6 @@ for (int i = 0; i < 8; i++) {
     Label label = new Label(Integer.toString(i), skin);
     menu.addActor(label);
 }
-
 
 /* Including the Widget in the Stage. */
 stage.addActor(menu);
@@ -142,6 +141,7 @@ If you feel like helping this library grow, make sure to check out [the Contribu
 * [raeleus](https://github.com/raeleus)
 * [mgsx](https://github.com/mgsx-dev)
 * [TEttinger](https://github.com/tommyettinger)
+* Albert Pétoncle
 
 For their sustained help through the libGDX discord channel. Their extensive knowledge was greatly appreciated.
 
