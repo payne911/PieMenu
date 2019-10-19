@@ -58,9 +58,11 @@ public class PieMenu extends RadialGroup {
 
     /**
      * Determines whether or not releasing a click within the inner-radius
-     * should cancel the selection.
-     * If {@code true} a release in the middle, even if {@link #infiniteSelectionRange}
-     * is set to {@code true}, will trigger a selection of the {@link #defaultIndex}.
+     * should cancel the selection.<br>
+     * If {@code true}, a click released in the middle will trigger a selection
+     * of the {@link #defaultIndex}.<br>
+     * Only applies for the case where you have activated the
+     * {@link #infiniteSelectionRange} flag.
      */
     private boolean middleCancel = false;
 

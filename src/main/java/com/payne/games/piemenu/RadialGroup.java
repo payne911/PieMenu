@@ -54,8 +54,10 @@ public class RadialGroup extends WidgetGroup {
      * if a {@link RadialGroupStyle#background} or a
      * {@link RadialGroupStyle#backgroundColor} was provided, it will be visible
      * in the middle.<br>
-     * Actors inserted into the Widget are placed in the middle between the
-     * inner-radius and the {@link #minRadius}.
+     * Actors inserted into the Widget are by default placed in the middle
+     * between the inner-radius and the radius.
+     *
+     * @see #modifyActor(Actor, float, float)
      */
     protected float innerRadiusPercent;
 

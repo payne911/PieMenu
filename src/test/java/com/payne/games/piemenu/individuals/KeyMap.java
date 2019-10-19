@@ -13,12 +13,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
@@ -160,7 +158,9 @@ public class KeyMap extends ApplicationAdapter {
         Stack s = new Stack();
         s.add(new Image(new Texture(Gdx.files.internal(img))));
         Label.LabelStyle lbs = new Label.LabelStyle(skin.get("red", Label.LabelStyle.class));
-        s.add(new Label(" " + key, lbs));
+        Container<Label> c = new Container<>(new Label(key, lbs));
+        c.align(Align.center);
+        s.add(c);
         return s;
     }
 
