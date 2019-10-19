@@ -1,3 +1,6 @@
+[3.0.0]
+- Hotfix for `rotateBy()`
+
 [3.0.0-rc2]
 - Introduced a new behavior-flag: `middleCancel` determines if releasing a click from within the inner-radius will trigger the extended selection or the `defaultIndex` selection.
 - `ChildRegion` is now referred to as `Slice` throughout the API.
