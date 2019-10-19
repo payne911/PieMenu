@@ -11,6 +11,7 @@
 - Fixed a few `Animated` constructors.
 - The `ShapeDrawer` is now instantiated internally.
 - The default rules used by `ShapeDrawer` to determine the amount of sides to draw is now internally overridden with an improved algorithm.
+- Added an example for adding Keyboard-Key-Mapping (selection through keyboard) on a `PieMenu`.
 
 [3.0.0-rc1]
 - Refactored the Style so that most of the `float` values (`radius` and the likes) have become class-attributes instead.

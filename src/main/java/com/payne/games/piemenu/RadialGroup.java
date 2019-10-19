@@ -391,16 +391,20 @@ public class RadialGroup extends WidgetGroup {
 
 
     /**
-     * @return The current diameter of the widget.
-     *         This might not be {@link #minRadius}.
+     * The current diameter of the widget.<br>
+     * This might not be twice the {@link #minRadius}.
+     *
+     * @return {@code Math.min(getWidth(), getHeight())}
      */
     protected float getMaxDiameter() {
         return Math.min(getWidth(), getHeight());
     }
 
     /**
-     * @return The current radius of the widget.
-     *         This might not be {@link #minRadius}.
+     * The current radius of the widget.<br>
+     * This might not be {@link #minRadius}.
+     *
+     * @return {@code Math.min(getWidth(), getHeight()) / 2}
      */
     protected float getMaxRadius() {
         return getMaxDiameter()/2;
@@ -408,13 +412,11 @@ public class RadialGroup extends WidgetGroup {
 
     @Override
     public float getPrefWidth() {
-        validate(); // todo: useful?
         return getMaxDiameter();
     }
 
     @Override
     public float getPrefHeight() {
-        validate(); // todo: useful?
         return getMaxDiameter();
     }
 
@@ -598,8 +600,6 @@ public class RadialGroup extends WidgetGroup {
      */
     protected void drawWithShapeDrawer(Batch batch, float parentAlpha, float degreesToDraw) {
 
-        validate();  // todo: useful?
-
         /* Pre-calculating */
         float bgRadian  = MathUtils.degreesToRadians*degreesToDraw;
         float tmpOffset = MathUtils.degreesToRadians*(startDegreesOffset + getRotation());
@@ -611,11 +611,9 @@ public class RadialGroup extends WidgetGroup {
             Color bc = batch.getColor();
             float restoreAlpha = bc.a;
             batch.setColor(bc.r, bc.g, bc.b, bc.a * globalAlphaMultiplier);
-            // todo: fix rotation of Drawable (see FillParent test)
-            System.out.println(getOriginX() - getMaxRadius() + " | " + (getOriginY() - getMaxRadius()));
             style.background.draw(batch,
-                    getOriginX() - getMaxRadius(), getOriginY() - getMaxRadius(),
-                    getOriginX(), getOriginY(),
+                    getX(Align.center) - getMaxRadius(), getY(Align.center) - getMaxRadius(),
+                    getMaxRadius(), getMaxRadius(),
                     getMaxDiameter(), getMaxDiameter(),
                     getScaleX(), getScaleY(),
                     getRotation());
@@ -688,7 +686,6 @@ public class RadialGroup extends WidgetGroup {
     }
 
     protected void drawChild(Vector2 vector2, int index, float startAngle, float radian) {
-        // todo: possibly integrate buffer here too since Background has one? (or remove from bg, and do +BUFFER here?)
         propagateAlpha(sd, getColor(index));
         sd.arc(vector2.x, vector2.y, (getMaxRadius()+ getInnerRadiusLength())/2,
                 startAngle, radian, getMaxRadius()- getInnerRadiusLength());

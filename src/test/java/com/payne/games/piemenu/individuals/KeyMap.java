@@ -1,4 +1,4 @@
-package com.payne.games.piemenu.genericTests;
+package com.payne.games.piemenu.individuals;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -14,12 +14,16 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
+
+import java.util.HashSet;
 
 
 public class KeyMap extends ApplicationAdapter {
@@ -71,43 +75,53 @@ public class KeyMap extends ApplicationAdapter {
         menu.setInfiniteSelectionRange(true);
         menu.setPieMenuListener(new PieMenu.PieMenuClickListener() {
 
-            private int counter = 0;
-            private int keyPressed = 0;
+            private HashSet<Integer> pressed = new HashSet<>();
+            private int currentKey;
 
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
-                System.out.println("down " + keycode);
-                switch(keycode) {
-                    case Input.Keys.NUM_1:
-                    case Input.Keys.NUMPAD_1:
-                        System.out.println("1");
-                        counter++;
-                        break;
-                    default:
-                        System.out.println(keycode);
-                        break;
+                if(!(event.getListenerActor() instanceof PieMenu))
+                    return false;
+                PieMenu pie = (PieMenu)event.getListenerActor();
+
+                boolean numPressed = keycode >= Input.Keys.NUM_0 && keycode <= Input.Keys.NUM_9;
+                boolean padPressed = keycode >= Input.Keys.NUMPAD_0 && keycode <= Input.Keys.NUMPAD_9;
+                boolean valid = numPressed || padPressed;
+                if(valid) {
+                    if(numPressed)
+                        currentKey = keycode - Input.Keys.NUM_0;
+                    else
+                        currentKey = keycode - Input.Keys.NUMPAD_0;
+                    pie.highlightIndex(currentKey);
+                    pressed.add(currentKey);
                 }
+
                 return true;
             }
 
-            /* This is to be able to detect keyboard keys pressed. */
             @Override
             public boolean keyUp(InputEvent event, int keycode) {
-                System.out.println("up " + keycode);
-                switch(keycode) {
-                    case Input.Keys.NUM_1:
-                    case Input.Keys.NUMPAD_1:
-                        System.out.println("1");
-                        counter--;
-                        break;
-                    default:
-                        System.out.println(keycode);
-                        break;
+                if(!(event.getListenerActor() instanceof PieMenu))
+                    return false;
+                PieMenu pie = (PieMenu)event.getListenerActor();
+
+                boolean numPressed = keycode >= Input.Keys.NUM_0 && keycode <= Input.Keys.NUM_9;
+                boolean padPressed = keycode >= Input.Keys.NUMPAD_0 && keycode <= Input.Keys.NUMPAD_9;
+                boolean valid = numPressed || padPressed;
+
+                if(valid) {
+                    if(numPressed)
+                        currentKey = keycode - Input.Keys.NUM_0;
+                    else
+                        currentKey = keycode - Input.Keys.NUMPAD_0;
+                    pressed.remove(currentKey);
+
+                    if(pressed.isEmpty())
+                        pie.selectIndex(currentKey);
+                    else
+                        pie.highlightIndex(pressed.iterator().next());
                 }
 
-                if(counter == 0) {
-                    keyPressed = keycode;
-                }
                 return true;
             }
         });
@@ -118,20 +132,30 @@ public class KeyMap extends ApplicationAdapter {
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("ChangeListener - newly selected index: " + menu.getSelectedIndex());
                 menu.setVisible(false);
+                stage.setKeyboardFocus(null);
                 menu.remove();
             }
         });
 
         /* Populating the widget. */
-        Array<Image> imgs = new Array<>();
-        imgs.add(new Image(new Texture(Gdx.files.internal("heart-drop.png"))));
-        imgs.add(new Image(new Texture(Gdx.files.internal("beer-stein.png"))));
-        imgs.add(new Image(new Texture(Gdx.files.internal("coffee-mug.png"))));
-        imgs.add(new Image(new Texture(Gdx.files.internal("gooey-daemon.png"))));
-        imgs.add(new Image(new Texture(Gdx.files.internal("jeweled-chalice.png"))));
-        imgs.add(new Image(new Texture(Gdx.files.internal("coffee-mug.png"))));
+        int key = 0;
+        Array<Stack> imgs = new Array<>();
+        imgs.add(getNewStack("heart-drop.png", Integer.toString(key++)));
+        imgs.add(getNewStack("beer-stein.png", Integer.toString(key++)));
+        imgs.add(getNewStack("coffee-mug.png", Integer.toString(key++)));
+        imgs.add(getNewStack("gooey-daemon.png", Integer.toString(key++)));
+        imgs.add(getNewStack("jeweled-chalice.png", Integer.toString(key++)));
+        imgs.add(getNewStack("coffee-mug.png", Integer.toString(key++)));
         for (int i = 0; i < imgs.size; i++)
             menu.addActor(imgs.get(i));
+    }
+
+    private Stack getNewStack(String img, String key) {
+        Stack s = new Stack();
+        s.add(new Image(new Texture(Gdx.files.internal(img))));
+        Label.LabelStyle lbs = new Label.LabelStyle(skin.get("red", Label.LabelStyle.class));
+        s.add(new Label(" " + key, lbs));
+        return s;
     }
 
 
@@ -156,6 +180,7 @@ public class KeyMap extends ApplicationAdapter {
             stage.addActor(menu);
             menu.centerOnMouse();
             menu.resetSelection();
+            stage.setKeyboardFocus(menu);
             menu.setVisible(true);
         }
     }
