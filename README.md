@@ -1,8 +1,8 @@
 ![Pie Menu logo](https://raw.githubusercontent.com/payne911/PieMenu/master/pie_menu_logo.png "Logo Title Text 1")
 
 # PieMenu
-[![](https://jitpack.io/v/payne911/PieMenu.svg)](https://jitpack.io/#payne911/PieMenu)
-[![license](https://img.shields.io/github/license/rafaskb/typing-label.svg)](https://github.com/rafaskb/typing-label/blob/master/LICENSE)
+[![jitpack](https://jitpack.io/v/payne911/PieMenu.svg)](https://jitpack.io/#payne911/PieMenu)
+[![license](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/payne911/PieMenu/blob/master/LICENSE)
 
 ---
 
@@ -36,7 +36,7 @@ First, let us demonstrate what you might be able to get out of this library (tho
 ![early_demo](https://raw.githubusercontent.com/payne911/PieMenu/master/media/early_demo.gif)
 
 #### Controls
-An [online demo](https://payne911.github.io/PieMenu/) is available. The controls are:
+**An [online demo](https://payne911.github.io/PieMenu/) is available.** The controls are:
 * ``RIGHT-CLICK`` : opens a PieMenu meant for selection through dragging (don't release the right-click until you're done with your selection). It was configured to let you preview the selection's effect.
 * ``MIDDLE-CLICK`` : opens a PieMenu meant for "normal" selection. You can release the button and select as you wish with a left-click.
 * ``S`` : toggles the visibility of the "permaPie" at the bottom of the screen.
@@ -88,7 +88,7 @@ project(":core") {
 
 See the [jitpack website](https://jitpack.io/#payne911/PieMenu) for more info.
 
-If you plan on releasing your project with an html module, check out the [Wiki page on integrating gwt](https://github.com/payne911/PieMenu/wiki/GWT-integration).
+**If you plan on releasing your project with an html module ("HTML5/GWT"), check out the [Wiki page on integrating gwt](https://github.com/payne911/PieMenu/wiki/GWT-integration).**
 
 ---
 
