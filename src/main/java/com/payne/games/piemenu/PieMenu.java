@@ -754,6 +754,8 @@ public class PieMenu extends RadialGroup {
          * The suggested {@link ClickListener} that comes with the {@link PieMenu}.
          * You are not obligated to use it, but this one has been designed to work
          * as is, for the most part.
+         *
+         * @param pieMenu the {@link PieMenu} that contains this {@link PieMenuListener}.
          */
         public PieMenuListener(PieMenu pieMenu) {
             setTapSquareSize(Integer.MAX_VALUE);
