@@ -5,7 +5,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -22,7 +27,7 @@ public class PieMenu extends RadialGroup {
 
     /**
      * This listener controls the interactions with the {@link PieMenu}.<br>
-     * It defaults to being a {@link PieMenuClickListener} but can be changed
+     * It defaults to being a {@link PieMenuListener} but can be changed
      * to your own implementation by calling {@link #setPieMenuListener(InputListener)}.
      */
     private InputListener pieMenuListener;
@@ -98,7 +103,7 @@ public class PieMenu extends RadialGroup {
     @Override
     protected void constructorsCommon() {
         super.constructorsCommon();
-        this.pieMenuListener = new PieMenuClickListener();
+        this.pieMenuListener = new PieMenuListener(this);
         addListener(pieMenuListener);
         setTouchable(Touchable.enabled);
     }
@@ -734,15 +739,25 @@ public class PieMenu extends RadialGroup {
      * are not obligated to use it, but this one has been designed to work as is,
      * for the most part.
      */
-    public static class PieMenuClickListener extends ClickListener {
+    public static class PieMenuListener extends ClickListener {
+
+        private PieMenu pieMenu;
+
+        /**
+         * @return the {@link PieMenu} that contains this {@link PieMenuListener}.
+         */
+        public PieMenu getPieMenu() {
+            return pieMenu;
+        }
 
         /**
          * The suggested {@link ClickListener} that comes with the {@link PieMenu}.
          * You are not obligated to use it, but this one has been designed to work
          * as is, for the most part.
          */
-        public PieMenuClickListener() {
+        public PieMenuListener(PieMenu pieMenu) {
             setTapSquareSize(Integer.MAX_VALUE);
+            this.pieMenu = pieMenu;
         }
 
         /**
@@ -751,13 +766,12 @@ public class PieMenu extends RadialGroup {
          */
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            if(!(event.getListenerActor() instanceof PieMenu))
+            if(event.getListenerActor() != pieMenu)
                 return false;
-            PieMenu pie = (PieMenu)event.getListenerActor();
 
-            boolean accepted = (button == pie.getSelectionButton());
+            boolean accepted = (button == pieMenu.getSelectionButton());
             if(accepted)
-                pie.highlightSliceAtStage(event.getStageX(), event.getStageY());
+                pieMenu.highlightSliceAtStage(event.getStageX(), event.getStageY());
             return accepted;
         }
 
@@ -767,11 +781,10 @@ public class PieMenu extends RadialGroup {
          */
         @Override
         public void touchDragged(InputEvent event, float x, float y, int pointer) {
-            if(!(event.getListenerActor() instanceof PieMenu))
+            if(event.getListenerActor() != pieMenu)
                 return;
-            PieMenu pie = (PieMenu)event.getListenerActor();
 
-            pie.highlightSliceAtStage(event.getStageX(), event.getStageY());
+            pieMenu.highlightSliceAtStage(event.getStageX(), event.getStageY());
             super.touchDragged(event, x, y, pointer);
         }
 
@@ -781,13 +794,12 @@ public class PieMenu extends RadialGroup {
          */
         @Override
         public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-            if(!(event.getListenerActor() instanceof PieMenu))
+            if(event.getListenerActor() != pieMenu)
                 return;
-            PieMenu pie = (PieMenu)event.getListenerActor();
 
-            if(button != pie.getSelectionButton())
+            if(button != pieMenu.getSelectionButton())
                 return;
-            pie.selectSliceAtStage(event.getStageX(), event.getStageY()); // todo: just use highlighted instead of finding index again?
+            pieMenu.selectSliceAtStage(event.getStageX(), event.getStageY()); // todo: just use highlighted instead of finding index again?
             super.touchUp(event, x, y, pointer, button);
         }
 
@@ -797,11 +809,10 @@ public class PieMenu extends RadialGroup {
          */
         @Override
         public boolean mouseMoved(InputEvent event, float x, float y) {
-            if(!(event.getListenerActor() instanceof PieMenu))
+            if(event.getListenerActor() != pieMenu)
                 return false;
-            PieMenu pie = (PieMenu)event.getListenerActor();
 
-            pie.hoverSliceAtStage(event.getStageX(), event.getStageY());
+            pieMenu.hoverSliceAtStage(event.getStageX(), event.getStageY());
             return true;
         }
 
@@ -811,13 +822,12 @@ public class PieMenu extends RadialGroup {
          */
         @Override
         public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-            if(!(event.getListenerActor() instanceof PieMenu))
+            if(event.getListenerActor() != pieMenu)
                 return;
-            PieMenu pie = (PieMenu)event.getListenerActor();
 
             /* Reset the hover only when the mouse exits the PieMenu. */
-            if(toActor != pie && (toActor == null || !(event.getTarget().isDescendantOf(pie))))
-                pie.hoverIndex(-1);
+            if(toActor != pieMenu && (toActor == null || !(toActor.isDescendantOf(pieMenu)) || !(event.getTarget().isDescendantOf(pieMenu))))
+                pieMenu.hoverIndex(-1);
             super.exit(event, x, y, pointer, toActor);
         }
     }
@@ -929,7 +939,7 @@ public class PieMenu extends RadialGroup {
 
     /**
      * Determines which button must be used to interact with the Widget.<br>
-     * If you are not using the {@link PieMenuClickListener}, then this
+     * If you are not using the {@link PieMenuListener}, then this
      * option will not work "as-is" and you will have to implement it again (if
      * you want to have it).
      *
@@ -1098,7 +1108,7 @@ public class PieMenu extends RadialGroup {
      * By calling this, the previous listener is removed from the widget, and
      * this new one is added automatically.<br>
      * The initial "previous" listener associated with this variable is the
-     * {@link PieMenuClickListener}.
+     * {@link PieMenuListener}.
      *
      * @see #pieMenuListener
      * @param pieMenuListener the listener that controls the interactions

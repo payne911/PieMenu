@@ -33,7 +33,7 @@ public class ShapeDrawerLimit extends ApplicationAdapter {
         batch = new PolygonSpriteBatch();
         stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
-        stage.setDebugAll(true);
+//        stage.setDebugAll(true);
 
         /* Setting up the WhitePixel. */
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -52,7 +52,7 @@ public class ShapeDrawerLimit extends ApplicationAdapter {
         style1.hoverColor = Color.RED;
         style1.selectedColor = Color.BLUE;
         style1.backgroundColor = Color.ORANGE;
-        menu = new PieMenu(batch, whitePixel, style1, 512); // at "513" it crashes
+        menu = new PieMenu(batch, whitePixel, style1, 250); // at "5092" it crashes
 
         for(int i=0 ; i<5 ; i++)
             menu.addActor(new Label("menu " + i, skin));
@@ -62,7 +62,7 @@ public class ShapeDrawerLimit extends ApplicationAdapter {
 
         stage.addActor(menu);
         menu.setPosition(180,180);
-        menu.drawRudimentaryDebug();
+//        menu.drawRudimentaryDebug();
     }
 
     @Override

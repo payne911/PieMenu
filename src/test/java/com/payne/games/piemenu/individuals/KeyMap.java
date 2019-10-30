@@ -13,14 +13,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
-
 import java.util.HashSet;
 
 
@@ -74,16 +77,15 @@ public class KeyMap extends ApplicationAdapter {
         menu.setMiddleCancel(true);
         menu.setDefaultIndex(2);
         menu.setInfiniteSelectionRange(true);
-        menu.setPieMenuListener(new PieMenu.PieMenuClickListener() {
+        menu.setPieMenuListener(new PieMenu.PieMenuListener(menu) {
 
             private HashSet<Integer> pressed = new HashSet<>();
             private int currentKey;
 
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
-                if(!(event.getListenerActor() instanceof PieMenu))
+                if(event.getListenerActor() != menu)
                     return false;
-                PieMenu pie = (PieMenu)event.getListenerActor();
 
                 boolean numPressed = keycode >= Input.Keys.NUM_0 && keycode <= Input.Keys.NUM_9;
                 boolean padPressed = keycode >= Input.Keys.NUMPAD_0 && keycode <= Input.Keys.NUMPAD_9;
@@ -93,7 +95,7 @@ public class KeyMap extends ApplicationAdapter {
                         currentKey = keycode - Input.Keys.NUM_0;
                     else
                         currentKey = keycode - Input.Keys.NUMPAD_0;
-                    pie.highlightIndex(currentKey);
+                    menu.highlightIndex(currentKey);
                     pressed.add(currentKey);
                 }
 
@@ -102,9 +104,8 @@ public class KeyMap extends ApplicationAdapter {
 
             @Override
             public boolean keyUp(InputEvent event, int keycode) {
-                if(!(event.getListenerActor() instanceof PieMenu))
+                if(event.getListenerActor() != menu)
                     return false;
-                PieMenu pie = (PieMenu)event.getListenerActor();
 
                 boolean numPressed = keycode >= Input.Keys.NUM_0 && keycode <= Input.Keys.NUM_9;
                 boolean padPressed = keycode >= Input.Keys.NUMPAD_0 && keycode <= Input.Keys.NUMPAD_9;
@@ -118,9 +119,9 @@ public class KeyMap extends ApplicationAdapter {
                     pressed.remove(currentKey);
 
                     if(pressed.isEmpty())
-                        pie.selectIndex(currentKey);
+                        menu.selectIndex(currentKey);
                     else
-                        pie.highlightIndex(pressed.iterator().next());
+                        menu.highlightIndex(pressed.iterator().next());
                 }
 
                 return true;

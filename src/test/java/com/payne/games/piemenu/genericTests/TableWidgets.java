@@ -10,7 +10,12 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
 
@@ -60,6 +65,7 @@ public class TableWidgets extends ApplicationAdapter {
         style1.selectedColor = Color.BLUE;
         style1.backgroundColor = Color.ORANGE;
         PieMenu menu1 = new PieMenu(batch, whitePixel, style1, 80);
+        menu1.setName("left widget");
 
         for(int i=0 ; i<5 ; i++)
             menu1.addActor(new Label("menu " + i, skin));
@@ -75,6 +81,7 @@ public class TableWidgets extends ApplicationAdapter {
         style2.selectedColor = Color.BLUE;
         style2.backgroundColor = Color.ORANGE;
         PieMenu menu2 = new PieMenu(batch, whitePixel, style2, 120);
+        menu2.setName("right widget");
 
         for(int i=0 ; i<5 ; i++)
             menu2.addActor(new Label("menu " + i, skin));
