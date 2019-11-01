@@ -613,12 +613,19 @@ public class RadialGroup extends WidgetGroup {
             Color bc = batch.getColor();
             float restoreAlpha = bc.a;
             batch.setColor(bc.r, bc.g, bc.b, bc.a * globalAlphaMultiplier);
-            style.background.draw(batch,
-                    getX(Align.center) - getMaxRadius(), getY(Align.center) - getMaxRadius(),
-                    getMaxRadius(), getMaxRadius(),
-                    getMaxDiameter(), getMaxDiameter(),
-                    getScaleX(), getScaleY(),
-                    getRotation());
+            if(style.background instanceof TransformDrawable) {
+                ((TransformDrawable)(style.background)).draw(batch,
+                        getX(Align.center) - getMaxRadius(), getY(Align.center) - getMaxRadius(),
+                        getMaxRadius(), getMaxRadius(),
+                        getMaxDiameter(), getMaxDiameter(),
+                        getScaleX(), getScaleY(),
+                        getRotation());
+            } else {
+                style.background.draw(batch,
+                        getX(Align.center) - getMaxRadius(),
+                        getY(Align.center) - getMaxRadius(),
+                        getMaxDiameter(), getMaxDiameter());
+            }
             batch.setColor(bc.r, bc.g, bc.b, restoreAlpha);
         }
 
@@ -953,7 +960,7 @@ public class RadialGroup extends WidgetGroup {
          * variables: it will be resized to fit in the whole region that
          * represents the position, width and height of the widget.
          */
-        public TransformDrawable background;
+        public Drawable background;
 
         /**
          * <i>Optional.</i><br>

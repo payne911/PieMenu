@@ -828,7 +828,7 @@ public class PieMenu extends RadialGroup {
                 return;
 
             /* Reset the hover only when the mouse exits the PieMenu. */
-            if(toActor != pieMenu && (toActor == null || !(toActor.isDescendantOf(pieMenu)) || !(event.getTarget().isDescendantOf(pieMenu))))
+            if(toActor != pieMenu && (toActor == null || !(toActor.isDescendantOf(pieMenu))))
                 pieMenu.hoverIndex(-1);
             super.exit(event, x, y, pointer, toActor);
         }

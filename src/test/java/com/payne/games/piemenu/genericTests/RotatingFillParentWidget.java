@@ -2,7 +2,7 @@ package com.payne.games.piemenu.genericTests;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -18,7 +18,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
 
 
-public class FillParentStageWidget extends ApplicationAdapter {
+public class RotatingFillParentWidget extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
     private Texture tmpTex;
@@ -82,9 +82,12 @@ public class FillParentStageWidget extends ApplicationAdapter {
         stage.act();
         stage.draw();
 
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+        if(Gdx.input.isKeyPressed(Keys.SPACE)) {
             menu.rotateBy(Gdx.graphics.getDeltaTime() * 100);
             System.out.println(menu.getRotation());
+        }
+        if(Gdx.input.isKeyPressed(Keys.M)) {
+            menu.setPosition(10,100);
         }
 
     }

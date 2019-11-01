@@ -1,9 +1,13 @@
+[3.0.1]
+- More efficient reset of the hover on mouse-exit.
+- The `background` image can now be a `Drawable` as well (but this will prevent you from using `rotateBy()`).
+
 [3.0.0]
-- Hotfix for `rotateBy()`
-- Hotfix for overlapping menus
-- Updated `ShapeDrawer` to v2.0.3 (fixes some crashes)
-- Shorter way of integrating the library for GWT
-- Renamed `PieMenuClickListener` to `PieMenuListener`
+- Hotfix for `rotateBy()`.
+- Hotfix for overlapping menus.
+- Updated `ShapeDrawer` to v2.0.3 (fixes some crashes).
+- Shorter way of integrating the library for GWT.
+- Renamed `PieMenuClickListener` to `PieMenuListener`.
 
 [3.0.0-rc2]
 - Introduced a new behavior-flag: `middleCancel` determines if releasing a click from within the inner-radius will trigger the extended selection or the `defaultIndex` selection.
