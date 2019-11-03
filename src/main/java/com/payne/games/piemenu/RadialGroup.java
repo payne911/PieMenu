@@ -797,9 +797,10 @@ public class RadialGroup extends WidgetGroup {
      *         relative to the origin (i.e. middle) of the widget
      */
     public float angleAtStage(float x, float y) {
+        localToStageCoordinates(vector2.set(getWidth()/2, getHeight()/2));
         return normalizeAngle(
                 MathUtils.radiansToDegrees
-                        * MathUtils.atan2(y - (getY(Align.center)), x - (getX(Align.center)))
+                        * MathUtils.atan2(y - vector2.y, x - vector2.x)
                 - getRotation() - startDegreesOffset
         );
     }
