@@ -4,7 +4,7 @@
 - `getMaxDiameter` has been renamed to `getCurrentDiameter`.
 - `getMaxRadius` has been renamed to `getCurrentRadius`.
 
-[3.0.1]
+[3.1.0]
 - Hotfix for "floating" `Group` that contained `RadialGroup`.
 - More efficient evaluation for the reset of the hover on mouse-exit.
 - The `background` image can now be a `Drawable` as well (but keep in mind that `Drawable` cannot be rotated).
