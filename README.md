@@ -63,7 +63,7 @@ allprojects {
 
     ext {
     	...
-        pieMenuVersion = '3.0.0'
+        pieMenuVersion = '3.1.0'
     }
     
     repositories {
