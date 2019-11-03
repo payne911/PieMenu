@@ -1,7 +1,13 @@
+(UPCOMING) [4.0.0]
+- A `Batch` does not need to be passed to the constructors anymore.
+- Introduced `PieWidget` in the new design: the `RadialGroup` now doesn't deal in any way with the `ShapeDrawer`.
+- `getMaxDiameter` has been renamed to `getCurrentDiameter`.
+- `getMaxRadius` has been renamed to `getCurrentRadius`.
+
 [3.0.1]
 - Hotfix for "floating" `Group` that contained `RadialGroup`.
-- More efficient reset of the hover on mouse-exit.
-- The `background` image can now be a `Drawable` as well (but this will prevent you from using `rotateBy()`).
+- More efficient evaluation for the reset of the hover on mouse-exit.
+- The `background` image can now be a `Drawable` as well (but keep in mind that `Drawable` cannot be rotated).
 
 [3.0.0]
 - Hotfix for `rotateBy()`.
