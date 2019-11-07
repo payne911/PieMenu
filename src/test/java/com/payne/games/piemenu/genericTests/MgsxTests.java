@@ -34,7 +34,7 @@ public class MgsxTests extends ApplicationAdapter {
 
 
 //        Group group = new Group();
-//        PieMenu menu = new PieMenu(stage.getBatch(), skin.getRegion("white"), PieMenuUtils.getStyle(), SIZE, .2f);
+//        PieMenu menu = new PieMenu(skin.getRegion("white"), PieMenuUtils.getStyle(), SIZE, .2f);
 //        fillMenu(menu, skin, "A", "D", "E");
 //        group.addActor(menu);
 //        menu.pack();
@@ -44,7 +44,7 @@ public class MgsxTests extends ApplicationAdapter {
 
 
 //        Group group2 = new Group();
-//        PieMenu menu2 = new PieMenu(stage.getBatch(), skin.getRegion("white"), PieMenuUtils.getStyle(), SIZE, .2f);
+//        PieMenu menu2 = new PieMenu(skin.getRegion("white"), PieMenuUtils.getStyle(), SIZE, .2f);
 //        fillMenu(menu2, skin, "A", "D", "E");
 //        group2.addActor(menu2);
 //        menu2.setPieMenuListener(new InputListener());
@@ -52,7 +52,7 @@ public class MgsxTests extends ApplicationAdapter {
 //        stage.addActor(group2);
 
 
-//        PieMenu menu3 = new PieMenu(stage.getBatch(), skin.getRegion("white"), PieMenuUtils.getStyle(), SIZE, .2f);
+//        PieMenu menu3 = new PieMenu(skin.getRegion("white"), PieMenuUtils.getStyle(), SIZE, .2f);
 //        fillMenu(menu3, skin, "A", "D", "E");
 //        menu3.pack();
 //        menu3.setPosition(200, 200);
@@ -147,7 +147,7 @@ public class MgsxTests extends ApplicationAdapter {
             float offsetX = spaceX;
 
             // floating case (OK)
-            menu = new PieMenu(stage.getBatch(), skin.getRegion("white"), style, SIZE, .2f);
+            menu = new PieMenu(skin.getRegion("white"), style, SIZE, .2f);
             fillMenu(menu, skin, "A", "B", "C");
             menu.pack();
             menu.setPosition(offsetX, stage.getHeight() - menu.getHeight());
@@ -159,7 +159,7 @@ public class MgsxTests extends ApplicationAdapter {
             // floating table case. (KO)
             table = new Table(skin);
             table.add("Title very long").row();
-            menu = new PieMenu(stage.getBatch(), skin.getRegion("white"), style, SIZE, .2f);
+            menu = new PieMenu(skin.getRegion("white"), style, SIZE, .2f);
             fillMenu(menu, skin, "A", "D", "E");
             table.add(menu);
             table.pack();
@@ -170,7 +170,7 @@ public class MgsxTests extends ApplicationAdapter {
 
             // floating table case 2. (KO)
             table = new Table(skin);
-            menu = new PieMenu(stage.getBatch(), skin.getRegion("white"), style, SIZE, .2f);
+            menu = new PieMenu(skin.getRegion("white"), style, SIZE, .2f);
             fillMenu(menu, skin, "A", "F", "G");
             table.add(menu).row();
             table.add("Title").row();
@@ -183,7 +183,7 @@ public class MgsxTests extends ApplicationAdapter {
             // floating table with multiple. (KO)
             table = new Table(skin);
             for (int i = 0; i < 3; i++) {
-                menu = new PieMenu(stage.getBatch(), skin.getRegion("white"), style, SIZE, .2f);
+                menu = new PieMenu(skin.getRegion("white"), style, SIZE, .2f);
                 fillMenu(menu, skin, "A", "H", "I");
                 table.add(menu);
                 addListeners(menu);
@@ -195,7 +195,7 @@ public class MgsxTests extends ApplicationAdapter {
 
             // floating table case with grow. (KO)
             table = new Table(skin);
-            menu = new PieMenu(stage.getBatch(), skin.getRegion("white"), style, 10, .2f);
+            menu = new PieMenu(skin.getRegion("white"), style, 10, .2f);
             fillMenu(menu, skin, "A", "J", "K");
             table.add(menu).grow().row();
             table.setSize(400, 300);
@@ -205,7 +205,7 @@ public class MgsxTests extends ApplicationAdapter {
 
             // table case with fill parent. (OK)
             table = new Table(skin);
-            menu = new PieMenu(stage.getBatch(), skin.getRegion("white"), style, SIZE, .2f);
+            menu = new PieMenu(skin.getRegion("white"), style, SIZE, .2f);
             fillMenu(menu, skin, "A", "L", "M");
             table.add(menu).expand().right().bottom().row();
             table.setFillParent(true);

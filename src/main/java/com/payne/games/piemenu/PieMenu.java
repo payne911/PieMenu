@@ -2,15 +2,9 @@ package com.payne.games.piemenu;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -18,12 +12,12 @@ import com.badlogic.gdx.utils.Pools;
 
 
 /**
- * A PieMenu reuses the {@link RadialGroup}'s functionalities to provide a way
+ * A PieMenu reuses the {@link PieWidget}'s functionalities to provide a way
  * to interact with the contained Actors through the "hit-box" of the slices.
  *
  * @author Jérémi Grenier-Berthiaume (aka "payne")
  */
-public class PieMenu extends RadialGroup {
+public class PieMenu extends PieWidget {
 
     /**
      * This listener controls the interactions with the {@link PieMenu}.<br>
@@ -111,21 +105,19 @@ public class PieMenu extends RadialGroup {
     /**
      * See {@link PieMenu} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
      */
-    public PieMenu(final Batch batch, final TextureRegion whitePixel,
+    public PieMenu(final TextureRegion whitePixel,
                    PieMenuStyle style, float minRadius) {
-        super(batch, whitePixel, minRadius);
+        super(whitePixel, minRadius);
         setStyle(style);
     }
 
     /**
      * See {@link PieMenu} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
@@ -133,17 +125,16 @@ public class PieMenu extends RadialGroup {
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
-    public PieMenu(final Batch batch, final TextureRegion whitePixel,
+    public PieMenu(final TextureRegion whitePixel,
                    PieMenuStyle style, float minRadius,
                    float innerRadiusPercent) {
-        super(batch, whitePixel, minRadius, innerRadiusPercent);
+        super(whitePixel, minRadius, innerRadiusPercent);
         setStyle(style);
     }
 
     /**
      * See {@link PieMenu} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
@@ -153,17 +144,16 @@ public class PieMenu extends RadialGroup {
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
-    public PieMenu(final Batch batch, final TextureRegion whitePixel,
+    public PieMenu(final TextureRegion whitePixel,
                    PieMenuStyle style, float minRadius,
                    float innerRadiusPercent, float startDegreesOffset) {
-        super(batch, whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
+        super(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
         setStyle(style);
     }
 
     /**
      * See {@link PieMenu} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
@@ -176,31 +166,29 @@ public class PieMenu extends RadialGroup {
      *                          many degrees the widget will span, starting from
      *                          its {@link #startDegreesOffset}.
      */
-    public PieMenu(final Batch batch, final TextureRegion whitePixel,
+    public PieMenu(final TextureRegion whitePixel,
                    PieMenuStyle style, float minRadius,
                    float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
-        super(batch, whitePixel, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+        super(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
         setStyle(style);
     }
 
     /**
      * See {@link PieMenu} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
      */
-    public PieMenu(final Batch batch, final TextureRegion whitePixel,
+    public PieMenu(final TextureRegion whitePixel,
                    Skin skin, float minRadius) {
-        super(batch, whitePixel, minRadius);
+        super(whitePixel, minRadius);
         setStyle(skin.get(PieMenuStyle.class));
     }
 
     /**
      * See {@link PieMenu} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
@@ -208,17 +196,16 @@ public class PieMenu extends RadialGroup {
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
-    public PieMenu(final Batch batch, final TextureRegion whitePixel,
+    public PieMenu(final TextureRegion whitePixel,
                    Skin skin, float minRadius,
                    float innerRadiusPercent) {
-        super(batch, whitePixel, minRadius, innerRadiusPercent);
+        super(whitePixel, minRadius, innerRadiusPercent);
         setStyle(skin.get(PieMenuStyle.class));
     }
 
     /**
      * See {@link PieMenu} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
@@ -228,17 +215,16 @@ public class PieMenu extends RadialGroup {
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
-    public PieMenu(final Batch batch, final TextureRegion whitePixel,
+    public PieMenu(final TextureRegion whitePixel,
                    Skin skin, float minRadius,
                    float innerRadiusPercent, float startDegreesOffset) {
-        super(batch, whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
+        super(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
         setStyle(skin.get(PieMenuStyle.class));
     }
 
     /**
      * See {@link PieMenu} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
@@ -251,32 +237,30 @@ public class PieMenu extends RadialGroup {
      *                          many degrees the widget will span, starting from
      *                          its {@link #startDegreesOffset}.
      */
-    public PieMenu(final Batch batch, final TextureRegion whitePixel,
+    public PieMenu(final TextureRegion whitePixel,
                    Skin skin, float minRadius,
                    float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
-        super(batch, whitePixel, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+        super(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
         setStyle(skin.get(PieMenuStyle.class));
     }
 
     /**
      * See {@link PieMenu} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
      */
-    public PieMenu(final Batch batch, final TextureRegion whitePixel,
+    public PieMenu(final TextureRegion whitePixel,
                    Skin skin, String style, float minRadius) {
-        super(batch, whitePixel, minRadius);
+        super(whitePixel, minRadius);
         setStyle(skin.get(style, PieMenuStyle.class));
     }
 
     /**
      * See {@link PieMenu} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
@@ -285,17 +269,16 @@ public class PieMenu extends RadialGroup {
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
-    public PieMenu(final Batch batch, final TextureRegion whitePixel,
+    public PieMenu(final TextureRegion whitePixel,
                    Skin skin, String style, float minRadius,
                    float innerRadiusPercent) {
-        super(batch, whitePixel, minRadius, innerRadiusPercent);
+        super(whitePixel, minRadius, innerRadiusPercent);
         setStyle(skin.get(style, PieMenuStyle.class));
     }
 
     /**
      * See {@link PieMenu} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
@@ -306,17 +289,16 @@ public class PieMenu extends RadialGroup {
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
-    public PieMenu(final Batch batch, final TextureRegion whitePixel,
+    public PieMenu(final TextureRegion whitePixel,
                    Skin skin, String style, float minRadius,
                    float innerRadiusPercent, float startDegreesOffset) {
-        super(batch, whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
+        super(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
         setStyle(skin.get(style, PieMenuStyle.class));
     }
 
     /**
      * See {@link PieMenu} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
@@ -330,10 +312,10 @@ public class PieMenu extends RadialGroup {
      *                          many degrees the widget will span, starting from
      *                          its {@link #startDegreesOffset}.
      */
-    public PieMenu(final Batch batch, final TextureRegion whitePixel,
+    public PieMenu(final TextureRegion whitePixel,
                    Skin skin, String style, float minRadius,
                    float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
-        super(batch, whitePixel, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+        super(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
         setStyle(skin.get(style, PieMenuStyle.class));
     }
 
@@ -436,7 +418,7 @@ public class PieMenu extends RadialGroup {
             Actor child = getChildren().get(childIndex);
             if(child.getTouchable() == Touchable.disabled)
                 return this;
-            child.parentToLocalCoordinates(vector2.set(x, y));
+            child.parentToLocalCoordinates(vector2.set(x,y));
             Actor hit = child.hit(vector2.x, vector2.y, touchable);
             if(hit != null)
                 return hit;
@@ -536,7 +518,7 @@ public class PieMenu extends RadialGroup {
      * Encompasses the characteristics that define the style of the Widget
      * to be drawn.
      */
-    public static class PieMenuStyle extends RadialGroupStyle {
+    public static class PieMenuStyle extends PieWidgetStyle {
 
         /**
          * <i>Recommended. Optional.</i><br>

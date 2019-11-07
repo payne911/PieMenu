@@ -3,6 +3,7 @@
 - Introduced `PieWidget` in the new design: the `RadialGroup` now doesn't deal in any way with the `ShapeDrawer`.
 - `getMaxDiameter` has been renamed to `getCurrentDiameter`.
 - `getMaxRadius` has been renamed to `getCurrentRadius`.
+- Introduced a new `individuals` demo (named "RadialButtons") to showcase the new `RadialGroup` class.
 
 [3.1.0]
 - Hotfix for "floating" `Group` that contained `RadialGroup`.

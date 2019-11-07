@@ -67,7 +67,7 @@ public class ButtonBound extends ApplicationAdapter {
         style.selectedColor = new Color(.7f,.3f,.5f,1);
         style.sliceColor = new Color(0,.7f,0,1);
         style.alternateSliceColor = new Color(.7f,0,0,1);
-        menu = new AnimatedPieMenu(batch, whitePixel, style, 130, 50f/130, 180, 320);
+        menu = new AnimatedPieMenu(whitePixel, style, 130, 50f/130, 180, 320);
 
         /* Customizing the behavior. */
         menu.setInfiniteSelectionRange(true);

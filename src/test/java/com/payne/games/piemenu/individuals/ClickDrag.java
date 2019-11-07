@@ -64,7 +64,7 @@ public class ClickDrag extends ApplicationAdapter {
         style.separatorColor = new Color(.1f,.1f,.1f,1);
         style.downColor = new Color(.5f,.5f,.5f,1);
         style.sliceColor = new Color(.33f,.33f,.33f,1);
-        menu = new PieMenu(batch, whitePixel, style, 80);
+        menu = new PieMenu(whitePixel, style, 80);
 
         /* Customizing the behavior. */
         menu.setInfiniteSelectionRange(true);

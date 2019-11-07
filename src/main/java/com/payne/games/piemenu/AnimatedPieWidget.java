@@ -31,7 +31,7 @@ import java.util.HashMap;
  * provided above.
  */
 @Deprecated
-public class AnimatedRadialGroup extends RadialGroup {
+public class AnimatedPieWidget extends PieWidget {
 
     /**
      * Duration of the animation.
@@ -51,22 +51,20 @@ public class AnimatedRadialGroup extends RadialGroup {
 
 
     /**
-     * See {@link AnimatedRadialGroup} for a description.
+     * See {@link AnimatedPieWidget} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
      */
-    public AnimatedRadialGroup(final Batch batch, final TextureRegion whitePixel,
-                               RadialGroupStyle style, float minRadius) {
-        super(batch, whitePixel, style, minRadius);
+    public AnimatedPieWidget(final TextureRegion whitePixel,
+                             PieWidgetStyle style, float minRadius) {
+        super(whitePixel, style, minRadius);
     }
 
     /**
-     * See {@link AnimatedRadialGroup} for a description.
+     * See {@link AnimatedPieWidget} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
@@ -74,16 +72,15 @@ public class AnimatedRadialGroup extends RadialGroup {
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
-    public AnimatedRadialGroup(final Batch batch, final TextureRegion whitePixel,
-                               RadialGroupStyle style, float minRadius,
-                               float innerRadiusPercent) {
-        super(batch, whitePixel, style, minRadius, innerRadiusPercent);
+    public AnimatedPieWidget(final TextureRegion whitePixel,
+                             PieWidgetStyle style, float minRadius,
+                             float innerRadiusPercent) {
+        super(whitePixel, style, minRadius, innerRadiusPercent);
     }
 
     /**
-     * See {@link AnimatedRadialGroup} for a description.
+     * See {@link AnimatedPieWidget} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
@@ -93,16 +90,15 @@ public class AnimatedRadialGroup extends RadialGroup {
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
-    public AnimatedRadialGroup(final Batch batch, final TextureRegion whitePixel,
-                               RadialGroupStyle style, float minRadius,
-                               float innerRadiusPercent, float startDegreesOffset) {
-        super(batch, whitePixel, style, minRadius, innerRadiusPercent, startDegreesOffset);
+    public AnimatedPieWidget(final TextureRegion whitePixel,
+                             PieWidgetStyle style, float minRadius,
+                             float innerRadiusPercent, float startDegreesOffset) {
+        super(whitePixel, style, minRadius, innerRadiusPercent, startDegreesOffset);
     }
 
     /**
-     * See {@link AnimatedRadialGroup} for a description.
+     * See {@link AnimatedPieWidget} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
@@ -115,29 +111,27 @@ public class AnimatedRadialGroup extends RadialGroup {
      *                          many degrees the widget will span, starting from
      *                          its {@link #startDegreesOffset}.
      */
-    public AnimatedRadialGroup(final Batch batch, final TextureRegion whitePixel,
-                               RadialGroupStyle style, float minRadius,
-                               float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
-        super(batch, whitePixel, style, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+    public AnimatedPieWidget(final TextureRegion whitePixel,
+                             PieWidgetStyle style, float minRadius,
+                             float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
+        super(whitePixel, style, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
     }
 
     /**
-     * See {@link AnimatedRadialGroup} for a description.
+     * See {@link AnimatedPieWidget} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
      */
-    public AnimatedRadialGroup(final Batch batch, final TextureRegion whitePixel,
-                               Skin skin, float minRadius) {
-        super(batch, whitePixel, skin, minRadius);
+    public AnimatedPieWidget(final TextureRegion whitePixel,
+                             Skin skin, float minRadius) {
+        super(whitePixel, skin, minRadius);
     }
 
     /**
-     * See {@link AnimatedRadialGroup} for a description.
+     * See {@link AnimatedPieWidget} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
@@ -145,15 +139,14 @@ public class AnimatedRadialGroup extends RadialGroup {
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
-    public AnimatedRadialGroup(final Batch batch, final TextureRegion whitePixel,
-                               Skin skin, float minRadius, float innerRadiusPercent) {
-        super(batch, whitePixel, skin, minRadius, innerRadiusPercent);
+    public AnimatedPieWidget(final TextureRegion whitePixel,
+                             Skin skin, float minRadius, float innerRadiusPercent) {
+        super(whitePixel, skin, minRadius, innerRadiusPercent);
     }
 
     /**
-     * See {@link AnimatedRadialGroup} for a description.
+     * See {@link AnimatedPieWidget} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
@@ -163,16 +156,15 @@ public class AnimatedRadialGroup extends RadialGroup {
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
-    public AnimatedRadialGroup(final Batch batch, final TextureRegion whitePixel,
-                               Skin skin, float minRadius, float innerRadiusPercent,
-                               float startDegreesOffset) {
-        super(batch, whitePixel, skin, minRadius, innerRadiusPercent, startDegreesOffset);
+    public AnimatedPieWidget(final TextureRegion whitePixel,
+                             Skin skin, float minRadius, float innerRadiusPercent,
+                             float startDegreesOffset) {
+        super(whitePixel, skin, minRadius, innerRadiusPercent, startDegreesOffset);
     }
 
     /**
-     * See {@link AnimatedRadialGroup} for a description.
+     * See {@link AnimatedPieWidget} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
@@ -185,30 +177,28 @@ public class AnimatedRadialGroup extends RadialGroup {
      *                          many degrees the widget will span, starting from
      *                          its {@link #startDegreesOffset}.
      */
-    public AnimatedRadialGroup(final Batch batch, final TextureRegion whitePixel,
-                               Skin skin, float minRadius, float innerRadiusPercent,
-                               float startDegreesOffset, float totalDegreesDrawn) {
-        super(batch, whitePixel, skin, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+    public AnimatedPieWidget(final TextureRegion whitePixel,
+                             Skin skin, float minRadius, float innerRadiusPercent,
+                             float startDegreesOffset, float totalDegreesDrawn) {
+        super(whitePixel, skin, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
     }
 
     /**
-     * See {@link AnimatedRadialGroup} for a description.
+     * See {@link AnimatedPieWidget} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
      * @param minRadius the {@link #minRadius} that defines the size of the widget.
      */
-    public AnimatedRadialGroup(final Batch batch, final TextureRegion whitePixel,
-                               Skin skin, String style, float minRadius) {
-        super(batch, whitePixel, skin, style, minRadius);
+    public AnimatedPieWidget(final TextureRegion whitePixel,
+                             Skin skin, String style, float minRadius) {
+        super(whitePixel, skin, style, minRadius);
     }
 
     /**
-     * See {@link AnimatedRadialGroup} for a description.
+     * See {@link AnimatedPieWidget} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
@@ -217,16 +207,15 @@ public class AnimatedRadialGroup extends RadialGroup {
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
-    public AnimatedRadialGroup(final Batch batch, final TextureRegion whitePixel,
-                               Skin skin, String style, float minRadius,
-                               float innerRadiusPercent) {
-        super(batch, whitePixel, skin, style, minRadius, innerRadiusPercent);
+    public AnimatedPieWidget(final TextureRegion whitePixel,
+                             Skin skin, String style, float minRadius,
+                             float innerRadiusPercent) {
+        super(whitePixel, skin, style, minRadius, innerRadiusPercent);
     }
 
     /**
-     * See {@link AnimatedRadialGroup} for a description.
+     * See {@link AnimatedPieWidget} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
@@ -237,16 +226,15 @@ public class AnimatedRadialGroup extends RadialGroup {
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
-    public AnimatedRadialGroup(final Batch batch, final TextureRegion whitePixel,
-                               Skin skin, String style, float minRadius,
-                               float innerRadiusPercent, float startDegreesOffset) {
-        super(batch, whitePixel, skin, style, minRadius, innerRadiusPercent, startDegreesOffset);
+    public AnimatedPieWidget(final TextureRegion whitePixel,
+                             Skin skin, String style, float minRadius,
+                             float innerRadiusPercent, float startDegreesOffset) {
+        super(whitePixel, skin, style, minRadius, innerRadiusPercent, startDegreesOffset);
     }
 
     /**
-     * See {@link AnimatedRadialGroup} for a description.
+     * See {@link AnimatedPieWidget} for a description.
      *
-     * @param batch used to draw everything but the contained actors.
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
@@ -260,11 +248,11 @@ public class AnimatedRadialGroup extends RadialGroup {
      *                          many degrees the widget will span, starting from
      *                          its {@link #startDegreesOffset}.
      */
-    public AnimatedRadialGroup(final Batch batch, final TextureRegion whitePixel,
-                               Skin skin, String style, float minRadius,
-                               float innerRadiusPercent, float startDegreesOffset,
-                               float totalDegreesDrawn) {
-        super(batch, whitePixel, skin, style, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+    public AnimatedPieWidget(final TextureRegion whitePixel,
+                             Skin skin, String style, float minRadius,
+                             float innerRadiusPercent, float startDegreesOffset,
+                             float totalDegreesDrawn) {
+        super(whitePixel, skin, style, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
     }
 
 
@@ -287,7 +275,7 @@ public class AnimatedRadialGroup extends RadialGroup {
             vector2.set(dist, 0);
             vector2.rotate(degreesPerChild*(i + half) + startDegreesOffset);
             modifyActor(actor, degreesPerChild, dist); // overridden by user
-            actor.setPosition(vector2.x+getMaxRadius(), vector2.y+getMaxRadius(), Align.center);
+            actor.setPosition(vector2.x+ getCurrentRadius(), vector2.y+ getCurrentRadius(), Align.center);
 
             /* Updating alpha (fade-in animation). */
             if(isCurrentlyAnimated()) {

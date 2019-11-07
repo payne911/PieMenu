@@ -52,7 +52,7 @@ public class RotatingFillParentWidget extends ApplicationAdapter {
         style.hoverColor = Color.RED;
         style.selectedColor = Color.BLUE;
         style.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("rael_pie.png")));
-        menu = new PieMenu(batch, whitePixel, style, 80, 24f/80, 30);
+        menu = new PieMenu(whitePixel, style, 80, 24f/80, 30);
         menu.setGlobalAlphaMultiplier(.5f);
 
         for(int i=0 ; i<6 ; i++)

@@ -52,7 +52,7 @@ public class ShapeDrawerLimit extends ApplicationAdapter {
         style1.hoverColor = Color.RED;
         style1.selectedColor = Color.BLUE;
         style1.backgroundColor = Color.ORANGE;
-        menu = new PieMenu(batch, whitePixel, style1, 250); // at "5092" it crashes
+        menu = new PieMenu(whitePixel, style1, 250); // at "5092" it crashes
 
         for(int i=0 ; i<5 ; i++)
             menu.addActor(new Label("menu " + i, skin));

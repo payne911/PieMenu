@@ -52,13 +52,13 @@ public class CustomAnimation extends ApplicationAdapter {
         style.downColor = new Color(1,.05f,.05f,.4f);
         style.hoverColor = new Color(.8f,.8f,.8f,.05f);
         style.hoverSelectedColor = new Color(1,.2f,.2f,.55f);
-        pieMenu = new PieMenu(batch, skin.getRegion("white"), style, BASE_RADIUS) {
+        pieMenu = new PieMenu(skin.getRegion("white"), style, BASE_RADIUS) {
             @Override
             public float getActorDistanceFromCenter(Actor actor) {
 
                 /* We want the Labels to be placed closer to the edge than the default value. */
                 return getAmountOfChildren() > 1
-                        ? getMaxRadius() - getChild(0).getWidth()
+                        ? getCurrentRadius() - getChild(0).getWidth()
                         : 0;
             }
 
