@@ -14,7 +14,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 /**
  * A RadialGroup aims at providing the user with a simple way to lay out
  * the contained Actors in a circular fashion. It does not use a
- * {@link ShapeDrawer} in any way.
+ * {@link ShapeDrawer} in any way. Thus, no Style whatsoever is required.
  *
  * @author Jérémi Grenier-Berthiaume (aka "payne")
  */

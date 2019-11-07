@@ -16,6 +16,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
  * A PieWidget aims at providing the user with a simple way to lay out
  * the contained Actors in a circular fashion. It uses a
  * {@link ShapeDrawer} to draw certain elements, when necessary.
+ * Basically, it uses a Style (compared to the {@link RadialGroup}).
  *
  * @author Jérémi Grenier-Berthiaume (aka "payne")
  */
