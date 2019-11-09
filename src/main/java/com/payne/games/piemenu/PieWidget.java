@@ -56,30 +56,30 @@ public class PieWidget extends RadialGroup {
     }
 
     /** Used internally for the shared properties among constructors of RadialWidgets. */
-    protected PieWidget(final TextureRegion whitePixel, float minRadius) {
-        super(minRadius);
+    protected PieWidget(final TextureRegion whitePixel, float preferredRadius) {
+        super(preferredRadius);
         constructorsCommon(whitePixel);
     }
 
     /** Used internally for the shared properties among constructors of RadialWidgets. */
     protected PieWidget(final TextureRegion whitePixel,
-                        float minRadius, float innerRadiusPercent) {
-        super(minRadius, innerRadiusPercent);
+                        float preferredRadius, float innerRadiusPercent) {
+        super(preferredRadius, innerRadiusPercent);
         constructorsCommon(whitePixel);
     }
 
     /** Used internally for the shared properties among constructors of RadialWidgets. */
     protected PieWidget(final TextureRegion whitePixel,
-                        float minRadius, float innerRadiusPercent, float startDegreesOffset) {
-        super(minRadius, innerRadiusPercent, startDegreesOffset);
+                        float preferredRadius, float innerRadiusPercent, float startDegreesOffset) {
+        super(preferredRadius, innerRadiusPercent, startDegreesOffset);
         constructorsCommon(whitePixel);
     }
 
     /** Used internally for the shared properties among constructors of RadialWidgets. */
     protected PieWidget(final TextureRegion whitePixel,
-                        float minRadius, float innerRadiusPercent,
+                        float preferredRadius, float innerRadiusPercent,
                         float startDegreesOffset, float totalDegreesDrawn) {
-        super(minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+        super(preferredRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
         constructorsCommon(whitePixel);
     }
 
@@ -88,11 +88,12 @@ public class PieWidget extends RadialGroup {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      */
     public PieWidget(final TextureRegion whitePixel,
-                     PieWidgetStyle style, float minRadius) {
-        this(whitePixel, minRadius);
+                     PieWidgetStyle style, float preferredRadius) {
+        this(whitePixel, preferredRadius);
         setStyle(style);
     }
 
@@ -101,15 +102,16 @@ public class PieWidget extends RadialGroup {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
     public PieWidget(final TextureRegion whitePixel,
-                     PieWidgetStyle style, float minRadius,
+                     PieWidgetStyle style, float preferredRadius,
                      float innerRadiusPercent) {
-        this(whitePixel, minRadius, innerRadiusPercent);
+        this(whitePixel, preferredRadius, innerRadiusPercent);
         setStyle(style);
     }
 
@@ -118,7 +120,8 @@ public class PieWidget extends RadialGroup {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -126,9 +129,9 @@ public class PieWidget extends RadialGroup {
      *                           how far from the origin the drawing begins.
      */
     public PieWidget(final TextureRegion whitePixel,
-                     PieWidgetStyle style, float minRadius,
+                     PieWidgetStyle style, float preferredRadius,
                      float innerRadiusPercent, float startDegreesOffset) {
-        this(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
+        this(whitePixel, preferredRadius, innerRadiusPercent, startDegreesOffset);
         setStyle(style);
     }
 
@@ -137,7 +140,8 @@ public class PieWidget extends RadialGroup {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -148,9 +152,9 @@ public class PieWidget extends RadialGroup {
      *                          its {@link #startDegreesOffset}.
      */
     public PieWidget(final TextureRegion whitePixel,
-                     PieWidgetStyle style, float minRadius,
+                     PieWidgetStyle style, float preferredRadius,
                      float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
-        this(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+        this(whitePixel, preferredRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
         setStyle(style);
     }
 
@@ -159,11 +163,12 @@ public class PieWidget extends RadialGroup {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      */
     public PieWidget(final TextureRegion whitePixel,
-                     Skin skin, float minRadius) {
-        this(whitePixel, minRadius);
+                     Skin skin, float preferredRadius) {
+        this(whitePixel, preferredRadius);
         setStyle(skin.get(PieWidgetStyle.class));
     }
 
@@ -172,15 +177,16 @@ public class PieWidget extends RadialGroup {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
     public PieWidget(final TextureRegion whitePixel,
-                     Skin skin, float minRadius,
+                     Skin skin, float preferredRadius,
                      float innerRadiusPercent) {
-        this(whitePixel, minRadius, innerRadiusPercent);
+        this(whitePixel, preferredRadius, innerRadiusPercent);
         setStyle(skin.get(PieWidgetStyle.class));
     }
 
@@ -189,7 +195,8 @@ public class PieWidget extends RadialGroup {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -197,9 +204,9 @@ public class PieWidget extends RadialGroup {
      *                           how far from the origin the drawing begins.
      */
     public PieWidget(final TextureRegion whitePixel,
-                     Skin skin, float minRadius,
+                     Skin skin, float preferredRadius,
                      float innerRadiusPercent, float startDegreesOffset) {
-        this(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
+        this(whitePixel, preferredRadius, innerRadiusPercent, startDegreesOffset);
         setStyle(skin.get(PieWidgetStyle.class));
     }
 
@@ -208,7 +215,8 @@ public class PieWidget extends RadialGroup {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -219,9 +227,9 @@ public class PieWidget extends RadialGroup {
      *                          its {@link #startDegreesOffset}.
      */
     public PieWidget(final TextureRegion whitePixel,
-                     Skin skin, float minRadius,
+                     Skin skin, float preferredRadius,
                      float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
-        this(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+        this(whitePixel, preferredRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
         setStyle(skin.get(PieWidgetStyle.class));
     }
 
@@ -231,11 +239,12 @@ public class PieWidget extends RadialGroup {
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      */
     public PieWidget(final TextureRegion whitePixel,
-                     Skin skin, String style, float minRadius) {
-        this(whitePixel, minRadius);
+                     Skin skin, String style, float preferredRadius) {
+        this(whitePixel, preferredRadius);
         setStyle(skin.get(style, PieWidgetStyle.class));
     }
 
@@ -246,15 +255,16 @@ public class PieWidget extends RadialGroup {
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
     public PieWidget(final TextureRegion whitePixel,
-                     Skin skin, String style, float minRadius,
+                     Skin skin, String style, float preferredRadius,
                      float innerRadiusPercent) {
-        this(whitePixel, minRadius, innerRadiusPercent);
+        this(whitePixel, preferredRadius, innerRadiusPercent);
         setStyle(skin.get(style, PieWidgetStyle.class));
     }
 
@@ -264,7 +274,8 @@ public class PieWidget extends RadialGroup {
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -272,9 +283,9 @@ public class PieWidget extends RadialGroup {
      *                           how far from the origin the drawing begins.
      */
     public PieWidget(final TextureRegion whitePixel,
-                     Skin skin, String style, float minRadius,
+                     Skin skin, String style, float preferredRadius,
                      float innerRadiusPercent, float startDegreesOffset) {
-        this(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
+        this(whitePixel, preferredRadius, innerRadiusPercent, startDegreesOffset);
         setStyle(skin.get(style, PieWidgetStyle.class));
     }
 
@@ -284,7 +295,8 @@ public class PieWidget extends RadialGroup {
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -295,9 +307,9 @@ public class PieWidget extends RadialGroup {
      *                          its {@link #startDegreesOffset}.
      */
     public PieWidget(final TextureRegion whitePixel,
-                     Skin skin, String style, float minRadius,
+                     Skin skin, String style, float preferredRadius,
                      float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
-        this(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+        this(whitePixel, preferredRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
         setStyle(skin.get(style, PieWidgetStyle.class));
     }
 
@@ -355,7 +367,7 @@ public class PieWidget extends RadialGroup {
     }
 
     /**
-     * Used to propagate the parent's alpha value to the children.<br>
+     * Used to propagate the parent's alpha value to the children.<br/>
      * Changes the {@link ShapeDrawer}'s color.
      *
      * @param sd the {@link ShapeDrawer} whose color will be changed.
@@ -440,11 +452,11 @@ public class PieWidget extends RadialGroup {
     /**
      * Determines the color of the slice in which resides the Actor designated
      * by the {@code index} parameter. By default, the colors come from the way
-     * you have set up your Style (anything that extends {@link PieWidgetStyle}).<br>
+     * you have set up your Style (anything that extends {@link PieWidgetStyle}).<br/>
      * Override this method when creating your Widget if you want to have control
-     * over those colors.<br>
+     * over those colors.<br/>
      * <b>Do not</b> set the color of the {@link ShapeDrawer} in there: that is
-     * handled internally. Just return the desired Color.<br><br>
+     * handled internally. Just return the desired Color.<br/><br/>
      * Here is an example:
      * <pre>
      * {@code
@@ -496,7 +508,7 @@ public class PieWidget extends RadialGroup {
 
     /**
      * Returns the label's style. Modifying the returned style may not have an
-     * effect until {@link #setStyle(PieWidgetStyle)} is called.<br>
+     * effect until {@link #setStyle(PieWidgetStyle)} is called.<br/>
      * It's probable that your code will look like this (to give you an idea):
      * <pre>
      * {@code
@@ -553,8 +565,8 @@ public class PieWidget extends RadialGroup {
     public static class PieWidgetStyle {
 
         /**
-         * <i>Recommended. Optional.</i><br>
-         * A background that will be drawn behind everything else within the Widget.<br>
+         * <i>Recommended. Optional.</i><br/>
+         * A background that will be drawn behind everything else within the Widget.<br/>
          * Be mindful of the fact that this is unaffected by any of the other
          * variables: it will be resized to fit in the whole region that
          * represents the position, width and height of the widget.
@@ -562,34 +574,34 @@ public class PieWidget extends RadialGroup {
         public Drawable background;
 
         /**
-         * <i>Optional.</i><br>
+         * <i>Optional.</i><br/>
          * A background color that, if provided, will be drawn over the
-         * background image and below everything else.<br>
+         * background image and below everything else.<br/>
          * It mostly acts as a quick set up option if you do not have an image
          * for you background.
          */
         public Color backgroundColor;
 
         /**
-         * <i>Recommended. Optional.</i><br>
-         * The color used by the separating lines between each item.<br>
+         * <i>Recommended. Optional.</i><br/>
+         * The color used by the separating lines between each item.<br/>
          * It is recommended mostly for the case where you are not defining an
-         * {@link #alternateSliceColor}.<br>
+         * {@link #alternateSliceColor}.<br/>
          * If you do not define a {@link #separatorWidth} along with this value,
          * no lines will be visible.
          */
         public Color separatorColor;
 
         /**
-         * <i>Recommended. Optional.</i><br>
-         * The color used to fill the "pie sectors" (i.e. slice) of each item.<br>
+         * <i>Recommended. Optional.</i><br/>
+         * The color used to fill the "pie sectors" (i.e. slice) of each item.<br/>
          * Consider using a fairly low alpha value if you are providing a
          * {@link #background} {@link Drawable}.
          */
         public Color sliceColor;
 
         /**
-         * <i>Optional.</i><br>
+         * <i>Optional.</i><br/>
          * If this color is set, the "pie sectors" will alternate between the
          * {@link #sliceColor} and this one so that their defining region
          * is more easily distinguished.
@@ -597,28 +609,28 @@ public class PieWidget extends RadialGroup {
         public Color alternateSliceColor;
 
         /**
-         * <i>Optional.</i><br>
+         * <i>Optional.</i><br/>
          * The color used for the line that defines the circumference of the
          * Widget. If the Widget is not a complete a circle, this will only be
-         * applied along the partial circumference.<br>
+         * applied along the partial circumference.<br/>
          * If you have set a non-zero {@link #innerRadiusPercent} value, this will
-         * also apply to the "inner radius" of your Widget.<br>
+         * also apply to the "inner radius" of your Widget.<br/>
          * If you do not define a {@link #circumferenceWidth} along with this
          * value, no circumference will be visible.
          */
         public Color circumferenceColor;
 
         /**
-         * <i>Recommended. Optional.</i><br>
-         * Determines how wide the lines that separate each slice will be.<br>
+         * <i>Recommended. Optional.</i><br/>
+         * Determines how wide the lines that separate each slice will be.<br/>
          * If no {@link #separatorColor} was provided along with this value,
          * no lines will be drawn.
          */
         public float separatorWidth;
 
         /**
-         * <i>Optional.</i><br>
-         * Determines how wide the circumference line will be.<br>
+         * <i>Optional.</i><br/>
+         * Determines how wide the circumference line will be.<br/>
          * If no {@link #circumferenceColor} was provided along with this value,
          * no circumference will be drawn.
          */
@@ -672,7 +684,7 @@ public class PieWidget extends RadialGroup {
 
     /**
      * You probably shouldn't be messing with this, but it's provided for
-     * convenience reasons.<br>
+     * convenience reasons.<br/>
      * For example, it's possible that your widget will be <i>so</i> big that
      * the {@link ShapeDrawer} will crash with an Exception while trying to
      * draw it. You would then want to use this setter to provide a brand new

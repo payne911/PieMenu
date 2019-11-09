@@ -3,7 +3,11 @@
 - Introduced `PieWidget` in the new design: the `RadialGroup` now doesn't deal in any way with the `ShapeDrawer`.
 - `getMaxDiameter` has been renamed to `getCurrentDiameter`.
 - `getMaxRadius` has been renamed to `getCurrentRadius`.
+- `minRadius` has been renamed to `preferredRadius`.
 - Introduced a new `individuals` demo (named "RadialButtons") to showcase the new `RadialGroup` class.
+- Hotfix for a `RadialGroup` containing other `PieMenu`.
+- Hotfix on `hit` for when a contained Actor extends beyond the limits of the widget itself.
+- Hotfix on `hit` for the `middleCancel` flag of `PieMenu`.
 
 [3.1.0]
 - Hotfix for "floating" `Group` that contained `RadialGroup`.

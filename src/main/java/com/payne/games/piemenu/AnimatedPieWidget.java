@@ -7,13 +7,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
-
 import java.util.HashMap;
 
 
 /**
- * An animated {@link RadialGroup}.<br>
- * A very simple folding/unfolding animation can be displayed whenever desired.<br>
+ * An animated {@link RadialGroup}.<br/>
+ * A very simple folding/unfolding animation can be displayed whenever desired.<br/>
  * Internally uses a {@link #currentAngle} attribute that is used for transitions
  * between states. Because of that, using {@link #setVisible(boolean)} might not
  * always reveal the Widget: you would have to ensure to call a setter before:
@@ -55,11 +54,12 @@ public class AnimatedPieWidget extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      */
     public AnimatedPieWidget(final TextureRegion whitePixel,
-                             PieWidgetStyle style, float minRadius) {
-        super(whitePixel, style, minRadius);
+                             PieWidgetStyle style, float preferredRadius) {
+        super(whitePixel, style, preferredRadius);
     }
 
     /**
@@ -67,15 +67,16 @@ public class AnimatedPieWidget extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
     public AnimatedPieWidget(final TextureRegion whitePixel,
-                             PieWidgetStyle style, float minRadius,
+                             PieWidgetStyle style, float preferredRadius,
                              float innerRadiusPercent) {
-        super(whitePixel, style, minRadius, innerRadiusPercent);
+        super(whitePixel, style, preferredRadius, innerRadiusPercent);
     }
 
     /**
@@ -83,7 +84,8 @@ public class AnimatedPieWidget extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -91,9 +93,9 @@ public class AnimatedPieWidget extends PieWidget {
      *                           how far from the origin the drawing begins.
      */
     public AnimatedPieWidget(final TextureRegion whitePixel,
-                             PieWidgetStyle style, float minRadius,
+                             PieWidgetStyle style, float preferredRadius,
                              float innerRadiusPercent, float startDegreesOffset) {
-        super(whitePixel, style, minRadius, innerRadiusPercent, startDegreesOffset);
+        super(whitePixel, style, preferredRadius, innerRadiusPercent, startDegreesOffset);
     }
 
     /**
@@ -101,7 +103,8 @@ public class AnimatedPieWidget extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -112,9 +115,9 @@ public class AnimatedPieWidget extends PieWidget {
      *                          its {@link #startDegreesOffset}.
      */
     public AnimatedPieWidget(final TextureRegion whitePixel,
-                             PieWidgetStyle style, float minRadius,
+                             PieWidgetStyle style, float preferredRadius,
                              float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
-        super(whitePixel, style, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+        super(whitePixel, style, preferredRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
     }
 
     /**
@@ -122,11 +125,12 @@ public class AnimatedPieWidget extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      */
     public AnimatedPieWidget(final TextureRegion whitePixel,
-                             Skin skin, float minRadius) {
-        super(whitePixel, skin, minRadius);
+                             Skin skin, float preferredRadius) {
+        super(whitePixel, skin, preferredRadius);
     }
 
     /**
@@ -134,14 +138,15 @@ public class AnimatedPieWidget extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
     public AnimatedPieWidget(final TextureRegion whitePixel,
-                             Skin skin, float minRadius, float innerRadiusPercent) {
-        super(whitePixel, skin, minRadius, innerRadiusPercent);
+                             Skin skin, float preferredRadius, float innerRadiusPercent) {
+        super(whitePixel, skin, preferredRadius, innerRadiusPercent);
     }
 
     /**
@@ -149,7 +154,8 @@ public class AnimatedPieWidget extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -157,9 +163,9 @@ public class AnimatedPieWidget extends PieWidget {
      *                           how far from the origin the drawing begins.
      */
     public AnimatedPieWidget(final TextureRegion whitePixel,
-                             Skin skin, float minRadius, float innerRadiusPercent,
+                             Skin skin, float preferredRadius, float innerRadiusPercent,
                              float startDegreesOffset) {
-        super(whitePixel, skin, minRadius, innerRadiusPercent, startDegreesOffset);
+        super(whitePixel, skin, preferredRadius, innerRadiusPercent, startDegreesOffset);
     }
 
     /**
@@ -167,7 +173,8 @@ public class AnimatedPieWidget extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -178,9 +185,9 @@ public class AnimatedPieWidget extends PieWidget {
      *                          its {@link #startDegreesOffset}.
      */
     public AnimatedPieWidget(final TextureRegion whitePixel,
-                             Skin skin, float minRadius, float innerRadiusPercent,
+                             Skin skin, float preferredRadius, float innerRadiusPercent,
                              float startDegreesOffset, float totalDegreesDrawn) {
-        super(whitePixel, skin, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+        super(whitePixel, skin, preferredRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
     }
 
     /**
@@ -189,11 +196,12 @@ public class AnimatedPieWidget extends PieWidget {
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      */
     public AnimatedPieWidget(final TextureRegion whitePixel,
-                             Skin skin, String style, float minRadius) {
-        super(whitePixel, skin, style, minRadius);
+                             Skin skin, String style, float preferredRadius) {
+        super(whitePixel, skin, style, preferredRadius);
     }
 
     /**
@@ -202,15 +210,16 @@ public class AnimatedPieWidget extends PieWidget {
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
     public AnimatedPieWidget(final TextureRegion whitePixel,
-                             Skin skin, String style, float minRadius,
+                             Skin skin, String style, float preferredRadius,
                              float innerRadiusPercent) {
-        super(whitePixel, skin, style, minRadius, innerRadiusPercent);
+        super(whitePixel, skin, style, preferredRadius, innerRadiusPercent);
     }
 
     /**
@@ -219,7 +228,8 @@ public class AnimatedPieWidget extends PieWidget {
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -227,9 +237,9 @@ public class AnimatedPieWidget extends PieWidget {
      *                           how far from the origin the drawing begins.
      */
     public AnimatedPieWidget(final TextureRegion whitePixel,
-                             Skin skin, String style, float minRadius,
+                             Skin skin, String style, float preferredRadius,
                              float innerRadiusPercent, float startDegreesOffset) {
-        super(whitePixel, skin, style, minRadius, innerRadiusPercent, startDegreesOffset);
+        super(whitePixel, skin, style, preferredRadius, innerRadiusPercent, startDegreesOffset);
     }
 
     /**
@@ -238,7 +248,8 @@ public class AnimatedPieWidget extends PieWidget {
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -249,10 +260,10 @@ public class AnimatedPieWidget extends PieWidget {
      *                          its {@link #startDegreesOffset}.
      */
     public AnimatedPieWidget(final TextureRegion whitePixel,
-                             Skin skin, String style, float minRadius,
+                             Skin skin, String style, float preferredRadius,
                              float innerRadiusPercent, float startDegreesOffset,
                              float totalDegreesDrawn) {
-        super(whitePixel, skin, style, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+        super(whitePixel, skin, style, preferredRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
     }
 
 
@@ -342,8 +353,8 @@ public class AnimatedPieWidget extends PieWidget {
     }
 
     /**
-     * Transitions from the current state to the other.<br>
-     * If the widget is opening, it will now be closing, for example.<br>
+     * Transitions from the current state to the other.<br/>
+     * If the widget is opening, it will now be closing, for example.<br/>
      * Visibility plays a role in determining the current state (for example,
      * if the widget is not visible, it is assumed that it's as if it was closed).
      *
@@ -358,7 +369,7 @@ public class AnimatedPieWidget extends PieWidget {
     }
 
     /**
-     * @return {@code true} if the widget is being closed or opened.<br>
+     * @return {@code true} if the widget is being closed or opened.<br/>
      *         {@code false} otherwise.
      */
     public boolean isCurrentlyAnimated() {
@@ -428,7 +439,7 @@ public class AnimatedPieWidget extends PieWidget {
 
     /**
      * @return {@code true} only when the Widget is currently running an opening
-     *         animation.<br>
+     *         animation.<br/>
      *         To be more precise, for example: when an opening animation ends,
      *         this returns {@code false}
      */
@@ -438,7 +449,7 @@ public class AnimatedPieWidget extends PieWidget {
 
     /**
      * @return {@code true} only when the Widget is currently running a closing
-     *         animation.<br>
+     *         animation.<br/>
      *         To be more precise, for example: when a closing animation ends,
      *         this returns {@code false}
      */
@@ -447,7 +458,7 @@ public class AnimatedPieWidget extends PieWidget {
     }
 
     /**
-     * After a closing animation, its value is equal to 0.<br>
+     * After a closing animation, its value is equal to 0.<br/>
      * After an opening animation, its value is equal to
      * {@code style.totalDegreesDrawn}.
      *
@@ -463,13 +474,13 @@ public class AnimatedPieWidget extends PieWidget {
 
     /**
      * Use this if you want to manipulate the internal state of how much of the
-     * widget should be drawn.<br>
-     * After a closing animation, its value is equal to 0.<br>
+     * widget should be drawn.<br/>
+     * After a closing animation, its value is equal to 0.<br/>
      * After an opening animation, its value is equal to
-     * {@code style.totalDegreesDrawn}.<br>
+     * {@code style.totalDegreesDrawn}.<br/>
      * This means that the accepted values are from 0 to style.totalDegreesDrawn,
-     * inclusively.<br>
-     * <br>
+     * inclusively.<br/>
+     * <br/>
      * It is recommended to use
      * <pre>
      * {@code

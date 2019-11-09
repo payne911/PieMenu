@@ -15,7 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -187,7 +191,7 @@ public class Demonstration extends ApplicationAdapter {
      * To be used to get the user to transition directly into
      * {@link InputListener#touchDragged(InputEvent, float, float, int)}
      * as if he had triggered
-     * {@link InputListener#touchDown(InputEvent, float, float, int, int)}.<br>
+     * {@link InputListener#touchDown(InputEvent, float, float, int, int)}.<br/>
      * I am not certain this is the recommended way of doing this, but for the
      * purposes of this demonstration, it works!
      *

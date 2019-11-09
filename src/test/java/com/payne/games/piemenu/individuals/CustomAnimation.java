@@ -69,7 +69,7 @@ public class CustomAnimation extends ApplicationAdapter {
                 /* Our custom animation! */
                 time += delta*5;
                 pieMenu.setStartDegreesOffset((time * 10) % 360);
-                pieMenu.setMinRadius(MathUtils.sin(time) * 20 + BASE_RADIUS);
+                pieMenu.setPreferredRadius(MathUtils.sin(time) * 20 + BASE_RADIUS);
 //                pieMenu.setInnerRadius(Math.abs(MathUtils.sin(time)/(float)Math.PI +.1f));
                 pieMenu.centerOnScreen();
             }

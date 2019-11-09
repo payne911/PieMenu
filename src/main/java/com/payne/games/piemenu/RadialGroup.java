@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.Align;
@@ -21,25 +22,25 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 public class RadialGroup extends WidgetGroup {
 
     /**
-     * <i>Required.</i><br>
+     * <i>Required.</i><br/>
      * The radius that defines how big the Widget will be (in terms of scene2d,
-     * this is actually half the "minimal size" this widget will ever take).<br>
+     * this is actually half the "minimal size" this widget will ever take).<br/>
      * It must be bigger than {@value #BUFFER}.
      */
-    protected float minRadius;
+    protected float preferredRadius;
 
     /**
-     * <i>Optional.</i><br>
+     * <i>Optional.</i><br/>
      * If provided, the {@link PieWidgetStyle#sliceColor} will only fill
-     * the region defined between the {@link #minRadius} and its percentage
-     * value coming from this.<br>
-     * For example, having a {@link #minRadius} of 80 and a
+     * the region defined between the {@link #preferredRadius} and its percentage
+     * value coming from this.<br/>
+     * For example, having a {@link #preferredRadius} of 80 and a
      * {@link #innerRadiusPercent} of 0.5 will mean that the inner-radius will
-     * stand at 40 pixels from the center.<br>
+     * stand at 40 pixels from the center.<br/>
      * A hole will be left into the middle of the Widget, like a doughnut, and
      * if a {@link PieWidgetStyle#background} or a
      * {@link PieWidgetStyle#backgroundColor} was provided, it will be visible
-     * in the middle.<br>
+     * in the middle.<br/>
      * Actors inserted into the Widget are by default placed in the middle
      * between the inner-radius and the radius.
      *
@@ -48,11 +49,11 @@ public class RadialGroup extends WidgetGroup {
     protected float innerRadiusPercent;
 
     /**
-     * <i>Optional.</i><br>
+     * <i>Optional.</i><br/>
      * Considers that angles start at 0 along the x-axis and increment up
-     * to 360 in a counter-clockwise fashion.<br>
+     * to 360 in a counter-clockwise fashion.<br/>
      * Defines how far from that origin the {@link #totalDegreesDrawn} will
-     * be drawn.<br>
+     * be drawn.<br/>
      * For example, if {@code startDegreesOffset = 90} and
      * {@code totalDegreesDrawn = 180}, you would obtain the left half of a
      * circle. All the children would be spread within that half-circle evenly.
@@ -60,10 +61,10 @@ public class RadialGroup extends WidgetGroup {
     protected float startDegreesOffset;
 
     /**
-     * <i>Required.</i><br>
-     * If not defined, will be initialized to 360 by default.<br>
+     * <i>Required.</i><br/>
+     * If not defined, will be initialized to 360 by default.<br/>
      * Determines the total amount of degrees into which the contained
-     * Actors will be spread.<br>
+     * Actors will be spread.<br/>
      * For example, if {@code startDegreesOffset = 0} and
      * {@code totalDegreesDrawn = 180}, you would obtain the top half of a
      * circle.
@@ -93,46 +94,50 @@ public class RadialGroup extends WidgetGroup {
     /**
      * See {@link RadialGroup} for a description.
      *
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      */
-    public RadialGroup(float minRadius) {
-        setMinRadius(minRadius);
+    public RadialGroup(float preferredRadius) {
+        setPreferredRadius(preferredRadius);
         constructorsCommon();
     }
 
     /**
      * See {@link RadialGroup} for a description.
      *
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
-    public RadialGroup(float minRadius, float innerRadiusPercent) {
-        this(minRadius);
+    public RadialGroup(float preferredRadius, float innerRadiusPercent) {
+        this(preferredRadius);
         setInnerRadiusPercent(innerRadiusPercent);
     }
 
     /**
      * See {@link RadialGroup} for a description.
      *
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
-    public RadialGroup(float minRadius, float innerRadiusPercent,
+    public RadialGroup(float preferredRadius, float innerRadiusPercent,
                        float startDegreesOffset) {
-        this(minRadius, innerRadiusPercent);
+        this(preferredRadius, innerRadiusPercent);
         setStartDegreesOffset(startDegreesOffset);
     }
 
     /**
      * See {@link RadialGroup} for a description.
      *
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -142,9 +147,9 @@ public class RadialGroup extends WidgetGroup {
      *                          many degrees the widget will span, starting from
      *                          its {@link #startDegreesOffset}.
      */
-    public RadialGroup(float minRadius, float innerRadiusPercent,
+    public RadialGroup(float preferredRadius, float innerRadiusPercent,
                        float startDegreesOffset, float totalDegreesDrawn) {
-        this(minRadius, innerRadiusPercent, startDegreesOffset);
+        this(preferredRadius, innerRadiusPercent, startDegreesOffset);
         setTotalDegreesDrawn(totalDegreesDrawn);
     }
 
@@ -158,8 +163,8 @@ public class RadialGroup extends WidgetGroup {
 
 
     /**
-     * The current diameter of the widget.<br>
-     * This might not be twice the {@link #minRadius}.
+     * The current diameter of the widget.<br/>
+     * This might not be twice the {@link #preferredRadius}.
      *
      * @return {@code Math.min(getWidth(), getHeight())}
      */
@@ -168,8 +173,8 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * The current radius of the widget.<br>
-     * This might not be {@link #minRadius}.
+     * The current radius of the widget.<br/>
+     * This might not be {@link #preferredRadius}.
      *
      * @return {@code Math.min(getWidth(), getHeight()) / 2}
      */
@@ -189,12 +194,12 @@ public class RadialGroup extends WidgetGroup {
 
     @Override
     public float getMinWidth() {
-        return minRadius * 2;
+        return preferredRadius * 2;
     }
 
     @Override
     public float getMinHeight() {
-        return minRadius * 2;
+        return preferredRadius * 2;
     }
 
     @Override
@@ -216,11 +221,11 @@ public class RadialGroup extends WidgetGroup {
 
     /**
      * Determines how far from the center the contained child Actors should be.
-     * By default, the value is {@code (getMaxRadius() + getInnerRadiusLength())/2}.<br>
+     * By default, the value is {@code (getMaxRadius() + getInnerRadiusLength())/2}.<br/>
      * Override this method when creating your Widget if you want to have control
-     * on where the Actors get placed.<br>
+     * on where the Actors get placed.<br/>
      * <b>Do not</b> position the Actor directly in this method: that is handled
-     * internally. Just return the desired distance from the center.<br><br>
+     * internally. Just return the desired distance from the center.<br/><br/>
      * Here is an example:
      * <pre>
      * {@code
@@ -246,11 +251,11 @@ public class RadialGroup extends WidgetGroup {
 
     /**
      * Used to apply changes to an Actor according to certain rules. By
-     * default, there are no changes applied.<br>
+     * default, there are no changes applied.<br/>
      * Override this method when creating your Widget if you want to have control
      * on how to resize, rotate, etc., the Actors that get placed within your
-     * Widget.<br>
-     * Trying to change the position of the Actor will not work.<br><br>
+     * Widget.<br/>
+     * Trying to change the position of the Actor will not work.<br/><br/>
      * Here is an example:
      * <pre>
      * {@code
@@ -271,7 +276,7 @@ public class RadialGroup extends WidgetGroup {
      *                                positioned from the center of the widget.
      */
     public void modifyActor(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
-
+        // todo: possibly add a default resize-value for `Image` instances here?
     }
 
     /**
@@ -279,7 +284,7 @@ public class RadialGroup extends WidgetGroup {
      * according to the input parameters. Doubling the returned value would give
      * you the size of a contained Actor which would roughly fill most of its
      * sector, or possibly overflow slightly. It is suggested to adjust slightly
-     * the returned value by multiplying it with a factor of your choice.<br>
+     * the returned value by multiplying it with a factor of your choice.<br/>
      * The return value's is calculated this way:
      * <pre>
      * {@code
@@ -391,7 +396,7 @@ public class RadialGroup extends WidgetGroup {
     public int findChildIndexAtStage(float x, float y) {
         int childIndex = findIndexFromAngle(angleAtStage(x,y));
         stageToLocalCoordinates(vector2.set(x,y));
-        return isWithinRadii(vector2.x - getCurrentRadius(), vector2.y - getCurrentRadius())
+        return isWithinRadii(vector2.x - getWidth()/2, vector2.y - getHeight()/2)
                 ? childIndex
                 : getAmountOfChildren(); // "getAmountOfChildren" is equivalent to "invalid"
     }
@@ -424,8 +429,26 @@ public class RadialGroup extends WidgetGroup {
         return normalizeAngle(
                 MathUtils.radiansToDegrees
                         * MathUtils.atan2(y - vector2.y, x - vector2.x)
-                - getRotation() - startDegreesOffset
+                - getTotalRotation() - startDegreesOffset
         );
+    }
+
+    /**
+     * To obtain the rotation value, including the rotation induced
+     * from the parent Groups.<br/>
+     * That is because calling {@link #getRotation()} in scene2d
+     * only returns the rotation value applied directly to the Actor.
+     * If a {@link Group} including this Actor is rotated, then even
+     * though the Actor appears rotated, the internal value will be 0.
+     *
+     * @return The total rotation value.
+     */
+    protected float getTotalRotation() {
+        float rotation = super.getRotation();
+        Group parent = getParent();
+        if(parent == null)
+            return rotation;
+        return rotation + parent.getRotation();
     }
 
     /**
@@ -441,7 +464,7 @@ public class RadialGroup extends WidgetGroup {
     /**
      * Checks whether or not the input coordinate is in between (inclusively)
      * the inner-radius and the current radius of the widget (which can
-     * be bigger than {@link #minRadius} if you use {@link #setFillParent(boolean)},
+     * be bigger than {@link #preferredRadius} if you use {@link #setFillParent(boolean)},
      * for example).
      *
      * @param x x-coordinate relative to the center of the widget's
@@ -479,7 +502,7 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * Centers the Widget on the center point of the provided Actor.<br>
+     * Centers the Widget on the center point of the provided Actor.<br/>
      * Will not follow this Actor: it just sets the position of the center of
      * the Widget to the center position of that Actor at that specific time.
      *
@@ -542,7 +565,7 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * This will globally change the alpha value of the widget.<br>
+     * This will globally change the alpha value of the widget.<br/>
      * It defaults to 1 (completely opaque).
      *
      * @param globalAlphaMultiplier this value is multiplied to all of the alpha
@@ -555,32 +578,35 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * @see #minRadius
+     * @see #preferredRadius
      * @return The radius that defines how big the Widget will be.
      */
-    public float getMinRadius() {
-        return minRadius;
+    public float getPreferredRadius() {
+        return preferredRadius;
     }
 
     /**
-     * <i>Required.</i><br>
-     * The radius that defines how big the Widget will be.<br>
-     * This is used as the minimal radius value if anything such as a
+     * <i>Required.</i><br/>
+     * The radius that defines how big the Widget will be.<br/>
+     * This is generally used as the minimal radius value if anything such as a
      * {@link com.badlogic.gdx.scenes.scene2d.ui.Table} ends up modifying the
      * size of the widget. {@link #setFillParent(boolean)} will also end up
-     * using that radius value as a minimum.
+     * using that radius value as a minimum.<br/>
+     * However, be aware that this value is not respected by the use of
+     * {@link #setWidth(float)} or {@link #setHeight(float)}. In other words, it
+     * is possible to set the size of your widget to a smaller value.
      *
-     * @param minRadius The value must be bigger than {@value #BUFFER}.
+     * @param preferredRadius The value must be bigger than {@value #BUFFER}.
      *                  If the value is smaller than the current
      *                  {@link #innerRadiusPercent} then the
      *                  {@link #innerRadiusPercent} is set to a smaller value.
      */
-    public void setMinRadius(float minRadius) {
-        if(minRadius < BUFFER)
+    public void setPreferredRadius(float preferredRadius) {
+        if(preferredRadius < BUFFER)
             throw new IllegalArgumentException("radius cannot be smaller than " + BUFFER + ".");
-        if(minRadius != lastRadius) {
-            this.minRadius = minRadius;
-            lastRadius = minRadius;
+        if(preferredRadius != lastRadius) {
+            this.preferredRadius = preferredRadius;
+            lastRadius = preferredRadius;
 
             setSize(getMinWidth(), getMinHeight()); // for orphan widgets (no parent)
 
@@ -609,20 +635,20 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * <i>Optional.</i><br>
+     * <i>Optional.</i><br/>
      * If provided, the {@link PieWidgetStyle#sliceColor} will only fill
-     * the slice defined between the {@link #minRadius} and its percentage
+     * the slice defined between the {@link #preferredRadius} and its percentage
      * value coming from this. A hole will be left into the middle of the Widget,
      * like a doughnut, and if a {@link PieWidgetStyle#background} or a
      * {@link PieWidgetStyle#backgroundColor} was provided, it will be visible
-     * in the middle.<br>
+     * in the middle.<br/>
      * Actors inserted into the Widget are placed in the middle between the
-     * innerRadius and the {@link #minRadius}. That is only the default behavior,
+     * innerRadius and the {@link #preferredRadius}. That is only the default behavior,
      * if you want to change that, see {@link #getActorDistanceFromCenter(Actor)}.
      *
      * @param innerRadiusPercent How far from the center do the slices start
      *                           being drawn, in terms of percentage of the
-     *                           {@link #minRadius}.<br>
+     *                           {@link #preferredRadius}.<br/>
      *                           The value must be between 0 (inclusive)
      *                           and 1 (exclusive).
      */
@@ -647,11 +673,11 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * <i>Optional.</i><br>
+     * <i>Optional.</i><br/>
      * Considers that angles start at 0 along the x-axis and increment up
-     * to 360 in a counter-clockwise fashion.<br>
+     * to 360 in a counter-clockwise fashion.<br/>
      * Defines how far from that origin the {@link #totalDegreesDrawn} will
-     * be drawn.<br>
+     * be drawn.<br/>
      * For example, if {@code startDegreesOffset = 90} and
      * {@code totalDegreesDrawn = 180}, you would obtain the left half of a
      * circle. All the children would be spread within that half-circle evenly.
@@ -678,10 +704,10 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * <i>Required.</i><br>
-     * If not defined, will be initialized to 360 by default.<br>
+     * <i>Required.</i><br/>
+     * If not defined, will be initialized to 360 by default.<br/>
      * Determines the total amount of degrees into which the contained
-     * Actors will be spread.<br>
+     * Actors will be spread.<br/>
      * For example, if {@code startDegreesOffset = 0} and
      * {@code totalDegreesDrawn = 180}, you would obtain the top half of a
      * circle.

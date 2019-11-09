@@ -4,7 +4,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -20,7 +25,7 @@ import com.badlogic.gdx.utils.Pools;
 public class PieMenu extends PieWidget {
 
     /**
-     * This listener controls the interactions with the {@link PieMenu}.<br>
+     * This listener controls the interactions with the {@link PieMenu}.<br/>
      * It defaults to being a {@link PieMenuListener} but can be changed
      * to your own implementation by calling {@link #setPieMenuListener(InputListener)}.
      */
@@ -28,7 +33,7 @@ public class PieMenu extends PieWidget {
 
     /**
      * The index that is used as a fallback value whenever a processed
-     * user-input does not map to a valid child index value.<br>
+     * user-input does not map to a valid child index value.<br/>
      * This value can be negative, if you want nothing to be the default.
      */
     private int defaultIndex = -1;
@@ -57,9 +62,9 @@ public class PieMenu extends PieWidget {
 
     /**
      * Determines whether or not releasing a click within the inner-radius
-     * should cancel the selection.<br>
+     * should cancel the selection.<br/>
      * If {@code true}, a click released in the middle will trigger a selection
-     * of the {@link #defaultIndex}.<br>
+     * of the {@link #defaultIndex}.<br/>
      * Only applies for the case where you have activated the
      * {@link #infiniteSelectionRange} flag.
      */
@@ -107,11 +112,12 @@ public class PieMenu extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      */
     public PieMenu(final TextureRegion whitePixel,
-                   PieMenuStyle style, float minRadius) {
-        super(whitePixel, minRadius);
+                   PieMenuStyle style, float preferredRadius) {
+        super(whitePixel, preferredRadius);
         setStyle(style);
     }
 
@@ -120,15 +126,16 @@ public class PieMenu extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
     public PieMenu(final TextureRegion whitePixel,
-                   PieMenuStyle style, float minRadius,
+                   PieMenuStyle style, float preferredRadius,
                    float innerRadiusPercent) {
-        super(whitePixel, minRadius, innerRadiusPercent);
+        super(whitePixel, preferredRadius, innerRadiusPercent);
         setStyle(style);
     }
 
@@ -137,7 +144,8 @@ public class PieMenu extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -145,9 +153,9 @@ public class PieMenu extends PieWidget {
      *                           how far from the origin the drawing begins.
      */
     public PieMenu(final TextureRegion whitePixel,
-                   PieMenuStyle style, float minRadius,
+                   PieMenuStyle style, float preferredRadius,
                    float innerRadiusPercent, float startDegreesOffset) {
-        super(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
+        super(whitePixel, preferredRadius, innerRadiusPercent, startDegreesOffset);
         setStyle(style);
     }
 
@@ -156,7 +164,8 @@ public class PieMenu extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param style defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -167,9 +176,9 @@ public class PieMenu extends PieWidget {
      *                          its {@link #startDegreesOffset}.
      */
     public PieMenu(final TextureRegion whitePixel,
-                   PieMenuStyle style, float minRadius,
+                   PieMenuStyle style, float preferredRadius,
                    float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
-        super(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+        super(whitePixel, preferredRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
         setStyle(style);
     }
 
@@ -178,11 +187,12 @@ public class PieMenu extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      */
     public PieMenu(final TextureRegion whitePixel,
-                   Skin skin, float minRadius) {
-        super(whitePixel, minRadius);
+                   Skin skin, float preferredRadius) {
+        super(whitePixel, preferredRadius);
         setStyle(skin.get(PieMenuStyle.class));
     }
 
@@ -191,15 +201,16 @@ public class PieMenu extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
     public PieMenu(final TextureRegion whitePixel,
-                   Skin skin, float minRadius,
+                   Skin skin, float preferredRadius,
                    float innerRadiusPercent) {
-        super(whitePixel, minRadius, innerRadiusPercent);
+        super(whitePixel, preferredRadius, innerRadiusPercent);
         setStyle(skin.get(PieMenuStyle.class));
     }
 
@@ -208,7 +219,8 @@ public class PieMenu extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -216,9 +228,9 @@ public class PieMenu extends PieWidget {
      *                           how far from the origin the drawing begins.
      */
     public PieMenu(final TextureRegion whitePixel,
-                   Skin skin, float minRadius,
+                   Skin skin, float preferredRadius,
                    float innerRadiusPercent, float startDegreesOffset) {
-        super(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
+        super(whitePixel, preferredRadius, innerRadiusPercent, startDegreesOffset);
         setStyle(skin.get(PieMenuStyle.class));
     }
 
@@ -227,7 +239,8 @@ public class PieMenu extends PieWidget {
      *
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -238,9 +251,9 @@ public class PieMenu extends PieWidget {
      *                          its {@link #startDegreesOffset}.
      */
     public PieMenu(final TextureRegion whitePixel,
-                   Skin skin, float minRadius,
+                   Skin skin, float preferredRadius,
                    float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
-        super(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+        super(whitePixel, preferredRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
         setStyle(skin.get(PieMenuStyle.class));
     }
 
@@ -250,11 +263,12 @@ public class PieMenu extends PieWidget {
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the
+     *                        size of the widget.
      */
     public PieMenu(final TextureRegion whitePixel,
-                   Skin skin, String style, float minRadius) {
-        super(whitePixel, minRadius);
+                   Skin skin, String style, float preferredRadius) {
+        super(whitePixel, preferredRadius);
         setStyle(skin.get(style, PieMenuStyle.class));
     }
 
@@ -264,15 +278,16 @@ public class PieMenu extends PieWidget {
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
     public PieMenu(final TextureRegion whitePixel,
-                   Skin skin, String style, float minRadius,
+                   Skin skin, String style, float preferredRadius,
                    float innerRadiusPercent) {
-        super(whitePixel, minRadius, innerRadiusPercent);
+        super(whitePixel, preferredRadius, innerRadiusPercent);
         setStyle(skin.get(style, PieMenuStyle.class));
     }
 
@@ -282,7 +297,8 @@ public class PieMenu extends PieWidget {
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -290,9 +306,9 @@ public class PieMenu extends PieWidget {
      *                           how far from the origin the drawing begins.
      */
     public PieMenu(final TextureRegion whitePixel,
-                   Skin skin, String style, float minRadius,
+                   Skin skin, String style, float preferredRadius,
                    float innerRadiusPercent, float startDegreesOffset) {
-        super(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset);
+        super(whitePixel, preferredRadius, innerRadiusPercent, startDegreesOffset);
         setStyle(skin.get(style, PieMenuStyle.class));
     }
 
@@ -302,7 +318,8 @@ public class PieMenu extends PieWidget {
      * @param whitePixel a 1x1 white pixel.
      * @param skin defines the way the widget looks like.
      * @param style the name of the style to be extracted from the skin.
-     * @param minRadius the {@link #minRadius} that defines the size of the widget.
+     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
@@ -313,9 +330,9 @@ public class PieMenu extends PieWidget {
      *                          its {@link #startDegreesOffset}.
      */
     public PieMenu(final TextureRegion whitePixel,
-                   Skin skin, String style, float minRadius,
+                   Skin skin, String style, float preferredRadius,
                    float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
-        super(whitePixel, minRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+        super(whitePixel, preferredRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
         setStyle(skin.get(style, PieMenuStyle.class));
     }
 
@@ -333,7 +350,7 @@ public class PieMenu extends PieWidget {
 
 
     /**
-     * Resets selected and highlighted child.<br>
+     * Resets selected and highlighted child.<br/>
      * Does <i>not</i> trigger the
      * {@link ChangeListener#changed(ChangeListener.ChangeEvent, Actor)},
      * nor the {@link PieMenuCallbacks#onHighlightChange(int)}
@@ -345,7 +362,7 @@ public class PieMenu extends PieWidget {
     }
 
     /**
-     * Deselects any hovered index.<br>
+     * Deselects any hovered index.<br/>
      * Does <i>not</i> trigger the
      * {@link PieMenuCallbacks#onHoverChange(int)}
      * (if you had set it up).
@@ -404,8 +421,9 @@ public class PieMenu extends PieWidget {
      * @param touchable if {@code true}, hit detection will respect the
      *                  {@link #setTouchable(Touchable) touchability}.
      * @return deepest child's hit at (x,y). Else, the widget itself if it's
-     *         the background. Else the widget itself if with infinite range.
-     *         Else null.
+     *         the background. Else {@code null} if {@link #middleCancel} is
+     *         {@code true} and within the {@link #getInnerRadiusLength()}.
+     *         Else the widget itself if with infinite range. Else {@code null}.
      */
     @Override
     public Actor hit(float x, float y, boolean touchable) {
@@ -415,6 +433,8 @@ public class PieMenu extends PieWidget {
         localToStageCoordinates(vector2.set(x,y));
         int childIndex = findChildIndexAtStage(vector2.x,vector2.y);
         if (isValidIndex(childIndex)) {
+            if(middleCancel && isWithinInnerRadius(x + getWidth()/2, y + getHeight()/2))
+                return null;
             Actor child = getChildren().get(childIndex);
             if(child.getTouchable() == Touchable.disabled)
                 return this;
@@ -492,9 +512,9 @@ public class PieMenu extends PieWidget {
     }
 
     /**
-     * Ensures the input values for the given style are valid.<br>
+     * Ensures the input values for the given style are valid.<br/>
      * Only looks at the properties related to the current class, and doesn't
-     * look back at parent's properties.<br>
+     * look back at parent's properties.<br/>
      * Generally shouldn't be called, aside from within the
      * {@link #setStyle(PieMenuStyle)} method which itself takes care of calling
      * the parent's method.
@@ -521,8 +541,8 @@ public class PieMenu extends PieWidget {
     public static class PieMenuStyle extends PieWidgetStyle {
 
         /**
-         * <i>Recommended. Optional.</i><br>
-         * Defines the color of the slice which is currently selected.<br>
+         * <i>Recommended. Optional.</i><br/>
+         * Defines the color of the slice which is currently selected.<br/>
          * If you have no {@link #downColor} set, this color will also be used
          * for when the user is pressing down on a slice and hasn't released
          * the press yet.
@@ -533,13 +553,13 @@ public class PieMenu extends PieWidget {
         public Color selectedColor;
 
         /**
-         * <i>Recommended. Optional.</i><br>
+         * <i>Recommended. Optional.</i><br/>
          * Defines the color of the slice which is currently highlighted
-         * (i.e. pressed).<br>
+         * (i.e. pressed).<br/>
          * Highlights come from dragging the mouse over the {@link PieMenu} while
          * pressing down a mouse-button. The mobile-equivalent is of having your
          * finger pressing down on the PieMenu and dragging it around without
-         * releasing.<br>
+         * releasing.<br/>
          * If you are setting a {@link #selectedColor} value, then you do not
          * need to bother with this one unless you want those colors to be
          * different.
@@ -550,8 +570,8 @@ public class PieMenu extends PieWidget {
         public Color downColor;
 
         /**
-         * <i>Recommended. Optional.</i><br>
-         * Defines the color of the slice which is currently hovered by the mouse.<br>
+         * <i>Recommended. Optional.</i><br/>
+         * Defines the color of the slice which is currently hovered by the mouse.<br/>
          * Only works for the desktops.
          *
          * @see #selectionButton
@@ -560,9 +580,9 @@ public class PieMenu extends PieWidget {
         public Color hoverColor;
 
         /**
-         * <i>Recommended. Optional.</i><br>
+         * <i>Recommended. Optional.</i><br/>
          * Defines the color of the slice which is currently hovered by the mouse
-         * when this slice was also a highlighted slice.<br>
+         * when this slice was also a highlighted slice.<br/>
          * Both {@link #hoverColor} and {@link #selectedColor}
          * must be defined for this attribute to be allowed to be set.
          */
@@ -605,9 +625,9 @@ public class PieMenu extends PieWidget {
 
     /**
      * Selects the child at the given index. Triggers the
-     * {{@link ChangeListener#changed(ChangeListener.ChangeEvent, Actor)}}.<br>
+     * {{@link ChangeListener#changed(ChangeListener.ChangeEvent, Actor)}}.<br/>
      * Indices are based on the order which was used to add child Actors to the
-     * Widget. First one added is at index 0, of course, and so on.<br>
+     * Widget. First one added is at index 0, of course, and so on.<br/>
      * It would be good practice to use {@link #isValidIndex(int)} to ensure that
      * the index provided to this method is valid.
      *
@@ -646,11 +666,11 @@ public class PieMenu extends PieWidget {
     /**
      * Called to check if the candidate slice is different from the previous
      * one. If it is, {@link PieMenuCallbacks#onHighlightChange(int)}
-     * is called.<br>
+     * is called.<br/>
      * Indices are based on the order which was used to add child Actors to the
-     * Widget. First one added is at index 0, of course, and so on.<br>
+     * Widget. First one added is at index 0, of course, and so on.<br/>
      * It would be good practice to use {@link #isValidIndex(int)} to ensure that
-     * the index provided to this method is valid.<br>
+     * the index provided to this method is valid.<br/>
      * If the input index is the same as the index of the currently highlighted
      * item, nothing will happen.
      *
@@ -668,9 +688,9 @@ public class PieMenu extends PieWidget {
     /**
      * Called to find the slice that is to be interacted with at the
      * given coordinate. If there is one, checks if the highlighted item should
-     * be highlighted.<br>
+     * be highlighted.<br/>
      * If it is a different index,
-     * {@link PieMenuCallbacks#onHighlightChange(int)} is called.<br>
+     * {@link PieMenuCallbacks#onHighlightChange(int)} is called.<br/>
      *
      * @param x x-coordinate in the stage.
      * @param y y-coordinate in the stage.
@@ -682,11 +702,11 @@ public class PieMenu extends PieWidget {
     /**
      * Called to check if the candidate slice is different from the previous
      * one. If it is, the {@link PieMenuCallbacks#onHoverChange(int)}
-     * is called.<br>
+     * is called.<br/>
      * Indices are based on the order which was used to add child Actors to the
-     * Widget. First one added is at index 0, of course, and so on.<br>
+     * Widget. First one added is at index 0, of course, and so on.<br/>
      * It would be good practice to use {@link #isValidIndex(int)} to ensure that
-     * the index provided to this method is valid.<br>
+     * the index provided to this method is valid.<br/>
      * If the input index is the same as the index of the currently hovered
      * item, nothing will happen.
      *
@@ -705,7 +725,7 @@ public class PieMenu extends PieWidget {
      * given coordinate. If there is one, checks if the hovered item is different
      * from the previous one.
      * If it is a different index,
-     * {@link PieMenuCallbacks#onHoverChange(int)} is called.<br>
+     * {@link PieMenuCallbacks#onHoverChange(int)} is called.<br/>
      *
      * @param x x-coordinate in the stage.
      * @param y y-coordinate in the stage.
@@ -836,9 +856,9 @@ public class PieMenu extends PieWidget {
     /**
      * If the {@link ChangeListener} wasn't enough, you can add a
      * {@link PieMenuCallbacks} to be able to execute code every
-     * time the currently-highlighted or currently-hovered value changes.<br>
+     * time the currently-highlighted or currently-hovered value changes.<br/>
      * Keep in mind that if you use {@link #resetSelection()} or
-     * {@link #setHighlightedIndex(int)}, this callback is not triggered.<br>
+     * {@link #setHighlightedIndex(int)}, this callback is not triggered.<br/>
      * It might also be useful to know that, on a desktop,
      * {@link #onHoverChange(int)} and {@link #onHighlightChange(int)} will never
      * be called at the same time: it's one or the other.
@@ -855,7 +875,7 @@ public class PieMenu extends PieWidget {
         }
 
         /**
-         * Called every time the "currently highlighted" value changes.<br>
+         * Called every time the "currently highlighted" value changes.<br/>
          * This only applies when a button is down and the mouse (or finger)
          * is moving. It thus works on desktops and mobiles.
          *
@@ -867,7 +887,7 @@ public class PieMenu extends PieWidget {
         }
 
         /**
-         * Called every time the "currently hovered" value changes.<br>
+         * Called every time the "currently hovered" value changes.<br/>
          * This only applies when no button is down while the mouse is moving,
          * and will only work for desktops.
          *
@@ -895,7 +915,7 @@ public class PieMenu extends PieWidget {
 
     /**
      * Returns the label's style. Modifying the returned style may not have an
-     * effect until {@link #setStyle(PieMenuStyle)} is called.<br>
+     * effect until {@link #setStyle(PieMenuStyle)} is called.<br/>
      * It's probable that your code will look like this (to give you an idea):
      * <pre>
      * {@code
@@ -922,7 +942,7 @@ public class PieMenu extends PieWidget {
     }
 
     /**
-     * Determines which button must be used to interact with the Widget.<br>
+     * Determines which button must be used to interact with the Widget.<br/>
      * If you are not using the {@link PieMenuListener}, then this
      * option will not work "as-is" and you will have to implement it again (if
      * you want to have it).
@@ -972,14 +992,14 @@ public class PieMenu extends PieWidget {
 
     /**
      * Returns the currently selected  item's index. A highlighted item can be
-     * considered selected, depending on the customized behavior of the Widget.<br>
+     * considered selected, depending on the customized behavior of the Widget.<br/>
      * The {@link #isValidIndex(int)} method is provided to easily check if the
      * returned value can be mapped to a child or not.
      *
      * @return The value of the {@link #defaultIndex} after a "reset", if
      *         no item were ever selected on this Widget, or if the selection
-     *         happened outside of the boundaries.<br>
-     *         Else, returns the index of the currently selected item.<br>
+     *         happened outside of the boundaries.<br/>
+     *         Else, returns the index of the currently selected item.<br/>
      */
     public int getSelectedIndex() {
         return selectedIndex;
@@ -988,7 +1008,7 @@ public class PieMenu extends PieWidget {
     /**
      * Changes the selected index to the desired value, but will not trigger any
      * callback such as the {@link ChangeListener}. If you want the callback to
-     * be trigger, use {@link #selectIndex(int)} instead.<br>
+     * be trigger, use {@link #selectIndex(int)} instead.<br/>
      * To ensure the index you are giving to this method is valid, use
      * {@link #isValidIndex(int)}. An invalid index will result in a simple
      * deselection. If you want the {@link #defaultIndex} to be the
@@ -1013,8 +1033,8 @@ public class PieMenu extends PieWidget {
 
     /**
      * The index that is used as a fallback value whenever a processed
-     * user-input does not map to a valid child index value.<br>
-     * This value can be negative, if you want nothing to be the default.<br>
+     * user-input does not map to a valid child index value.<br/>
+     * This value can be negative, if you want nothing to be the default.<br/>
      * If the current value of {@link #selectedIndex} isn't valid, then both
      * {@link #selectedIndex} and {@link #highlightedIndex} are set to that new
      * value, but only the selection's {@link ChangeListener} will be triggered.
@@ -1044,7 +1064,7 @@ public class PieMenu extends PieWidget {
      * Changes the highlighted index to the desired value, but will not trigger
      * any callback such as the {@link PieMenuCallbacks#onHighlightChange(int)}.
      * If you want the callback to be trigger, use {@link #highlightIndex(int)}
-     * instead.<br>
+     * instead.<br/>
      * To ensure the index you are giving to this method is valid, use
      * {@link #isValidIndex(int)}. An invalid index will result in a simple
      * deselection. If you want the {@link #defaultIndex} to be the
@@ -1067,7 +1087,7 @@ public class PieMenu extends PieWidget {
      * Changes the hovered index to the desired value, but will not trigger
      * any callback such as the {@link PieMenuCallbacks#onHoverChange(int)}.
      * If you want the callback to be trigger, use {@link #highlightIndex(int)}
-     * instead.<br>
+     * instead.<br/>
      * To ensure the index you are giving to this method is valid, use
      * {@link #isValidIndex(int)}. An invalid index will result in a simple
      * deselection: if that is what you wanted, you might want to look into
@@ -1090,7 +1110,7 @@ public class PieMenu extends PieWidget {
 
     /**
      * By calling this, the previous listener is removed from the widget, and
-     * this new one is added automatically.<br>
+     * this new one is added automatically.<br/>
      * The initial "previous" listener associated with this variable is the
      * {@link PieMenuListener}.
      *
