@@ -64,7 +64,7 @@ public class HitOutside extends ApplicationAdapter {
 
 
         stage.addActor(containerWidget);
-        containerWidget.setFillParent(true);
+//        containerWidget.setFillParent(true);
     }
 
     @Override

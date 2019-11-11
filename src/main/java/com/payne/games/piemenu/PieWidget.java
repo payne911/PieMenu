@@ -12,11 +12,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable;
 import com.badlogic.gdx.utils.Align;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
+
 /**
  * A PieWidget aims at providing the user with a simple way to lay out
  * the contained Actors in a circular fashion. It uses a
- * {@link ShapeDrawer} to draw certain elements, when necessary.
- * Basically, it uses a Style (compared to the {@link RadialGroup}).
+ * {@link ShapeDrawer} to draw certain elements, when necessary.<br/>
+ * Basically, if you are not finding yourself happy with the results
+ * coming from using a {@link PieWidgetStyle}, then you might want to
+ * consider using a simple {@link RadialGroup}.
  *
  * @author Jérémi Grenier-Berthiaume (aka "payne")
  */
@@ -404,13 +407,16 @@ public class PieWidget extends RadialGroup {
             float restoreAlpha = bc.a;
             batch.setColor(bc.r, bc.g, bc.b, bc.a * globalAlphaMultiplier);
             if(style.background instanceof TransformDrawable) {
+                // todo: can "getX()" screw up because relative to parent? (TO TEST)
                 ((TransformDrawable)(style.background)).draw(batch,
-                        getX(Align.center) - getCurrentRadius(), getY(Align.center) - getCurrentRadius(),
+                        getX(Align.center) - getCurrentRadius(),
+                        getY(Align.center) - getCurrentRadius(),
                         getCurrentRadius(), getCurrentRadius(),
                         getCurrentDiameter(), getCurrentDiameter(),
                         getScaleX(), getScaleY(),
                         getRotation());
             } else {
+                // todo: can "getX()" screw up because relative to parent? (TO TEST)
                 style.background.draw(batch,
                         getX(Align.center) - getCurrentRadius(),
                         getY(Align.center) - getCurrentRadius(),
@@ -447,6 +453,20 @@ public class PieWidget extends RadialGroup {
                     pointAtAngle(vector23, vector2, getCurrentRadius(), drawnRadianAngle),
                     style.separatorWidth);
         }
+    }
+
+    /**
+     * To get the coordinates of a point along a line traced from the center,
+     * along the designated angle, at the designated distance from the center.
+     *
+     * @param center center point of the Circle
+     * @param radius how far from the center the desired point is
+     * @param radian the angle along which the line is calculated
+     * @return the point associated with those parameters
+     */
+    public Vector2 pointAtAngle(Vector2 output, Vector2 center, float radius, float radian) {
+        output.set(center.x + radius * MathUtils.cos(radian), center.y + radius * MathUtils.sin(radian));
+        return output;
     }
 
     /**
@@ -501,7 +521,19 @@ public class PieWidget extends RadialGroup {
             sd.arc(vector2.x, vector2.y, radius, startAngle, radian, style.circumferenceWidth);
         }
     }
-        /*
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
     =================================== STYLE ==================================
      */
 

@@ -340,21 +340,6 @@ public class RadialGroup extends WidgetGroup {
         setOrigin(getWidth()/2, getHeight()/2); // to support rotations around the center
     }
 
-
-    /**
-     * To get the coordinates of a point along a line traced from the center,
-     * along the designated angle, at the designated distance from the center.
-     *
-     * @param center center point of the Circle
-     * @param radius how far from the center the desired point is
-     * @param radian the angle along which the line is calculated
-     * @return the point associated with those parameters
-     */
-    public Vector2 pointAtAngle(Vector2 output, Vector2 center, float radius, float radian) {
-        output.set(center.x + radius * MathUtils.cos(radian), center.y + radius * MathUtils.sin(radian));
-        return output;
-    }
-
     /**
      * @param x x-coordinate relative to the origin (bottom left) of the widget
      * @param y y-coordinate relative to the origin (bottom left) of the widget
@@ -368,22 +353,40 @@ public class RadialGroup extends WidgetGroup {
         if (touchable && getTouchable() == Touchable.disabled) return null;
         if (!isVisible()) return null;
 
-        localToStageCoordinates(vector2.set(x,y));
-        int childIndex = findChildIndexAtStage(vector2.x,vector2.y);
-        if (isValidIndex(childIndex)) {
-            Actor child = getChildren().get(childIndex);
+        /* Checking all children first to catch the ones extending beyond the widget. */
+        for (Actor child : getChildren()) {
             if(child.getTouchable() == Touchable.disabled)
-                return this;
+                continue;
             child.parentToLocalCoordinates(vector2.set(x,y));
             Actor hit = child.hit(vector2.x, vector2.y, touchable);
-            if(hit != null)
+            if(hit != null) {
+//                System.out.println("hit");
                 return hit;
-            else
-                return this;
+            }
         }
 
+        /* Then we want to consider the widget's boundaries itself. */
+        localToStageCoordinates(vector2.set(x,y));
+        int childIndex = findChildIndexAtStage(vector2.x,vector2.y);
+        if(isValidIndex(childIndex)) {
+//            System.out.println("this valid");
+            return this;
+        }
+
+//        // todo: shouldn't return `null` if hitting background
+//        if(isBackgroundHit(x,y)) {
+//            System.out.println("this background");
+//            return this;
+//        }
+
+//        System.out.println("null");
         return null;
     }
+
+//    public boolean isBackgroundHit(float x, float y) {
+//        stageToLocalCoordinates(vector2.set(x,y));
+//        return isWithinInnerRadius(vector2.x - getWidth()/2, vector2.y - getHeight()/2);
+//    }
 
     /**
      * Given a coordinate, find the index of the child (if any).
@@ -429,7 +432,7 @@ public class RadialGroup extends WidgetGroup {
         return normalizeAngle(
                 MathUtils.radiansToDegrees
                         * MathUtils.atan2(y - vector2.y, x - vector2.x)
-                - getTotalRotation() - startDegreesOffset
+                        - getTotalRotation() - startDegreesOffset
         );
     }
 
@@ -462,13 +465,25 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
+     * Given a child index, find whether or not it would be a valid candidate to
+     * highlight or select.
+     *
+     * @param index an integer that would usually be the output of
+     *              {@link #findChildIndexAtStage(float, float)}.
+     * @return {@code true} only if the index is linked to a valid child sector.
+     */
+    public boolean isValidIndex(int index) {
+        return !(index <= -1 || index >= getAmountOfChildren());
+    }
+
+    /**
      * Checks whether or not the input coordinate is in between (inclusively)
      * the inner-radius and the current radius of the widget (which can
      * be bigger than {@link #preferredRadius} if you use {@link #setFillParent(boolean)},
      * for example).
      *
-     * @param x x-coordinate relative to the center of the widget's
-     * @param y y-coordinate relative to the center of the widget's
+     * @param x x-coordinate relative to the center of the widget.
+     * @param y y-coordinate relative to the center of the widget.
      * @return 'true' only if the coordinates fall within the widget's radii.
      */
     public boolean isWithinRadii(float x, float y) {
@@ -476,6 +491,21 @@ public class RadialGroup extends WidgetGroup {
         float innerRadSquared = pow2(getInnerRadiusLength());
         float radSquared = pow2(getCurrentRadius());
         return distance >= innerRadSquared && distance <= radSquared;
+    }
+
+    /**
+     * Checks whether or not the input coordinate is within (exclusively)
+     * the inner-radius.
+     *
+     * @param x x-coordinate relative to the center of the widget.
+     * @param y y-coordinate relative to the center of the widget.
+     * @return 'true' only if the coordinates fall within the widget's
+     *         inner radius.
+     */
+    public boolean isWithinInnerRadius(float x, float y) {
+        float distance = pow2(x) + pow2(y);
+        float innerRadSquared = pow2(getInnerRadiusLength());
+        return distance < innerRadSquared;
     }
 
     /**
@@ -511,20 +541,8 @@ public class RadialGroup extends WidgetGroup {
     public void centerOnActor(Actor actor) {
         if(actor == null)
             return;
-        // todo: possibly needs to be fixed for Contained Actors ?
-        setPosition(actor.getX(Align.center), actor.getY(Align.center), Align.center);
-    }
-
-    /**
-     * Given a child index, find whether or not it would be a valid candidate to
-     * highlight or select.
-     *
-     * @param index an integer that would usually be the output of
-     *              {@link #findChildIndexAtStage(float, float)}.
-     * @return {@code true} only if the index is linked to a valid child sector.
-     */
-    public boolean isValidIndex(int index) {
-        return !(index <= -1 || index >= getAmountOfChildren());
+        actor.localToStageCoordinates(vector2.set(actor.getWidth()/2, actor.getHeight()/2));
+        setPosition(vector2.x, vector2.y, Align.center);
     }
 
 

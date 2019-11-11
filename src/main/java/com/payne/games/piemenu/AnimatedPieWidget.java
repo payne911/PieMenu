@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
+
 import java.util.HashMap;
 
 
@@ -286,7 +287,7 @@ public class AnimatedPieWidget extends PieWidget {
             vector2.set(dist, 0);
             vector2.rotate(degreesPerChild*(i + half) + startDegreesOffset);
             modifyActor(actor, degreesPerChild, dist); // overridden by user
-            actor.setPosition(vector2.x+ getCurrentRadius(), vector2.y+ getCurrentRadius(), Align.center);
+            actor.setPosition(vector2.x + getWidth()/2, vector2.y + getHeight()/2, Align.center);
 
             /* Updating alpha (fade-in animation). */
             if(isCurrentlyAnimated()) {

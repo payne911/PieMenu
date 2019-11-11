@@ -4,12 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -18,7 +13,8 @@ import com.badlogic.gdx.utils.Pools;
 
 /**
  * A PieMenu reuses the {@link PieWidget}'s functionalities to provide a way
- * to interact with the contained Actors through the "hit-box" of the slices.
+ * to interact with the contained Actors through the "hit-box" of the slices.<br/>
+ * Basically, each slice ends up acting like a button.
  *
  * @author Jérémi Grenier-Berthiaume (aka "payne")
  */
@@ -389,21 +385,6 @@ public class PieMenu extends PieWidget {
     }
 
     /**
-     * Checks whether or not the input coordinate is within (exclusively)
-     * the inner-radius.
-     *
-     * @param x x-coordinate relative to the center of the widget's
-     * @param y y-coordinate relative to the center of the widget's
-     * @return 'true' only if the coordinates fall within the widget's
-     *         inner radius.
-     */
-    public boolean isWithinInnerRadius(float x, float y) {
-        float distance = pow2(x) + pow2(y);
-        float innerRadSquared = pow2(getInnerRadiusLength());
-        return distance < innerRadSquared;
-    }
-
-    /**
      * Used to transform an index into a known range: it'll either remain itself
      * if it was designating a valid child index, else it becomes the
      * {@link #defaultIndex} value.
@@ -413,43 +394,6 @@ public class PieMenu extends PieWidget {
      */
     public int mapIndex(int index) {
         return isValidIndex(index) ? index : defaultIndex;
-    }
-
-    /**
-     * @param x x-coordinate relative to the origin (bottom left) of the widget
-     * @param y y-coordinate relative to the origin (bottom left) of the widget
-     * @param touchable if {@code true}, hit detection will respect the
-     *                  {@link #setTouchable(Touchable) touchability}.
-     * @return deepest child's hit at (x,y). Else, the widget itself if it's
-     *         the background. Else {@code null} if {@link #middleCancel} is
-     *         {@code true} and within the {@link #getInnerRadiusLength()}.
-     *         Else the widget itself if with infinite range. Else {@code null}.
-     */
-    @Override
-    public Actor hit(float x, float y, boolean touchable) {
-        if (touchable && getTouchable() == Touchable.disabled) return null;
-        if (!isVisible()) return null;
-
-        localToStageCoordinates(vector2.set(x,y));
-        int childIndex = findChildIndexAtStage(vector2.x,vector2.y);
-        if (isValidIndex(childIndex)) {
-            if(middleCancel && isWithinInnerRadius(x + getWidth()/2, y + getHeight()/2))
-                return null;
-            Actor child = getChildren().get(childIndex);
-            if(child.getTouchable() == Touchable.disabled)
-                return this;
-            child.parentToLocalCoordinates(vector2.set(x,y));
-            Actor hit = child.hit(vector2.x, vector2.y, touchable);
-            if(hit != null)
-                return hit;
-            else
-                return this;
-        }
-
-        if(infiniteSelectionRange)
-            return this;
-
-        return null;
     }
 
     @Override
