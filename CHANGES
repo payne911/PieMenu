@@ -10,7 +10,6 @@
 - Fixed `RadialGroup` containing other `PieMenu`.
 - Fixed non-regular width and height values on Animated widgets.
 - Fixed `centerOnActor` method used on an Actor that was contained within a `Group`.
-todo: should PieWidget `hit` return `this` when hitting a background ? (define "isBackgroundHit()" method for custom approach without duplicating `hit`)
 
 [3.1.0]
 - Fixed the "floating" `Group` that contained `RadialGroup`.

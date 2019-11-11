@@ -359,6 +359,13 @@ public class PieWidget extends RadialGroup {
     }
 
     @Override
+    public boolean isBackgroundHit(float x, float y) {
+        if(style.background == null && style.backgroundColor == null)
+            return false;
+        return isWithinInnerRadius(x - getWidth()/2, y - getHeight()/2);
+    }
+
+    @Override
     public void draw(Batch batch, float parentAlpha) {
         drawWithShapeDrawer(batch, parentAlpha, totalDegreesDrawn);
         drawMe(batch, parentAlpha);
@@ -407,7 +414,6 @@ public class PieWidget extends RadialGroup {
             float restoreAlpha = bc.a;
             batch.setColor(bc.r, bc.g, bc.b, bc.a * globalAlphaMultiplier);
             if(style.background instanceof TransformDrawable) {
-                // todo: can "getX()" screw up because relative to parent? (TO TEST)
                 ((TransformDrawable)(style.background)).draw(batch,
                         getX(Align.center) - getCurrentRadius(),
                         getY(Align.center) - getCurrentRadius(),
@@ -416,7 +422,6 @@ public class PieWidget extends RadialGroup {
                         getScaleX(), getScaleY(),
                         getRotation());
             } else {
-                // todo: can "getX()" screw up because relative to parent? (TO TEST)
                 style.background.draw(batch,
                         getX(Align.center) - getCurrentRadius(),
                         getY(Align.center) - getCurrentRadius(),

@@ -341,8 +341,8 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * @param x x-coordinate relative to the origin (bottom left) of the widget
-     * @param y y-coordinate relative to the origin (bottom left) of the widget
+     * @param x x-coordinate relative to the bottom-left of the widget.
+     * @param y y-coordinate relative to the bottom-left of the widget.
      * @param touchable if {@code true}, hit detection will respect the
      *                  {@link #setTouchable(Touchable) touchability}.
      * @return deepest child's hit at (x,y). Else, the widget itself if it's
@@ -359,34 +359,36 @@ public class RadialGroup extends WidgetGroup {
                 continue;
             child.parentToLocalCoordinates(vector2.set(x,y));
             Actor hit = child.hit(vector2.x, vector2.y, touchable);
-            if(hit != null) {
-//                System.out.println("hit");
+            if(hit != null)
                 return hit;
-            }
         }
 
         /* Then we want to consider the widget's boundaries itself. */
         localToStageCoordinates(vector2.set(x,y));
         int childIndex = findChildIndexAtStage(vector2.x,vector2.y);
-        if(isValidIndex(childIndex)) {
-//            System.out.println("this valid");
+        if(isValidIndex(childIndex))
             return this;
-        }
 
-//        // todo: shouldn't return `null` if hitting background
-//        if(isBackgroundHit(x,y)) {
-//            System.out.println("this background");
-//            return this;
-//        }
+        /* And ultimately whether some background element is hit. */
+        if(isBackgroundHit(x,y))
+            return this;
 
-//        System.out.println("null");
         return null;
     }
 
-//    public boolean isBackgroundHit(float x, float y) {
-//        stageToLocalCoordinates(vector2.set(x,y));
-//        return isWithinInnerRadius(vector2.x - getWidth()/2, vector2.y - getHeight()/2);
-//    }
+    /**
+     * Determines whether or not the background is being hit.
+     *
+     * @see #hit(float, float, boolean)
+     * @param x x-coordinate relative to the bottom-left of the widget.
+     * @param y y-coordinate relative to the bottom-left of the widget.
+     * @return {@code true} only if some background element of the widget
+     *         is being hit. (For example, if there are no background
+     *         image or color, then this always returns {@code false}.)
+     */
+    public boolean isBackgroundHit(float x, float y) {
+        return false;
+    }
 
     /**
      * Given a coordinate, find the index of the child (if any).
@@ -447,7 +449,7 @@ public class RadialGroup extends WidgetGroup {
      * @return The total rotation value.
      */
     protected float getTotalRotation() {
-        float rotation = super.getRotation();
+        float rotation = getRotation();
         Group parent = getParent();
         if(parent == null)
             return rotation;
@@ -479,8 +481,8 @@ public class RadialGroup extends WidgetGroup {
     /**
      * Checks whether or not the input coordinate is in between (inclusively)
      * the inner-radius and the current radius of the widget (which can
-     * be bigger than {@link #preferredRadius} if you use {@link #setFillParent(boolean)},
-     * for example).
+     * be bigger than {@link #preferredRadius} if you use
+     * {@link #setFillParent(boolean)}, for example).
      *
      * @param x x-coordinate relative to the center of the widget.
      * @param y y-coordinate relative to the center of the widget.
