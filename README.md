@@ -6,7 +6,7 @@
 
 ---
 
-A library for [libGDX](https://libgdx.badlogicgames.com/), an open-source game development application framework written in Java.
+A library to obtain a circular WidgetGroup within [libGDX](https://libgdx.badlogicgames.com/), an open-source game development application framework written in Java.
 
 Aims at providing users with the so-called `RadialGroup`: it is a simple container that places its children `Actors` in a circular fashion.
 
@@ -99,7 +99,7 @@ The basic idea looks like this:
 /* Setting up and creating the widget. */
 PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
 style.sliceColor = new Color(.33f,.33f,.33f,1); // "style" variables affect the way the widget looks
-PieMenu menu = new PieMenu(batch, skin.getRegion("white"), style, 80); // "white" would be a 1x1 white pixel
+PieMenu menu = new PieMenu(skin.getRegion("white"), style, 80); // "white" would be a 1x1 white pixel
 
 /* Adding a listener. */
 menu.addListener(new ChangeListener() {
@@ -122,7 +122,7 @@ stage.addActor(menu);
 And *voilà*!
 
 ### [Wiki](https://github.com/payne911/PieMenu/wiki)
-This library offers you many types of behaviors related to pie menus. Many of those are well-documented in the Wiki (with description, code and gif), so make sure to check it out.
+This library offers you many types of behaviors related to pie-menus. Many of those are well-documented in the Wiki (with description, code and gif), so make sure to check it out.
 
 More specifically, you might be interested in:
 * [Complete examples of code](https://github.com/payne911/PieMenu/wiki/Examples), along with textual descriptions of the expected behavior
