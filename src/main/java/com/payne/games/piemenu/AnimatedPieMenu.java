@@ -7,13 +7,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
-
 import java.util.HashMap;
 
 
 /**
- * An animated {@link PieMenu}.<br/>
- * A very simple folding/unfolding animation can be displayed whenever desired.<br/>
+ * An animated {@link PieMenu}.<br>
+ * A very simple folding/unfolding animation can be displayed whenever desired.<br>
  * Internally uses a {@link #currentAngle} attribute that is used for transitions
  * between states. Because of that, using {@link #setVisible(boolean)} might not
  * always reveal the Widget: you would have to ensure to call a setter before:
@@ -353,8 +352,8 @@ public class AnimatedPieMenu extends PieMenu {
     }
 
     /**
-     * Transitions from the current state to the other.<br/>
-     * If the widget is opening, it will now be closing, for example.<br/>
+     * Transitions from the current state to the other.<br>
+     * If the widget is opening, it will now be closing, for example.<br>
      * Visibility plays a role in determining the current state (for example,
      * if the widget is not visible, it is assumed that it's as if it was closed).
      *
@@ -369,7 +368,7 @@ public class AnimatedPieMenu extends PieMenu {
     }
 
     /**
-     * @return {@code true} if the widget is being closed or opened.<br/>
+     * @return {@code true} if the widget is being closed or opened.<br>
      *         {@code false} otherwise.
      */
     public boolean isCurrentlyAnimated() {
@@ -440,7 +439,7 @@ public class AnimatedPieMenu extends PieMenu {
 
     /**
      * @return {@code true} only when the Widget is currently running an opening
-     *         animation.<br/>
+     *         animation.<br>
      *         To be more precise, for example: when an opening animation ends,
      *         this returns {@code false}
      */
@@ -450,7 +449,7 @@ public class AnimatedPieMenu extends PieMenu {
 
     /**
      * @return {@code true} only when the Widget is currently running a closing
-     *         animation.<br/>
+     *         animation.<br>
      *         To be more precise, for example: when a closing animation ends,
      *         this returns {@code false}
      */
@@ -459,7 +458,7 @@ public class AnimatedPieMenu extends PieMenu {
     }
 
     /**
-     * After a closing animation, its value is equal to 0.<br/>
+     * After a closing animation, its value is equal to 0.<br>
      * After an opening animation, its value is equal to
      * {@code style.totalDegreesDrawn}.
      *
@@ -475,13 +474,13 @@ public class AnimatedPieMenu extends PieMenu {
 
     /**
      * Use this if you want to manipulate the internal state of how much of the
-     * widget should be drawn.<br/>
-     * After a closing animation, its value is equal to 0.<br/>
+     * widget should be drawn.<br>
+     * After a closing animation, its value is equal to 0.<br>
      * After an opening animation, its value is equal to
-     * {@code style.totalDegreesDrawn}.<br/>
+     * {@code style.totalDegreesDrawn}.<br>
      * This means that the accepted values are from 0 to style.totalDegreesDrawn,
-     * inclusively.<br/>
-     * <br/>
+     * inclusively.<br>
+     * <br>
      * It is recommended to use
      * <pre>
      * {@code

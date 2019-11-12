@@ -16,7 +16,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 /**
  * A PieWidget aims at providing the user with a simple way to lay out
  * the contained Actors in a circular fashion. It uses a
- * {@link ShapeDrawer} to draw certain elements, when necessary.<br/>
+ * {@link ShapeDrawer} to draw certain elements, when necessary.<br>
  * Basically, if you are not finding yourself happy with the results
  * coming from using a {@link PieWidgetStyle}, then you might want to
  * consider using a simple {@link RadialGroup}.
@@ -377,7 +377,7 @@ public class PieWidget extends RadialGroup {
     }
 
     /**
-     * Used to propagate the parent's alpha value to the children.<br/>
+     * Used to propagate the parent's alpha value to the children.<br>
      * Changes the {@link ShapeDrawer}'s color.
      *
      * @param sd the {@link ShapeDrawer} whose color will be changed.
@@ -477,11 +477,11 @@ public class PieWidget extends RadialGroup {
     /**
      * Determines the color of the slice in which resides the Actor designated
      * by the {@code index} parameter. By default, the colors come from the way
-     * you have set up your Style (anything that extends {@link PieWidgetStyle}).<br/>
+     * you have set up your Style (anything that extends {@link PieWidgetStyle}).<br>
      * Override this method when creating your Widget if you want to have control
-     * over those colors.<br/>
+     * over those colors.<br>
      * <b>Do not</b> set the color of the {@link ShapeDrawer} in there: that is
-     * handled internally. Just return the desired Color.<br/><br/>
+     * handled internally. Just return the desired Color.<br><br>
      * Here is an example:
      * <pre>
      * {@code
@@ -545,7 +545,7 @@ public class PieWidget extends RadialGroup {
 
     /**
      * Returns the label's style. Modifying the returned style may not have an
-     * effect until {@link #setStyle(PieWidgetStyle)} is called.<br/>
+     * effect until {@link #setStyle(PieWidgetStyle)} is called.<br>
      * It's probable that your code will look like this (to give you an idea):
      * <pre>
      * {@code
@@ -602,8 +602,8 @@ public class PieWidget extends RadialGroup {
     public static class PieWidgetStyle {
 
         /**
-         * <i>Recommended. Optional.</i><br/>
-         * A background that will be drawn behind everything else within the Widget.<br/>
+         * <i>Recommended. Optional.</i><br>
+         * A background that will be drawn behind everything else within the Widget.<br>
          * Be mindful of the fact that this is unaffected by any of the other
          * variables: it will be resized to fit in the whole region that
          * represents the position, width and height of the widget.
@@ -611,34 +611,34 @@ public class PieWidget extends RadialGroup {
         public Drawable background;
 
         /**
-         * <i>Optional.</i><br/>
+         * <i>Optional.</i><br>
          * A background color that, if provided, will be drawn over the
-         * background image and below everything else.<br/>
+         * background image and below everything else.<br>
          * It mostly acts as a quick set up option if you do not have an image
          * for you background.
          */
         public Color backgroundColor;
 
         /**
-         * <i>Recommended. Optional.</i><br/>
-         * The color used by the separating lines between each item.<br/>
+         * <i>Recommended. Optional.</i><br>
+         * The color used by the separating lines between each item.<br>
          * It is recommended mostly for the case where you are not defining an
-         * {@link #alternateSliceColor}.<br/>
+         * {@link #alternateSliceColor}.<br>
          * If you do not define a {@link #separatorWidth} along with this value,
          * no lines will be visible.
          */
         public Color separatorColor;
 
         /**
-         * <i>Recommended. Optional.</i><br/>
-         * The color used to fill the "pie sectors" (i.e. slice) of each item.<br/>
+         * <i>Recommended. Optional.</i><br>
+         * The color used to fill the "pie sectors" (i.e. slice) of each item.<br>
          * Consider using a fairly low alpha value if you are providing a
          * {@link #background} {@link Drawable}.
          */
         public Color sliceColor;
 
         /**
-         * <i>Optional.</i><br/>
+         * <i>Optional.</i><br>
          * If this color is set, the "pie sectors" will alternate between the
          * {@link #sliceColor} and this one so that their defining region
          * is more easily distinguished.
@@ -646,28 +646,28 @@ public class PieWidget extends RadialGroup {
         public Color alternateSliceColor;
 
         /**
-         * <i>Optional.</i><br/>
+         * <i>Optional.</i><br>
          * The color used for the line that defines the circumference of the
          * Widget. If the Widget is not a complete a circle, this will only be
-         * applied along the partial circumference.<br/>
+         * applied along the partial circumference.<br>
          * If you have set a non-zero {@link #innerRadiusPercent} value, this will
-         * also apply to the "inner radius" of your Widget.<br/>
+         * also apply to the "inner radius" of your Widget.<br>
          * If you do not define a {@link #circumferenceWidth} along with this
          * value, no circumference will be visible.
          */
         public Color circumferenceColor;
 
         /**
-         * <i>Recommended. Optional.</i><br/>
-         * Determines how wide the lines that separate each slice will be.<br/>
+         * <i>Recommended. Optional.</i><br>
+         * Determines how wide the lines that separate each slice will be.<br>
          * If no {@link #separatorColor} was provided along with this value,
          * no lines will be drawn.
          */
         public float separatorWidth;
 
         /**
-         * <i>Optional.</i><br/>
-         * Determines how wide the circumference line will be.<br/>
+         * <i>Optional.</i><br>
+         * Determines how wide the circumference line will be.<br>
          * If no {@link #circumferenceColor} was provided along with this value,
          * no circumference will be drawn.
          */
@@ -721,7 +721,7 @@ public class PieWidget extends RadialGroup {
 
     /**
      * You probably shouldn't be messing with this, but it's provided for
-     * convenience reasons.<br/>
+     * convenience reasons.<br>
      * For example, it's possible that your widget will be <i>so</i> big that
      * the {@link ShapeDrawer} will crash with an Exception while trying to
      * draw it. You would then want to use this setter to provide a brand new

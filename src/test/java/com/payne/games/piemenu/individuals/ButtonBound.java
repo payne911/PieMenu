@@ -122,7 +122,7 @@ public class ButtonBound extends ApplicationAdapter {
      * To be used to get the user to transition directly into
      * {@link InputListener#touchDragged(InputEvent, float, float, int)}
      * as if he had triggered
-     * {@link InputListener#touchDown(InputEvent, float, float, int, int)}.<br/>
+     * {@link InputListener#touchDown(InputEvent, float, float, int, int)}.<br>
      * I am not certain this is the recommended way of doing this, but for the
      * purposes of this demonstration, it works!
      *

@@ -1,4 +1,4 @@
-(UPCOMING) [4.0.0]
+[4.0.0]
 - A `Batch` does not need to be passed to the constructors anymore.
 - Introduced `PieWidget` in the new design: the `RadialGroup` now doesn't deal in any way with the `ShapeDrawer`.
 - `getMaxDiameter` has been renamed to `getCurrentDiameter`.
