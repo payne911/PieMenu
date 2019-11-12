@@ -11,19 +11,18 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.payne.games.piemenu.PieMenu;
-import space.earlygrey.shapedrawer.ShapeDrawer;
+import com.payne.games.piemenu.PieWidget;
 
 
-public class ShapeDrawerLimit extends ApplicationAdapter {
+public class HitOutside extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
     private Texture tmpTex;
     private Batch batch;
-    private PieMenu menu;
+    private PieWidget containerWidget;
 
     @Override
     public void create() {
@@ -33,7 +32,7 @@ public class ShapeDrawerLimit extends ApplicationAdapter {
         batch = new PolygonSpriteBatch();
         stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
-//        stage.setDebugAll(true);
+        stage.setDebugAll(true);
 
         /* Setting up the WhitePixel. */
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -48,21 +47,24 @@ public class ShapeDrawerLimit extends ApplicationAdapter {
 
 
         /* Adding the demo widgets. */
-        PieMenu.PieMenuStyle style1 = new PieMenu.PieMenuStyle();
-        style1.hoverColor = Color.RED;
-        style1.selectedColor = Color.BLUE;
-        style1.backgroundColor = Color.ORANGE;
-        menu = new PieMenu(whitePixel, style1, 250); // at "5092" it crashes
+        PieWidget.PieWidgetStyle style1 = new PieWidget.PieWidgetStyle();
+//        style1.sliceColor = Color.ORANGE;
+//        style1.alternateSliceColor = new Color(.8f, .5f, .2f, 1);
+        style1.circumferenceWidth = 2;
+        style1.circumferenceColor = Color.BLACK;
+        style1.separatorWidth = 2;
+        style1.separatorColor = Color.BLACK;
+        containerWidget = new PieWidget(whitePixel, style1, 200, 0.9f);
+        containerWidget.setName("MAIN");
 
-        for(int i=0 ; i<5 ; i++)
-            menu.addActor(new Label("menu " + i, skin));
+        for(int i=0 ; i<5 ; i++) {
+            TextButton tmp = new TextButton("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", skin);
+            containerWidget.addActor(tmp);
+        }
 
 
-        menu.setShapeDrawer(new ShapeDrawer(batch, whitePixel)); // default "estimateSidesRequired"
-
-        stage.addActor(menu);
-        menu.setPosition(180,180);
-//        menu.drawRudimentaryDebug();
+        stage.addActor(containerWidget);
+//        containerWidget.setFillParent(true);
     }
 
     @Override
@@ -76,9 +78,11 @@ public class ShapeDrawerLimit extends ApplicationAdapter {
         stage.act();
         stage.draw();
 
+        containerWidget.centerOnScreen();
+
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            menu.rotateBy(Gdx.graphics.getDeltaTime() * 100);
-            System.out.println(menu.getRotation());
+            containerWidget.rotateBy(Gdx.graphics.getDeltaTime() * 100);
+            System.out.println(containerWidget.getRotation());
         }
 
     }

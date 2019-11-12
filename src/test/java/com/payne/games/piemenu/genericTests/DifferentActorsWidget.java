@@ -45,12 +45,12 @@ public class DifferentActorsWidget extends ApplicationAdapter {
         style.hoverColor = Color.RED;
         style.selectedColor = Color.BLUE;
         style.backgroundColor = Color.ORANGE;
-        menu = new PieMenu(batch, whitePixel, style, 400) {
+        menu = new PieMenu(whitePixel, style, 400) {
             @Override
             public float getActorDistanceFromCenter(Actor actor) {
                 invalidate();
                 return getAmountOfChildren() > 1
-                        ? getMaxRadius() - getChild(0).getWidth()
+                        ? getCurrentRadius() - getChild(0).getWidth()
                         : 0;
             }
 

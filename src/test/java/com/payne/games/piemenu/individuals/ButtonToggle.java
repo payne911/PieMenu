@@ -18,8 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.payne.games.piemenu.AnimatedRadialGroup;
-import com.payne.games.piemenu.RadialGroup;
+import com.payne.games.piemenu.AnimatedPieWidget;
+import com.payne.games.piemenu.PieWidget;
 
 
 public class ButtonToggle extends ApplicationAdapter {
@@ -27,7 +27,7 @@ public class ButtonToggle extends ApplicationAdapter {
     private Stage stage;
     private Texture tmpTex;
     private Batch batch;
-    private AnimatedRadialGroup radGroup;
+    private AnimatedPieWidget radGroup;
 
 
     @Override
@@ -60,13 +60,13 @@ public class ButtonToggle extends ApplicationAdapter {
         \==================================================================== */
 
         /* Setting up and creating the widget. */
-        RadialGroup.RadialGroupStyle style = new RadialGroup.RadialGroupStyle();
+        PieWidget.PieWidgetStyle style = new PieWidget.PieWidgetStyle();
         style.sliceColor = new Color(1,1,1,.2f);
         style.separatorWidth = 2;
         style.circumferenceWidth = 2;
         style.circumferenceColor = Color.BLACK;
         style.separatorColor = style.circumferenceColor;
-        radGroup = new AnimatedRadialGroup(batch, whitePixel, style, 110, 50f/110, 315, 270);
+        radGroup = new AnimatedPieWidget(whitePixel, style, 110, 50f/110, 315, 270);
 
         /* Populating the widget. */
         for (int i = 0; i < 8; i++) {

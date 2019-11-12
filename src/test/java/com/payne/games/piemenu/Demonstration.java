@@ -15,7 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -37,7 +41,7 @@ public class Demonstration extends ApplicationAdapter {
     private PieMenu middleMousePie;
     private PieMenu.PieMenuStyle midStyle1;
     private PieMenu.PieMenuStyle midStyle2;
-    private AnimatedRadialGroup radial;
+    private AnimatedPieWidget radial;
 
     private float midStyle1InnerRadius = 24f/80;
     private float midStyle2InnerRadius = 27f/80;
@@ -94,11 +98,11 @@ public class Demonstration extends ApplicationAdapter {
     private void setUpRadialWidget(Table root) {
 
         /* Setting up and creating the widget. */
-        RadialGroup.RadialGroupStyle style = new RadialGroup.RadialGroupStyle();
+        PieWidget.PieWidgetStyle style = new PieWidget.PieWidgetStyle();
         style.backgroundColor = new Color(1,1,1,1);
         style.sliceColor = new Color(.4f,.4f,.4f,1);
         style.alternateSliceColor = new Color(.6f,0,0,1);
-        radial = new AnimatedRadialGroup(batch, whitePixel, style, 100, .5f, 0, 180);
+        radial = new AnimatedPieWidget(whitePixel, style, 100, .5f, 0, 180);
 
         /* Populating the widget. */
         for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
@@ -132,7 +136,7 @@ public class Demonstration extends ApplicationAdapter {
         style.selectedColor = new Color(.7f,.3f,.5f,1);
         style.sliceColor = new Color(0,.7f,0,1);
         style.alternateSliceColor = new Color(.7f,0,0,1);
-        dragPie = new AnimatedPieMenu(batch, whitePixel, style, 130, 50f/130, 180, 320);
+        dragPie = new AnimatedPieMenu(whitePixel, style, 130, 50f/130, 180, 320);
 
         /* Customizing the behavior. */
         dragPie.setInfiniteSelectionRange(true);
@@ -187,7 +191,7 @@ public class Demonstration extends ApplicationAdapter {
      * To be used to get the user to transition directly into
      * {@link InputListener#touchDragged(InputEvent, float, float, int)}
      * as if he had triggered
-     * {@link InputListener#touchDown(InputEvent, float, float, int, int)}.<br>
+     * {@link InputListener#touchDown(InputEvent, float, float, int, int)}.<br/>
      * I am not certain this is the recommended way of doing this, but for the
      * purposes of this demonstration, it works!
      *
@@ -209,7 +213,7 @@ public class Demonstration extends ApplicationAdapter {
         style.separatorColor = new Color(.1f,.1f,.1f,1);
         style.downColor = new Color(.5f,.5f,.5f,1);
         style.sliceColor = new Color(.33f,.33f,.33f,1);
-        rightMousePie = new PieMenu(batch, whitePixel, style, 80);
+        rightMousePie = new PieMenu(whitePixel, style, 80);
 
         /* Customizing the behavior. */
         rightMousePie.setInfiniteSelectionRange(true);
@@ -268,7 +272,7 @@ public class Demonstration extends ApplicationAdapter {
         midStyle1 = new PieMenu.PieMenuStyle();
         midStyle1.selectedColor = new Color(1,.5f,.5f,.5f);
         midStyle1.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("rael_pie.png")));
-        middleMousePie = new PieMenu(batch, whitePixel, midStyle1, 80, midStyle1InnerRadius, 30) {
+        middleMousePie = new PieMenu(whitePixel, midStyle1, 80, midStyle1InnerRadius, 30) {
             /* Since we are using Images, we want to resize them to fit within each sector. */
             @Override
             public void modifyActor(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
@@ -321,7 +325,7 @@ public class Demonstration extends ApplicationAdapter {
         style.sliceColor = new Color(.33f,.33f,.33f,1);
         style.alternateSliceColor = new Color(.25f,.25f,.25f,1);
         style.circumferenceColor = new Color(0,0,0,1);
-        permaPie = new PieMenu(batch, whitePixel, style, 80, 20f/80, 0 ,180);
+        permaPie = new PieMenu(whitePixel, style, 80, 20f/80, 0 ,180);
 
         /* Adding a selection-listener. */
         permaPie.addListener(new ChangeListener() {
