@@ -63,12 +63,12 @@ allprojects {
 
     ext {
     	...
-        pieMenuVersion = '4.0.0'
+        pieMenuVersion = '4.0.0'  // add this line
     }
     
     repositories {
 	...
-	maven { url 'https://jitpack.io' }
+	maven { url 'https://jitpack.io' }  // add this line if it wasn't already there
     }
 }
 ```
@@ -81,7 +81,7 @@ project(":core") {
 
     dependencies {
         ...
-        api "com.github.payne911:PieMenu:$pieMenuVersion"
+        api "com.github.payne911:PieMenu:$pieMenuVersion"  // add this line
     }
 }
 ```
