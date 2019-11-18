@@ -23,7 +23,7 @@ version '4.0.0'
 group 'com.payne.games'
 
 def gdxVersion = '1.9.10'
-def shapedrawerVersion = '2.0.3'
+def shapedrawerVersion = '2.1.0'
 
 // Disable JDK 8's doclint
 // http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
