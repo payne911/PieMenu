@@ -1,41 +1,36 @@
 package com.payne.games.piemenu;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.payne.games.piemenu.actions.RadialGroupActionColorBasic;
+import com.payne.games.piemenu.actions.RadialGroupActionVisualAngleClose;
+import com.payne.games.piemenu.actions.RadialGroupActionVisualAngleOpen;
+import com.payne.games.piemenu.core.BaseGame;
+import com.payne.games.piemenu.core.BaseScreen;
 
 
-public class Demonstration extends ApplicationAdapter {
+public class Demonstration extends BaseScreen {
     private Skin skin;
-    private Stage stage;
     private Texture tmpTex;
-    private Batch batch;
     private TextureRegion whitePixel;
 
     private AnimatedPieMenu dragPie;
+    private PieMenu dragPieAnimation;
     private PieMenu permaPie;
     private PieMenu rightMousePie;
     private PieMenu middleMousePie;
@@ -47,6 +42,7 @@ public class Demonstration extends ApplicationAdapter {
     private float midStyle2InnerRadius = 27f/80;
     private Color backgroundColor = new Color(1,1,1,.2f);
     private int dragPieAmount = 0;
+    private int dragPieAnimationAmount = 0;
     private int permaPieAmount = 0;
     private int radialAmount = 0;
     private float red = .25f;
@@ -54,19 +50,26 @@ public class Demonstration extends ApplicationAdapter {
     private float blue = .45f;
     private final int INITIAL_CHILDREN_AMOUNT = 5;
 
+    public Demonstration(BaseGame game) {
+        super(game);
+    }
+
+    private Texture getTextureSkinAttach(String path) {
+        Texture localTexture = new Texture(Gdx.files.internal(path));
+        skin.add(path, localTexture);
+        return localTexture;
+    }
 
     @Override
-    public void create () {
+    public void show () {
+        super.show();
 
         /* Setting up the Stage. */
         skin = new Skin(Gdx.files.internal("skin.json"));
-        batch = new PolygonSpriteBatch();
-        stage = new Stage(new ScreenViewport(), batch);
-        Gdx.input.setInputProcessor(stage);
         Table root = new Table();
         root.setFillParent(true);
-        stage.addActor(root);
-//        stage.setDebugAll(true);
+        game.stage.addActor(root);
+//        game.stage.setDebugAll(true);
 
         /* Controls and instructions. */
         root.add(new Label("R: restart\n" +
@@ -88,6 +91,7 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Adding the demo widgets. */
         setUpButtonDragPieMenu(root);
+        setUpButtondragPieAnimationMenu(root);
         setUpRightMousePieMenu();
         setUpMiddleMousePieMenu();
         setUpRadialWidget(root);
@@ -123,7 +127,7 @@ public class Demonstration extends ApplicationAdapter {
         root.add(textButton).expand().bottom();
 
         /* Including the Widget in the Stage. */
-        stage.addActor(radial);
+        game.stage.addActor(radial);
         radial.setVisible(false);
     }
 
@@ -161,7 +165,7 @@ public class Demonstration extends ApplicationAdapter {
                 dragPie.resetSelection();
                 dragPie.centerOnActor(textButton);
                 dragPie.animateOpening(.4f);
-                transferInteraction(stage, dragPie);
+                transferInteraction(game.stage, dragPie);
                 return true;
             }
         });
@@ -183,8 +187,96 @@ public class Demonstration extends ApplicationAdapter {
         });
 
         /* Including the Widget in the Stage. */
-        stage.addActor(dragPie);
+        game.stage.addActor(dragPie);
         dragPie.setVisible(false);
+    }
+
+    private void setUpButtondragPieAnimationMenu(Table root) {
+
+        /* Setting up and creating the widget. */
+        PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
+        style.backgroundColor = new Color(1,1,1,.3f);
+        style.selectedColor = new Color(.7f,.3f,.5f,1);
+        style.sliceColor = new Color(0,.7f,0,1);
+        style.alternateSliceColor = new Color(.7f,0,0,1);
+        dragPieAnimation = new PieMenu(whitePixel, style, 130, 50f/130, 180, 320);
+        dragPieAnimation.setVisualAngleAutoUpdate(false);
+
+        /* Customizing the behavior. */
+        dragPieAnimation.setInfiniteSelectionRange(true);
+
+        /* Populating the widget. */
+        for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
+            Label label = new Label(Integer.toString(dragPieAnimationAmount++), skin);
+            dragPieAnimation.addActor(label);
+        }
+
+        RadialGroupActionVisualAngleOpen actionVisualAngleOpen = new RadialGroupActionVisualAngleOpen(dragPieAnimation, .1f, Interpolation.linear);
+        Action actionOpen = new ParallelAction(actionVisualAngleOpen, new RadialGroupActionColorBasic(dragPieAnimation));
+        RadialGroupActionVisualAngleClose actionVisualAngleClose = new RadialGroupActionVisualAngleClose(dragPieAnimation, .1f, Interpolation.linear);
+        Action actionClose = new ParallelAction(actionVisualAngleClose, new RadialGroupActionColorBasic(dragPieAnimation));
+
+        /* Setting up the demo-button. */
+        final TextButton textButton = new TextButton("Drag Pie",  skin);
+        textButton.addListener(new ClickListener() {
+            /*
+            In our particular case, we want to NOT use a ChangeListener because
+            else the user would have to release his mouse-click before seeing
+            the menu, which goes against our current goal of obtaining a
+            "drag-selection" menu.
+            */
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                dragPieAnimation.resetSelection();
+                dragPieAnimation.centerOnActor(textButton);
+
+                if (dragPieAnimation.getActions().contains(actionClose, true)) {
+                    actionClose.restart();
+                    dragPieAnimation.removeAction(actionClose);
+                }
+                if (!dragPieAnimation.getActions().contains(actionOpen, true)) {
+                    actionOpen.restart();
+                    dragPieAnimation.addAction(actionOpen);
+                }
+
+                transferInteraction(game.stage, dragPieAnimation);
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
+            }
+        });
+        root.add(textButton).expand().bottom();
+
+        /* Adding a selection-listener. */
+        dragPieAnimation.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                if (dragPieAnimation.getActions().contains(actionOpen, true)) {
+                    actionOpen.restart();
+                    dragPieAnimation.removeAction(actionOpen);
+                }
+                if (!dragPieAnimation.getActions().contains(actionClose, true)) {
+                    actionClose.restart();
+                    dragPieAnimation.addAction(actionClose);
+                }
+
+                int index = dragPieAnimation.getSelectedIndex();
+                if(!dragPieAnimation.isValidIndex(index)) {
+                    textButton.setText("Drag Pie");
+                    return;
+                }
+                Actor child = dragPieAnimation.getChild(index);
+                textButton.setText(((Label)child).getText().toString());
+            }
+        });
+
+        /* Including the Widget in the Stage. */
+        game.stage.addActor(dragPieAnimation);
+        dragPieAnimation.setVisible(false);
     }
 
     /**
@@ -201,7 +293,7 @@ public class Demonstration extends ApplicationAdapter {
     private void transferInteraction(Stage stage, PieMenu widget) {
         if(widget == null) throw new IllegalArgumentException("widget cannot be null.");
         if(widget.getPieMenuListener() == null) throw new IllegalArgumentException("inputListener cannot be null.");
-        stage.addTouchFocus(widget.getPieMenuListener(), widget, widget, 0, widget.getSelectionButton());
+        game.stage.addTouchFocus(widget.getPieMenuListener(), widget, widget, 0, widget.getSelectionButton());
     }
 
     private void setUpRightMousePieMenu() {
@@ -271,7 +363,7 @@ public class Demonstration extends ApplicationAdapter {
         /* Setting up and creating the widget. */
         midStyle1 = new PieMenu.PieMenuStyle();
         midStyle1.selectedColor = new Color(1,.5f,.5f,.5f);
-        midStyle1.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("rael_pie.png")));
+        midStyle1.background = new TextureRegionDrawable(getTextureSkinAttach("rael_pie.png"));
         middleMousePie = new PieMenu(whitePixel, midStyle1, 80, midStyle1InnerRadius, 30) {
             /* Since we are using Images, we want to resize them to fit within each sector. */
             @Override
@@ -297,12 +389,12 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Populating the widget. */
         Array<Image> imgs = new Array<>();
-        imgs.add(new Image(new Texture(Gdx.files.internal("heart-drop.png"))));
-        imgs.add(new Image(new Texture(Gdx.files.internal("beer-stein.png"))));
-        imgs.add(new Image(new Texture(Gdx.files.internal("coffee-mug.png"))));
-        imgs.add(new Image(new Texture(Gdx.files.internal("gooey-daemon.png"))));
-        imgs.add(new Image(new Texture(Gdx.files.internal("jeweled-chalice.png"))));
-        imgs.add(new Image(new Texture(Gdx.files.internal("coffee-mug.png"))));
+        imgs.add(new Image(getTextureSkinAttach("heart-drop.png")));
+        imgs.add(new Image(getTextureSkinAttach("beer-stein.png")));
+        imgs.add(new Image(getTextureSkinAttach("coffee-mug.png")));
+        imgs.add(new Image(getTextureSkinAttach("gooey-daemon.png")));
+        imgs.add(new Image(getTextureSkinAttach("jeweled-chalice.png")));
+        imgs.add(new Image(getTextureSkinAttach("coffee-mug.png")));
         for (int i = 0; i < imgs.size; i++)
             middleMousePie.addActor(imgs.get(i));
 
@@ -312,7 +404,7 @@ public class Demonstration extends ApplicationAdapter {
         midStyle2.selectedColor = new Color(1,.5f,.5f,.5f);
         midStyle2.separatorColor = new Color(.1f,.1f,.1f,.5f);
         midStyle2.sliceColor = new Color(.73f,.33f,.33f,.1f);
-        midStyle2.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("disc.png")));
+        midStyle2.background = new TextureRegionDrawable(getTextureSkinAttach("disc.png"));
     }
 
     private void setUpPermaPieMenu() {
@@ -347,7 +439,7 @@ public class Demonstration extends ApplicationAdapter {
 
         /* Including the Widget at some absolute coordinate in the World. */
         permaPie.setPosition(Gdx.graphics.getWidth()/2f,0, Align.center);
-        stage.addActor(permaPie);
+        game.stage.addActor(permaPie);
     }
 
 
@@ -355,28 +447,29 @@ public class Demonstration extends ApplicationAdapter {
 
 
     @Override
-    public void render () {
-
+    public void render (float delta) {
         /* Clearing the screen and filling up the background. */
         Gdx.gl.glClearColor(red, green, blue, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         /* Updating and drawing the Stage. */
-        stage.act();
-        stage.draw();
+        game.stage.act();
+        game.stage.draw();
 
         /* Debugging and interactions. */
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             dragPie.addActor(new Label(Integer.toString(dragPieAmount++), skin));
+            dragPieAnimation.addActor(new Label(Integer.toString(dragPieAnimationAmount++), skin));
             permaPie.addActor(new Label(Integer.toString(permaPieAmount++), skin));
             radial.addActor(new Label(Integer.toString(radialAmount++), skin));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             dragPieAmount = 0;
+            dragPieAnimationAmount = 0;
             permaPieAmount = 0;
             radialAmount = 0;
             dispose();
-            create();
+            show();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             if(dragPie.getAmountOfChildren() == 0)
@@ -389,13 +482,13 @@ public class Demonstration extends ApplicationAdapter {
             permaPie.setVisible(!permaPie.isVisible());
         }
         if (Gdx.input.isButtonJustPressed(rightMousePie.getSelectionButton())) {
-            stage.addActor(rightMousePie);
+            game.stage.addActor(rightMousePie);
             rightMousePie.centerOnMouse();
             rightMousePie.setVisible(true);
-            transferInteraction(stage, rightMousePie);
+            transferInteraction(game.stage, rightMousePie);
         }
         if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
-            stage.addActor(middleMousePie);
+            game.stage.addActor(middleMousePie);
             middleMousePie.centerOnMouse();
             middleMousePie.resetSelection();
             middleMousePie.setVisible(true);
@@ -411,16 +504,10 @@ public class Demonstration extends ApplicationAdapter {
     }
 
     @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
-
-    @Override
     public void dispose () {
 
         /* Disposing is good practice! */
         skin.dispose();
-        stage.dispose();
         tmpTex.dispose();
     }
 }
