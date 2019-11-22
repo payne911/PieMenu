@@ -37,6 +37,10 @@ public class BaseGame extends Game {
         }
     }
 
+    public void refreshDebug() {
+        stage.setDebugAll(isDebug);
+    }
+
     public void toggleDebug() {
         isDebug = !isDebug;
         stage.setDebugAll(isDebug);
@@ -72,12 +76,17 @@ public class BaseGame extends Game {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
+        super.resize(width, height);
     }
 
     @Override
     public void dispose() {
+        super.dispose();
         batch.dispose();
         stage.dispose();
         skin.dispose();
+        if (getScreen() != mainScreen) {
+            mainScreen.dispose();
+        }
     }
 }

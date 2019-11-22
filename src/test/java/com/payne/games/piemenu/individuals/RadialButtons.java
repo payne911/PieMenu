@@ -1,44 +1,27 @@
 package com.payne.games.piemenu.individuals;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
 import com.payne.games.piemenu.RadialGroup;
+import com.payne.games.piemenu.core.BaseGame;
+import com.payne.games.piemenu.core.BaseScreen;
 
 
-public class RadialButtons extends ApplicationAdapter {
-    private Skin skin;
-    private Stage stage;
-    private Batch batch;
+public class RadialButtons extends BaseScreen {
     private RadialGroup menu;
 
-    /* For the demonstration's purposes. Not actually necessary. */
-    private float red   = .25f;
-    private float blue  = .75f;
-    private float green = .25f;
-
+    public RadialButtons(BaseGame game) {
+        super(game);
+    }
 
     @Override
-    public void create () {
-
-        /* Setting up the Stage. */
-        skin = new Skin(Gdx.files.internal("skin.json"));
-        batch = new PolygonSpriteBatch();
-        stage = new Stage(new ScreenViewport(), batch);
-        Gdx.input.setInputProcessor(stage);
-
-
+    public void show() {
+        setScreenColor(.25f, .25f, .75f, 1f);
 
         /* ====================================================================\
         |                  HERE BEGINS THE MORE SPECIFIC CODE                  |
@@ -46,17 +29,17 @@ public class RadialButtons extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.backgroundColor = new Color(1,1,1,.3f);
-        style.selectedColor = new Color(.7f,.3f,.5f,1);
-        style.sliceColor = new Color(0,.7f,0,1);
-        style.alternateSliceColor = new Color(.7f,0,0,1);
+        style.backgroundColor = new Color(1, 1, 1, .3f);
+        style.selectedColor = new Color(.7f, .3f, .5f, 1);
+        style.sliceColor = new Color(0, .7f, 0, 1);
+        style.alternateSliceColor = new Color(.7f, 0, 0, 1);
         menu = new RadialGroup(200, .7f);
 
         /* Populating the widget. */
         for (int i = 0; i < 9; i++) {
             final int tmp = i;
             String name;
-            switch(i) {
+            switch (i) {
                 case 0:
                     name = "-BLUE-";
                     break;
@@ -70,30 +53,30 @@ public class RadialButtons extends ApplicationAdapter {
                     name = "white";
                     break;
             }
-            TextButton btn = new TextButton(name, skin);
+            TextButton btn = new TextButton(name, game.skin);
             btn.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    switch(tmp) {
+                    switch (tmp) {
                         case 0:
-                            red   = .25f;
-                            blue  = .75f;
-                            green = .25f;
+                            screenColorRed = .25f;
+                            screenColorBlue = .75f;
+                            screenColorGreen = .25f;
                             break;
                         case 3:
-                            red   = .75f;
-                            blue  = .25f;
-                            green = .25f;
+                            screenColorRed = .75f;
+                            screenColorBlue = .25f;
+                            screenColorGreen = .25f;
                             break;
                         case 6:
-                            red   = .25f;
-                            blue  = .25f;
-                            green = .75f;
+                            screenColorRed = .25f;
+                            screenColorBlue = .25f;
+                            screenColorGreen = .75f;
                             break;
                         default:
-                            red   = .75f;
-                            blue  = .75f;
-                            green = .75f;
+                            screenColorRed = .75f;
+                            screenColorBlue = .75f;
+                            screenColorGreen = .75f;
                             break;
                     }
                 }
@@ -102,41 +85,19 @@ public class RadialButtons extends ApplicationAdapter {
         }
 
         /* Setting up the demo-button. */
-        final TextButton textButton = new TextButton("Show buttons",  skin);
+        final TextButton textButton = new TextButton("Show buttons", game.skin);
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 menu.setVisible(!menu.isVisible());
             }
         });
-        textButton.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2, Align.center);
-        stage.addActor(textButton);
+        textButton.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, Align.center);
+        game.stage.addActor(textButton);
 
         /* Including the widget in the Stage. */
-        stage.addActor(menu);
+        game.stage.addActor(menu);
         menu.setVisible(false);
         menu.centerOnActor(textButton);
-    }
-
-
-    @Override
-    public void render () {
-
-        /* Clearing the screen and filling up the background. */
-        Gdx.gl.glClearColor(red, green, blue, 1); // updated with the menu
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        /* Drawing the Stage (no need to update with `Stage#act()`). */
-        stage.draw();
-    }
-
-
-    @Override
-    public void dispose () {
-
-        /* Disposing is good practice! */
-        stage.dispose();
-        batch.dispose();
-        skin.dispose();
     }
 }
