@@ -367,7 +367,7 @@ public class PieWidget extends RadialGroup {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        drawWithShapeDrawer(batch, parentAlpha, totalDegreesDrawn);
+        drawWithShapeDrawer(batch, parentAlpha, visualAngle);
         drawMe(batch, parentAlpha);
     }
 

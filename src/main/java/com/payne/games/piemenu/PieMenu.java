@@ -550,7 +550,7 @@ public class PieMenu extends PieWidget {
          *
          * @param style a Style to copy the parameters from.
          */
-        public PieMenuStyle(PieMenu.PieMenuStyle style) {
+        public PieMenuStyle(PieMenuStyle style) {
             super(style);
             this.selectedColor = new Color(style.selectedColor);
             this.downColor = new Color(style.downColor);

@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.Align;
 import com.payne.games.piemenu.PieWidget.PieWidgetStyle;
@@ -83,6 +84,10 @@ public class RadialGroup extends WidgetGroup {
     protected static final float BUFFER = 1;
     private static Vector2 vector2 = new Vector2();
 
+    protected float visualAngle;
+    protected int visualActionOpenCount = 0;
+    protected int visualActionCloseCount = 0;
+    protected boolean visualAngleAutoUpdate = true;
 
 
     /** Used internally for the shared properties among constructors of RadialWidgets. */
@@ -311,10 +316,19 @@ public class RadialGroup extends WidgetGroup {
     }
 
     @Override
+    public void act(float delta) {
+        super.act(delta);
+
+        if (visualAngleAutoUpdate && visualActionOpenCount == 0 && visualActionCloseCount == 0) {
+            if (visualAngle != totalDegreesDrawn) setVisualAngle(totalDegreesDrawn);
+        }
+    }
+
+    @Override
     public void layout() {
         updateOrigin(); // for rotations to happen around the actual center
 
-        float degreesPerChild = totalDegreesDrawn / getAmountOfChildren();
+        float degreesPerChild = visualAngle / getAmountOfChildren();
         float half = 1f / 2;
 
         for (int i = 0; i < getAmountOfChildren(); i++) {
@@ -416,7 +430,7 @@ public class RadialGroup extends WidgetGroup {
      * @return The index of the child at that coordinate. Not guaranteed to be valid.
      */
     public int findIndexFromAngle(float angle) {
-        return MathUtils.floor(angle / totalDegreesDrawn * getAmountOfChildren());
+        return MathUtils.floor(angle / visualAngle * getAmountOfChildren());
     }
 
     /**
@@ -743,5 +757,78 @@ public class RadialGroup extends WidgetGroup {
             this.totalDegreesDrawn = totalDegreesDrawn;
             invalidate();
         }
+    }
+
+    /**
+     * The visual angle, represents the current angle, used for animation, similar in concept to {@link ScrollPane#getVisualScrollX()} and {@link ScrollPane#getVisualScrollY()}
+     */
+    public float getVisualAngle() {
+        return visualAngle;
+    }
+
+    /**
+     * Called whenever the visual angle is changed.
+     */
+    public void setVisualAngle(float visualAngle) {
+        if (visualAngle > totalDegreesDrawn || visualAngle < 0) {
+            throw new IllegalArgumentException("currentAngle must be between 0 and totalDegreesDrawn.");
+        }
+        if (this.visualAngle != visualAngle) {
+            this.visualAngle = visualAngle;
+            invalidate();
+        }
+    }
+
+    /**
+     * Sets the visual angle equal to the total angle. This can be used when setting the angle without
+     * animating.
+     */
+    public void updateVisualAngle() {
+        visualAngle = totalDegreesDrawn;
+    }
+
+    public float getVisualAnglePercent() {
+        if (totalDegreesDrawn == 0) return 0;
+        return MathUtils.clamp(visualAngle / totalDegreesDrawn, 0, 1);
+    }
+
+    public int getVisualActionOpenCount() {
+        return visualActionOpenCount;
+    }
+
+    public void setVisualActionOpenCount(int visualActionOpenCount) {
+        this.visualActionOpenCount = visualActionOpenCount;
+    }
+
+    public void incrementVisualActionOpenCount() {
+        this.visualActionOpenCount++;
+    }
+
+    public void decrementVisualActionOpenCount() {
+        this.visualActionOpenCount--;
+    }
+
+    public int getVisualActionCloseCount() {
+        return visualActionCloseCount;
+    }
+
+    public void setVisualActionCloseCount(int visualActionCloseCount) {
+        this.visualActionCloseCount = visualActionCloseCount;
+    }
+
+    public void incrementVisualActionCloseCount() {
+        this.visualActionCloseCount++;
+    }
+
+    public void decrementVisualActionCloseCount() {
+        this.visualActionCloseCount--;
+    }
+
+    public boolean isVisualAngleAutoUpdate() {
+        return visualAngleAutoUpdate;
+    }
+
+    public void setVisualAngleAutoUpdate(boolean visualAngleAutoUpdate) {
+        this.visualAngleAutoUpdate = visualAngleAutoUpdate;
     }
 }
