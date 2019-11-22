@@ -4,12 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -589,8 +584,12 @@ public class PieMenu extends PieWidget {
 
         selectedIndex = newIndex;
         highlightedIndex = newIndex;
-        if (newIndex != oldHighlightedIndex)
-            fire(new PieMenuHighlightChangeEvent(newIndex));
+        if (newIndex != oldHighlightedIndex) {
+            PieMenuHighlightChangeEvent highlightChangeEvent = Pools.obtain(PieMenuHighlightChangeEvent.class);
+            highlightChangeEvent.newIndex = newIndex;
+            fire(highlightChangeEvent);
+            Pools.free(highlightChangeEvent);
+        }
 
         ChangeListener.ChangeEvent changeEvent = Pools.obtain(ChangeListener.ChangeEvent.class);
         if (fire(changeEvent)) {
@@ -630,7 +629,10 @@ public class PieMenu extends PieWidget {
         if(newIndex != highlightedIndex) {
             highlightedIndex = newIndex;
             resetHover();
-            fire(new PieMenuHighlightChangeEvent(newIndex));
+            PieMenuHighlightChangeEvent highlightChangeEvent = Pools.obtain(PieMenuHighlightChangeEvent.class);
+            highlightChangeEvent.newIndex = newIndex;
+            fire(highlightChangeEvent);
+            Pools.free(highlightChangeEvent);
         }
     }
 
@@ -665,7 +667,10 @@ public class PieMenu extends PieWidget {
         newIndex = mapIndex(newIndex);
         if(newIndex != hoveredIndex) {
             hoveredIndex = newIndex;
-            fire(new PieMenuHoverChangeEvent(newIndex));
+            PieMenuHoverChangeEvent hoverChangeEvent = Pools.obtain(PieMenuHoverChangeEvent.class);
+            hoverChangeEvent.newIndex = newIndex;
+            fire(hoverChangeEvent);
+            Pools.free(hoverChangeEvent);
         }
     }
 
@@ -789,16 +794,20 @@ public class PieMenu extends PieWidget {
     private static class PieMenuHighlightChangeEvent extends Event {
         private int newIndex;
 
-        public PieMenuHighlightChangeEvent(int newIndex) {
-            this.newIndex = newIndex;
+        @Override
+        public void reset() {
+            super.reset();
+            newIndex = -1;
         }
     }
 
     private static class PieMenuHoverChangeEvent extends Event {
         private int newIndex;
 
-        public PieMenuHoverChangeEvent(int newIndex) {
-            this.newIndex = newIndex;
+        @Override
+        public void reset() {
+            super.reset();
+            newIndex = -1;
         }
     }
 
