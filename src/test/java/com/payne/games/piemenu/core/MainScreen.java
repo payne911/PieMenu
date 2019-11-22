@@ -13,7 +13,22 @@ import com.badlogic.gdx.utils.reflect.Constructor;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.payne.games.piemenu.Demonstration;
 import com.payne.games.piemenu.genericTests.CenterOnActor;
-
+import com.payne.games.piemenu.genericTests.DifferentActorsWidget;
+import com.payne.games.piemenu.genericTests.HitInfiniteMiddle;
+import com.payne.games.piemenu.genericTests.HitOutside;
+import com.payne.games.piemenu.genericTests.MgsxTests;
+import com.payne.games.piemenu.genericTests.RotatingFillParentWidget;
+import com.payne.games.piemenu.genericTests.SelfContainedPieMenu;
+import com.payne.games.piemenu.genericTests.ShapeDrawerLimit;
+import com.payne.games.piemenu.genericTests.TableWidgets;
+import com.payne.games.piemenu.individuals.ButtonBound;
+import com.payne.games.piemenu.individuals.ButtonToggle;
+import com.payne.games.piemenu.individuals.ClickDrag;
+import com.payne.games.piemenu.individuals.ClickToggle;
+import com.payne.games.piemenu.individuals.CustomAnimation;
+import com.payne.games.piemenu.individuals.KeyMap;
+import com.payne.games.piemenu.individuals.Permanent;
+import com.payne.games.piemenu.individuals.RadialButtons;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,11 +37,33 @@ public class MainScreen extends BaseScreen {
 
     public static final List<Class<? extends BaseScreen>> registeredTests = new ArrayList<Class<? extends BaseScreen>>(Arrays.asList(
             Demonstration.class,
-            CenterOnActor.class));
+
+            CenterOnActor.class,
+            DifferentActorsWidget.class,
+            HitInfiniteMiddle.class,
+            HitOutside.class,
+            MgsxTests.class,
+            RotatingFillParentWidget.class,
+            SelfContainedPieMenu.class,
+            ShapeDrawerLimit.class,
+            TableWidgets.class,
+
+            ButtonBound.class,
+            ButtonToggle.class,
+            ClickDrag.class,
+            ClickToggle.class,
+            CustomAnimation.class,
+            KeyMap.class,
+            Permanent.class,
+            RadialButtons.class
+    ));
+
     private Table tableRoot;
 
     public MainScreen(BaseGame game) {
         super(game);
+
+        autoDispose = false;
 
         tableRoot = new Table(game.skin);
         tableRoot.setFillParent(true);
@@ -51,6 +88,7 @@ public class MainScreen extends BaseScreen {
                 @Override
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                     super.enter(event, x, y, pointer, fromActor);
+                    game.stage.setScrollFocus(localScrollPane);
                     localLabel.setColor(Color.RED);
                 }
 
@@ -78,7 +116,7 @@ public class MainScreen extends BaseScreen {
 
     @Override
     public void show() {
-        super.show();
         game.stage.addActor(tableRoot);
+        game.refreshDebug();
     }
 }

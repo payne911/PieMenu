@@ -1,51 +1,26 @@
 package com.payne.games.piemenu.genericTests;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
 import com.payne.games.piemenu.PieMenu.PieMenuStyle;
+import com.payne.games.piemenu.core.BaseGame;
+import com.payne.games.piemenu.core.BaseScreen;
 
 
-public class HitInfiniteMiddle extends ApplicationAdapter {
-    private Skin skin;
-    private Stage stage;
-    private Texture tmpTex;
-    private Batch batch;
+public class HitInfiniteMiddle extends BaseScreen {
     private PieMenu containerWidget;
 
+    public HitInfiniteMiddle(BaseGame game) {
+        super(game);
+    }
+
     @Override
-    public void create() {
-
-        /* Setting up the Stage. */
-        skin = new Skin(Gdx.files.internal("skin.json"));
-        batch = new PolygonSpriteBatch();
-        stage = new Stage(new ScreenViewport(), batch);
-        Gdx.input.setInputProcessor(stage);
-        stage.setDebugAll(true);
-
-        /* Setting up the WhitePixel. */
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(1, 1, 1, 1);
-        pixmap.fill();
-        tmpTex = new Texture(pixmap);
-        pixmap.dispose();
-        TextureRegion whitePixel = new TextureRegion(tmpTex);
-
-
-
-
+    public void show() {
+        setScreenColor(.4f, .4f, .4f, 1);
+        game.enableDebug();
 
         /* Adding the demo widgets. */
         PieMenuStyle style1 = new PieMenuStyle();
@@ -56,32 +31,23 @@ public class HitInfiniteMiddle extends ApplicationAdapter {
         style1.separatorWidth = 2;
         style1.separatorColor = Color.BLACK;
 
-        containerWidget = new PieMenu(whitePixel, style1, 200, 0.9f);
+        containerWidget = new PieMenu(game.skin.getRegion("white"), style1, 200, 0.9f);
         containerWidget.setName("MAIN");
         containerWidget.setInfiniteSelectionRange(true);
         containerWidget.setMiddleCancel(true);
 
-        for(int i=0 ; i<5 ; i++) {
-            TextButton tmp = new TextButton("@@@@@@@@@@@@@@@@@@", skin);
+        for (int i = 0; i < 5; i++) {
+            TextButton tmp = new TextButton("@@@@@@@@@@@@@@@@@@", game.skin);
             containerWidget.addActor(tmp);
         }
 
 
-        stage.addActor(containerWidget);
+        game.stage.addActor(containerWidget);
         containerWidget.setFillParent(true);
     }
 
     @Override
-    public void render() {
-
-        /* Clearing the screen and filling up the background. */
-        Gdx.gl.glClearColor(.4f, .4f, .4f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        /* Updating and drawing the Stage. */
-        stage.act();
-        stage.draw();
-
+    public void updateInputPost(float delta) {
         containerWidget.centerOnScreen();
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
@@ -89,20 +55,5 @@ public class HitInfiniteMiddle extends ApplicationAdapter {
             System.out.println(containerWidget.getRotation());
         }
 
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
-
-    @Override
-    public void dispose() {
-
-        /* Disposing is good practice! */
-        skin.dispose();
-        stage.dispose();
-        batch.dispose();
-        tmpTex.dispose();
     }
 }

@@ -1,69 +1,49 @@
 package com.payne.games.piemenu.genericTests;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.payne.games.piemenu.PieMenu;
+import com.payne.games.piemenu.core.BaseGame;
+import com.payne.games.piemenu.core.BaseScreen;
 
 
-public class TableWidgets extends ApplicationAdapter {
-    private Skin skin;
-    private Stage stage;
-    private Batch batch;
-    private Texture tmpTex;
+public class TableWidgets extends BaseScreen {
+
+    public TableWidgets(BaseGame game) {
+        super(game);
+    }
 
     @Override
-    public void create () {
+    public void show() {
+        setScreenColor(.2f, .2f, .7f, 1);
 
-        /* Setting up the Stage. */
-        skin = new Skin(Gdx.files.internal("skin.json"));
-        batch = new PolygonSpriteBatch();
-        stage = new Stage(new ScreenViewport(), batch);
-        Gdx.input.setInputProcessor(stage);
-		Table root = new Table();
-		root.debugAll();
-		root.setFillParent(true);
-		stage.addActor(root);
+        Table root = new Table();
+        root.debugAll();
+        root.setFillParent(true);
+        game.stage.addActor(root);
 
-		/* Top label. */
-		root.add(new Label("R: restart\n" +
-				"S: toggle the permanent pie\n" +
-				"Middle-click / Right-click: try it out!", skin)).colspan(2).padTop(25).top();
+        /* Top label. */
+        root.add(new Label("R: restart\n" +
+                "S: toggle the permanent pie\n" +
+                "Middle-click / Right-click: try it out!", game.skin)).colspan(2).padTop(25).top();
 
-		/* New row. */
-		root.row().padBottom(20).uniform();
-
-        /* Setting up the WhitePixel. */
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(1,1,1,1);
-        pixmap.fill();
-        tmpTex = new Texture(pixmap);
-        pixmap.dispose();
-        TextureRegion whitePixel = new TextureRegion(tmpTex);
-
-
-
-
+        /* New row. */
+        root.row().padBottom(20).uniform();
 
         /* Adding the demo widgets. */
         PieMenu.PieMenuStyle style1 = new PieMenu.PieMenuStyle();
         style1.hoverColor = Color.RED;
         style1.selectedColor = Color.BLUE;
         style1.backgroundColor = Color.ORANGE;
-        PieMenu menu1 = new PieMenu(whitePixel, style1, 80);
+        PieMenu menu1 = new PieMenu(game.skin.getRegion("white"), style1, 80);
         menu1.setName("left widget");
 
-        for(int i=0 ; i<5 ; i++)
-            menu1.addActor(new Label("menu " + i, skin));
+        for (int i = 0; i < 5; i++)
+            menu1.addActor(new Label("menu " + i, game.skin));
 
 //        menu1.setPosition(stage.getWidth()/2 + 100, stage.getHeight()/2, Align.center);
 //        stage.addActor(menu1);
@@ -75,11 +55,11 @@ public class TableWidgets extends ApplicationAdapter {
         style2.hoverColor = Color.RED;
         style2.selectedColor = Color.BLUE;
         style2.backgroundColor = Color.ORANGE;
-        PieMenu menu2 = new PieMenu(whitePixel, style2, 120);
+        PieMenu menu2 = new PieMenu(game.skin.getRegion("white"), style2, 120);
         menu2.setName("right widget");
 
-        for(int i=0 ; i<5 ; i++)
-            menu2.addActor(new Label("menu " + i, skin));
+        for (int i = 0; i < 5; i++)
+            menu2.addActor(new Label("menu " + i, game.skin));
 
 //        menu2.setPosition(0, 0, Align.bottomLeft);
 //        stage.addActor(menu2);
@@ -94,10 +74,10 @@ public class TableWidgets extends ApplicationAdapter {
         style3.hoverColor = Color.RED;
         style3.selectedColor = Color.BLUE;
         style3.backgroundColor = Color.ORANGE;
-        PieMenu menu3 = new PieMenu(whitePixel, style3, 40);
+        PieMenu menu3 = new PieMenu(game.skin.getRegion("white"), style3, 40);
 
-        for(int i=0 ; i<5 ; i++)
-            menu3.addActor(new Label("menu " + i, skin));
+        for (int i = 0; i < 5; i++)
+            menu3.addActor(new Label("menu " + i, game.skin));
 
 //        menu3.setPosition(stage.getWidth(), stage.getHeight(), Align.topRight);
 //        stage.addActor(menu3);
@@ -108,39 +88,11 @@ public class TableWidgets extends ApplicationAdapter {
 
         /* Some buttons, for comparison. */
         root.row().padLeft(50);
-        Button b1 = new Button(skin);
-        Button b2 = new TextButton("textBtn", skin);
-        Button b3 = new ImageTextButton("imgTxt", skin);
+        Button b1 = new Button(game.skin);
+        Button b2 = new TextButton("textBtn", game.skin);
+        Button b3 = new ImageTextButton("imgTxt", game.skin);
 
         root.add(b1).fill();
-        root.add(b2,b3);
-    }
-
-    @Override
-    public void render () {
-
-        /* Clearing the screen and filling up the background. */
-        Gdx.gl.glClearColor(.2f,.2f,.7f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        /* Updating and drawing the Stage. */
-        stage.act();
-        stage.draw();
-
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
-
-    @Override
-    public void dispose () {
-
-        /* Disposing is good practice! */
-        skin.dispose();
-        batch.dispose();
-        stage.dispose();
-        tmpTex.dispose();
+        root.add(b2, b3);
     }
 }
