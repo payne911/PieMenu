@@ -60,9 +60,21 @@ public class MainScreen extends BaseScreen {
         localScrollPane.setOverscroll(false, false);
         localScrollPane.setFadeScrollBars(false);
 
-        tableRoot.add("Select A Test", "red");
+        tableRoot.add("Select A Test")
+                .expandX()
+                .pad(10)
+                .getActor().setFontScale(1.2f);
         tableRoot.row();
         tableRoot.add(localScrollPane).grow();
+        tableRoot.row();
+        tableRoot.add("Press CTRL + NumPad- to switch to the previous test\n" +
+                "Press CTRL + NumPad+ to switch to the next test\n" +
+                "Press CTRL + R to restart the current test\n" +
+                "Press CTRL + D to toggle debug\n" +
+                "Press Esc to exit to main menu")
+                .left()
+                .growX()
+                .pad(10);
 
         for (int i = 0; i < registeredTests.size(); i++) {
             Class localClass = registeredTests.get(i);
@@ -75,7 +87,7 @@ public class MainScreen extends BaseScreen {
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                     super.enter(event, x, y, pointer, fromActor);
                     game.stage.setScrollFocus(localScrollPane);
-                    localLabel.setColor(Color.RED);
+                    localLabel.setColor(Color.WHITE);
                 }
 
                 @Override
