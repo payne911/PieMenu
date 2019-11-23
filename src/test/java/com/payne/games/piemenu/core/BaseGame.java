@@ -3,11 +3,15 @@ package com.payne.games.piemenu.core;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.Constructor;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class BaseGame extends Game {
@@ -61,6 +65,41 @@ public class BaseGame extends Game {
             if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
                 toggleDebug();
                 Gdx.app.log("Debug mode", isDebug ? "On" : "Off");
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+                if (getScreen() != mainScreen) {
+                    try {
+                        Constructor localConstructor = ClassReflection.getConstructor(getScreen().getClass(), BaseGame.class);
+                        setScreen((Screen) localConstructor.newInstance(this));
+                    } catch (ReflectionException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.MINUS)) {
+                if (getScreen() != mainScreen) {
+                    int localIndexCurrent = MainScreen.registeredTests.indexOf(getScreen().getClass());
+                    int localIndexNext = localIndexCurrent - 1;
+                    if ((localIndexCurrent >= 0 && localIndexCurrent < MainScreen.registeredTests.size()) && localIndexNext >= 0) {
+                        try {
+                            Constructor localConstructor = ClassReflection.getConstructor(MainScreen.registeredTests.get(localIndexNext), BaseGame.class);
+                            setScreen((Screen) localConstructor.newInstance(this));
+                        } catch (ReflectionException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.PLUS)) {
+                if (getScreen() != mainScreen) {
+                    int localIndexCurrent = MainScreen.registeredTests.indexOf(getScreen().getClass());
+                    int localIndexNext = localIndexCurrent + 1;
+                    if ((localIndexCurrent >= 0 && localIndexCurrent < MainScreen.registeredTests.size()) && localIndexNext < MainScreen.registeredTests.size()) {
+                        try {
+                            Constructor localConstructor = ClassReflection.getConstructor(MainScreen.registeredTests.get(localIndexNext), BaseGame.class);
+                            setScreen((Screen) localConstructor.newInstance(this));
+                        } catch (ReflectionException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             switchToMainScreen();
