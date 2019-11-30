@@ -1,4 +1,4 @@
-package com.payne.games.piemenu.individuals;
+package com.payne.games.piemenu.listedExamples;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -8,8 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.payne.games.piemenu.PieMenu;
-import com.payne.games.piemenu.core.BaseGame;
 import com.payne.games.piemenu.core.BaseScreen;
+import com.payne.games.piemenu.core.TestsMenu;
 
 
 public class Permanent extends BaseScreen {
@@ -18,7 +18,7 @@ public class Permanent extends BaseScreen {
     /* For the demonstration's purposes. */
     private Color backgroundColor = new Color(1, 1, 1, .2f);
 
-    public Permanent(BaseGame game) {
+    public Permanent(TestsMenu game) {
         super(game);
     }
 
@@ -32,7 +32,7 @@ public class Permanent extends BaseScreen {
 
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.circumferenceWidth = 1;
+        style.circumferenceWidth = 2;
         style.backgroundColor = backgroundColor;
         style.downColor = new Color(.5f, .5f, .5f, 1);
         style.sliceColor = new Color(.33f, .33f, .33f, 1);

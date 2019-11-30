@@ -1,4 +1,6 @@
 UPCOMING [4.1.0]
+- Integrated the scene2d `Actions` to allow more customizable animations than what the `AnimatedPieMenu` and `AnimatedPieWidget` offered.
+- Added a Testing Menu so that Contributors can more easily test their implementations.
 - Updated `ShapeDrawer` version to `v2.1.0`.
 
 [4.0.0]

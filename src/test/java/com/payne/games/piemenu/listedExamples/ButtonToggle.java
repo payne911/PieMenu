@@ -1,4 +1,4 @@
-package com.payne.games.piemenu.individuals;
+package com.payne.games.piemenu.listedExamples;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -9,13 +9,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.payne.games.piemenu.AnimatedPieWidget;
 import com.payne.games.piemenu.PieWidget;
-import com.payne.games.piemenu.core.BaseGame;
 import com.payne.games.piemenu.core.BaseScreen;
+import com.payne.games.piemenu.core.TestsMenu;
 
 public class ButtonToggle extends BaseScreen {
     private AnimatedPieWidget radGroup;
 
-    public ButtonToggle(BaseGame game) {
+    public ButtonToggle(TestsMenu game) {
         super(game);
     }
 

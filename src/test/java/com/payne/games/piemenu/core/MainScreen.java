@@ -12,41 +12,59 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Constructor;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.payne.games.piemenu.Demonstration;
-import com.payne.games.piemenu.genericTests.*;
-import com.payne.games.piemenu.individuals.*;
-
+import com.payne.games.piemenu.listedExamples.ActionMenu;
+import com.payne.games.piemenu.listedExamples.ButtonBound;
+import com.payne.games.piemenu.listedExamples.ButtonToggle;
+import com.payne.games.piemenu.listedExamples.ClickDrag;
+import com.payne.games.piemenu.listedExamples.ClickToggle;
+import com.payne.games.piemenu.listedExamples.CustomAnimation;
+import com.payne.games.piemenu.listedExamples.KeyMap;
+import com.payne.games.piemenu.listedExamples.Permanent;
+import com.payne.games.piemenu.listedExamples.RadialButtons;
+import com.payne.games.piemenu.visualTests.CenterOnActor;
+import com.payne.games.piemenu.visualTests.DifferentActorsWidget;
+import com.payne.games.piemenu.visualTests.HitInfiniteMiddle;
+import com.payne.games.piemenu.visualTests.HitOutside;
+import com.payne.games.piemenu.visualTests.MgsxTests;
+import com.payne.games.piemenu.visualTests.RotatingFillParentWidget;
+import com.payne.games.piemenu.visualTests.SelfContainedPieMenu;
+import com.payne.games.piemenu.visualTests.ShapeDrawerLimit;
+import com.payne.games.piemenu.visualTests.TableWidgets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class MainScreen extends BaseScreen {
 
-    public static final List<Class<? extends BaseScreen>> registeredTests = new ArrayList<Class<? extends BaseScreen>>(Arrays.asList(
-            Demonstration.class,
+    // todo: this list should be populated automatically (so as to respect the OCP principle)
+    public static final List<Class<? extends BaseScreen>> registeredTests = new ArrayList<>(
+            Arrays.asList(
+                    Demonstration.class,
 
-            CenterOnActor.class,
-            DifferentActorsWidget.class,
-            HitInfiniteMiddle.class,
-            HitOutside.class,
-            MgsxTests.class,
-            RotatingFillParentWidget.class,
-            SelfContainedPieMenu.class,
-            ShapeDrawerLimit.class,
-            TableWidgets.class,
+                    CenterOnActor.class,
+                    DifferentActorsWidget.class,
+                    HitInfiniteMiddle.class,
+                    HitOutside.class,
+                    MgsxTests.class,
+                    RotatingFillParentWidget.class,
+                    SelfContainedPieMenu.class,
+                    ShapeDrawerLimit.class,
+                    TableWidgets.class,
 
-            ButtonBound.class,
-            ButtonToggle.class,
-            ClickDrag.class,
-            ClickToggle.class,
-            CustomAnimation.class,
-            KeyMap.class,
-            Permanent.class,
-            RadialButtons.class
-    ));
+                    ActionMenu.class,
+                    ButtonBound.class,
+                    ButtonToggle.class,
+                    ClickDrag.class,
+                    ClickToggle.class,
+                    CustomAnimation.class,
+                    KeyMap.class,
+                    Permanent.class,
+                    RadialButtons.class
+            ));
 
     private Table tableRoot;
 
-    public MainScreen(BaseGame game) {
+    public MainScreen(TestsMenu game) {
         super(game);
 
         autoDispose = false;
@@ -102,7 +120,7 @@ public class MainScreen extends BaseScreen {
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
                     try {
-                        Constructor localConstructor = ClassReflection.getConstructor(localClass, BaseGame.class);
+                        Constructor localConstructor = ClassReflection.getConstructor(localClass, TestsMenu.class);
                         game.setScreen((Screen) localConstructor.newInstance(game));
                     } catch (ReflectionException e) {
                         e.printStackTrace();
