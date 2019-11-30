@@ -14,11 +14,11 @@ public abstract class BaseScreen extends ScreenAdapter {
     protected float screenColorBlue = 0.4f;
     protected float screenColorAlpha = 1f;
 
-    protected BaseGame game;
+    protected TestsMenu game;
     protected boolean autoDispose = true;
     protected Array<Texture> autoDisposableTextures = new Array<>();
 
-    public BaseScreen(BaseGame game) {
+    public BaseScreen(TestsMenu game) {
         this.game = game;
     }
 
@@ -39,10 +39,10 @@ public abstract class BaseScreen extends ScreenAdapter {
         screenColorAlpha = a;
     }
 
-    public void updateInputPre(float delta) {
+    public void updateInputPre(float delta) { // todo: remove?
     }
 
-    public void updateInputPost(float delta) {
+    public void updateInputPost(float delta) { // todo: remove?
     }
 
     @Override
@@ -50,12 +50,12 @@ public abstract class BaseScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(screenColorRed, screenColorGreen, screenColorBlue, screenColorAlpha);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        updateInputPre(delta);
+        updateInputPre(delta); // todo: remove?
 
         game.stage.act(delta);
         game.stage.draw();
 
-        updateInputPost(delta);
+        updateInputPost(delta); // todo: remove?
     }
 
     @Override

@@ -3,14 +3,11 @@ package com.payne.games.piemenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -20,15 +17,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.payne.games.piemenu.actions.RadialGroupActionColorBasic;
-import com.payne.games.piemenu.actions.RadialGroupActionVisualAngleClose;
-import com.payne.games.piemenu.actions.RadialGroupActionVisualAngleOpen;
-import com.payne.games.piemenu.core.BaseGame;
 import com.payne.games.piemenu.core.BaseScreen;
+import com.payne.games.piemenu.core.TestsMenu;
 
 public class Demonstration extends BaseScreen {
     private AnimatedPieMenu dragPie;
-    private PieMenu dragPieAnimation;
     private PieMenu permaPie;
     private PieMenu rightMousePie;
     private PieMenu middleMousePie;
@@ -40,12 +33,11 @@ public class Demonstration extends BaseScreen {
     private float midStyle2InnerRadius = 27f / 80;
     private Color backgroundColor = new Color(1, 1, 1, .2f);
     private int dragPieAmount = 0;
-    private int dragPieAnimationAmount = 0;
     private int permaPieAmount = 0;
     private int radialAmount = 0;
     private final int INITIAL_CHILDREN_AMOUNT = 5;
 
-    public Demonstration(BaseGame game) {
+    public Demonstration(TestsMenu game) {
         super(game);
     }
 
@@ -73,7 +65,6 @@ public class Demonstration extends BaseScreen {
 
         /* Adding the demo widgets. */
         setUpButtonDragPieMenu(root);
-        setUpButtonDragPieAnimationMenu(root);
         setUpRightMousePieMenu();
         setUpMiddleMousePieMenu();
         setUpRadialWidget(root);
@@ -173,94 +164,6 @@ public class Demonstration extends BaseScreen {
         dragPie.setVisible(false);
     }
 
-    private void setUpButtonDragPieAnimationMenu(Table root) {
-
-        /* Setting up and creating the widget. */
-        PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.backgroundColor = new Color(1, 1, 1, .3f);
-        style.selectedColor = new Color(.7f, .3f, .5f, 1);
-        style.sliceColor = new Color(0, .7f, 0, 1);
-        style.alternateSliceColor = new Color(.7f, 0, 0, 1);
-        dragPieAnimation = new PieMenu(game.skin.getRegion("white"), style, 130, 50f / 130, 180, 320);
-        dragPieAnimation.setVisualAngleAutoUpdate(false);
-
-        /* Customizing the behavior. */
-        dragPieAnimation.setInfiniteSelectionRange(true);
-
-        /* Populating the widget. */
-        for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
-            Label label = new Label(Integer.toString(dragPieAnimationAmount++), game.skin);
-            dragPieAnimation.addActor(label);
-        }
-
-        RadialGroupActionVisualAngleOpen actionVisualAngleOpen = new RadialGroupActionVisualAngleOpen(dragPieAnimation, .1f, Interpolation.linear);
-        Action actionOpen = new ParallelAction(actionVisualAngleOpen, new RadialGroupActionColorBasic(dragPieAnimation));
-        RadialGroupActionVisualAngleClose actionVisualAngleClose = new RadialGroupActionVisualAngleClose(dragPieAnimation, .1f, Interpolation.linear);
-        Action actionClose = new ParallelAction(actionVisualAngleClose, new RadialGroupActionColorBasic(dragPieAnimation));
-
-        /* Setting up the demo-button. */
-        final TextButton textButton = new TextButton("Drag Pie", game.skin);
-        textButton.addListener(new ClickListener() {
-            /*
-            In our particular case, we want to NOT use a ChangeListener because
-            else the user would have to release his mouse-click before seeing
-            the menu, which goes against our current goal of obtaining a
-            "drag-selection" menu.
-            */
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                dragPieAnimation.resetSelection();
-                dragPieAnimation.centerOnActor(textButton);
-
-                if (dragPieAnimation.getActions().contains(actionClose, true)) {
-                    actionClose.restart();
-                    dragPieAnimation.removeAction(actionClose);
-                }
-                if (!dragPieAnimation.getActions().contains(actionOpen, true)) {
-                    actionOpen.restart();
-                    dragPieAnimation.addAction(actionOpen);
-                }
-
-                transferInteraction(game.stage, dragPieAnimation);
-                return true;
-            }
-
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                super.touchUp(event, x, y, pointer, button);
-            }
-        });
-        root.add(textButton).expand().bottom();
-
-        /* Adding a selection-listener. */
-        dragPieAnimation.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-
-                if (dragPieAnimation.getActions().contains(actionOpen, true)) {
-                    actionOpen.restart();
-                    dragPieAnimation.removeAction(actionOpen);
-                }
-                if (!dragPieAnimation.getActions().contains(actionClose, true)) {
-                    actionClose.restart();
-                    dragPieAnimation.addAction(actionClose);
-                }
-
-                int index = dragPieAnimation.getSelectedIndex();
-                if (!dragPieAnimation.isValidIndex(index)) {
-                    textButton.setText("Drag Pie");
-                    return;
-                }
-                Actor child = dragPieAnimation.getChild(index);
-                textButton.setText(((Label) child).getText().toString());
-            }
-        });
-
-        /* Including the Widget in the Stage. */
-        game.stage.addActor(dragPieAnimation);
-        dragPieAnimation.setVisible(false);
-    }
-
     /**
      * To be used to get the user to transition directly into
      * {@link InputListener#touchDragged(InputEvent, float, float, int)}
@@ -275,7 +178,7 @@ public class Demonstration extends BaseScreen {
     private void transferInteraction(Stage stage, PieMenu widget) {
         if (widget == null) throw new IllegalArgumentException("widget cannot be null.");
         if (widget.getPieMenuListener() == null) throw new IllegalArgumentException("inputListener cannot be null.");
-        game.stage.addTouchFocus(widget.getPieMenuListener(), widget, widget, 0, widget.getSelectionButton());
+        stage.addTouchFocus(widget.getPieMenuListener(), widget, widget, 0, widget.getSelectionButton());
     }
 
     private void setUpRightMousePieMenu() {
@@ -430,13 +333,11 @@ public class Demonstration extends BaseScreen {
         /* Debugging and interactions. */
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             dragPie.addActor(new Label(Integer.toString(dragPieAmount++), game.skin));
-            dragPieAnimation.addActor(new Label(Integer.toString(dragPieAnimationAmount++), game.skin));
             permaPie.addActor(new Label(Integer.toString(permaPieAmount++), game.skin));
             radial.addActor(new Label(Integer.toString(radialAmount++), game.skin));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             dragPieAmount = 0;
-            dragPieAnimationAmount = 0;
             permaPieAmount = 0;
             radialAmount = 0;
             dispose();

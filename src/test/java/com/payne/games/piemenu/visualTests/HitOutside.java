@@ -1,19 +1,18 @@
-package com.payne.games.piemenu.genericTests;
+package com.payne.games.piemenu.visualTests;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.payne.games.piemenu.PieMenu;
-import com.payne.games.piemenu.PieMenu.PieMenuStyle;
-import com.payne.games.piemenu.core.BaseGame;
+import com.payne.games.piemenu.PieWidget;
 import com.payne.games.piemenu.core.BaseScreen;
+import com.payne.games.piemenu.core.TestsMenu;
 
 
-public class HitInfiniteMiddle extends BaseScreen {
-    private PieMenu containerWidget;
+public class HitOutside extends BaseScreen {
+    private PieWidget containerWidget;
 
-    public HitInfiniteMiddle(BaseGame game) {
+    public HitOutside(TestsMenu game) {
         super(game);
     }
 
@@ -23,27 +22,24 @@ public class HitInfiniteMiddle extends BaseScreen {
         game.enableDebug();
 
         /* Adding the demo widgets. */
-        PieMenuStyle style1 = new PieMenuStyle();
+        PieWidget.PieWidgetStyle style1 = new PieWidget.PieWidgetStyle();
 //        style1.sliceColor = Color.ORANGE;
 //        style1.alternateSliceColor = new Color(.8f, .5f, .2f, 1);
         style1.circumferenceWidth = 2;
         style1.circumferenceColor = Color.BLACK;
         style1.separatorWidth = 2;
         style1.separatorColor = Color.BLACK;
-
-        containerWidget = new PieMenu(game.skin.getRegion("white"), style1, 200, 0.9f);
+        containerWidget = new PieWidget(game.skin.getRegion("white"), style1, 200, 0.9f);
         containerWidget.setName("MAIN");
-        containerWidget.setInfiniteSelectionRange(true);
-        containerWidget.setMiddleCancel(true);
 
         for (int i = 0; i < 5; i++) {
-            TextButton tmp = new TextButton("@@@@@@@@@@@@@@@@@@", game.skin);
+            TextButton tmp = new TextButton("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", game.skin);
             containerWidget.addActor(tmp);
         }
 
 
         game.stage.addActor(containerWidget);
-        containerWidget.setFillParent(true);
+//        containerWidget.setFillParent(true);
     }
 
     @Override

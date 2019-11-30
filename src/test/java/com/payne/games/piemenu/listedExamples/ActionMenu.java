@@ -1,25 +1,31 @@
-package com.payne.games.piemenu.individuals;
+package com.payne.games.piemenu.listedExamples;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.payne.games.piemenu.AnimatedPieMenu;
 import com.payne.games.piemenu.PieMenu;
-import com.payne.games.piemenu.core.BaseGame;
+import com.payne.games.piemenu.PieMenu.PieMenuStyle;
+import com.payne.games.piemenu.actions.RadialGroupActionColorBasic;
+import com.payne.games.piemenu.actions.RadialGroupActionVisualAngleClose;
+import com.payne.games.piemenu.actions.RadialGroupActionVisualAngleOpen;
 import com.payne.games.piemenu.core.BaseScreen;
+import com.payne.games.piemenu.core.TestsMenu;
 
 
-public class ButtonBound extends BaseScreen {
-    private AnimatedPieMenu menu;
+public class ActionMenu extends BaseScreen {
+    private PieMenu menu;
 
-    public ButtonBound(BaseGame game) {
+    public ActionMenu(TestsMenu game) {
         super(game);
     }
 
@@ -39,12 +45,13 @@ public class ButtonBound extends BaseScreen {
         \==================================================================== */
 
         /* Setting up and creating the widget. */
-        PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
+        PieMenuStyle style = new PieMenuStyle();
         style.backgroundColor = new Color(1, 1, 1, .3f);
         style.selectedColor = new Color(.7f, .3f, .5f, 1);
         style.sliceColor = new Color(0, .7f, 0, 1);
         style.alternateSliceColor = new Color(.7f, 0, 0, 1);
-        menu = new AnimatedPieMenu(game.skin.getRegion("white"), style, 130, 50f / 130, 180, 320);
+        menu = new PieMenu(game.skin.getRegion("white"), style, 130, 50f/130, 180, 320);
+        menu.setVisualAngleAutoUpdate(false);
 
         /* Customizing the behavior. */
         menu.setInfiniteSelectionRange(true);
@@ -54,6 +61,12 @@ public class ButtonBound extends BaseScreen {
             Label label = new Label(Integer.toString(i), game.skin);
             menu.addActor(label);
         }
+
+        /* Preparing the Actions used for our Animations. */
+        RadialGroupActionVisualAngleOpen actionVisualAngleOpen = new RadialGroupActionVisualAngleOpen(menu, .1f, Interpolation.linear);
+        Action actionOpen = new ParallelAction(actionVisualAngleOpen, new RadialGroupActionColorBasic(menu));
+        RadialGroupActionVisualAngleClose actionVisualAngleClose = new RadialGroupActionVisualAngleClose(menu, .1f, Interpolation.linear);
+        Action actionClose = new ParallelAction(actionVisualAngleClose, new RadialGroupActionColorBasic(menu));
 
         /* Setting up the demo-button. */
         final TextButton textButton = new TextButton("Drag Pie", game.skin);
@@ -68,9 +81,23 @@ public class ButtonBound extends BaseScreen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 menu.resetSelection();
                 menu.centerOnActor(textButton);
-                menu.animateOpening(.4f);
+
+                if (menu.getActions().contains(actionClose, true)) {
+                    actionClose.restart();
+                    menu.removeAction(actionClose);
+                }
+                if (!menu.getActions().contains(actionOpen, true)) {
+                    actionOpen.restart();
+                    menu.addAction(actionOpen);
+                }
+
                 transferInteraction(game.stage, menu);
                 return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
             }
         });
         root.add(textButton).expand().bottom();
@@ -79,7 +106,16 @@ public class ButtonBound extends BaseScreen {
         menu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                menu.transitionToClosing(.4f);
+
+                if (menu.getActions().contains(actionOpen, true)) {
+                    actionOpen.restart();
+                    menu.removeAction(actionOpen);
+                }
+                if (!menu.getActions().contains(actionClose, true)) {
+                    actionClose.restart();
+                    menu.addAction(actionClose);
+                }
+
                 int index = menu.getSelectedIndex();
                 if (!menu.isValidIndex(index)) {
                     textButton.setText("Drag Pie");

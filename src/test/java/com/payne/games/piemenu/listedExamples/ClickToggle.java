@@ -1,4 +1,4 @@
-package com.payne.games.piemenu.individuals;
+package com.payne.games.piemenu.listedExamples;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -9,14 +9,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.payne.games.piemenu.PieMenu;
-import com.payne.games.piemenu.core.BaseGame;
 import com.payne.games.piemenu.core.BaseScreen;
+import com.payne.games.piemenu.core.TestsMenu;
 
 
 public class ClickToggle extends BaseScreen {
     private PieMenu menu;
 
-    public ClickToggle(BaseGame game) {
+    public ClickToggle(TestsMenu game) {
         super(game);
     }
 

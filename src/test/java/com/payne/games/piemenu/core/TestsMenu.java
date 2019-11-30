@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.reflect.Constructor;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class BaseGame extends Game {
+public class TestsMenu extends Game {
 
     private static final String SKIN_PATH = "skin.json";
 
@@ -68,7 +68,7 @@ public class BaseGame extends Game {
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
                 if (getScreen() != mainScreen) {
                     try {
-                        Constructor localConstructor = ClassReflection.getConstructor(getScreen().getClass(), BaseGame.class);
+                        Constructor localConstructor = ClassReflection.getConstructor(getScreen().getClass(), TestsMenu.class);
                         setScreen((Screen) localConstructor.newInstance(this));
                     } catch (ReflectionException e) {
                         e.printStackTrace();
@@ -80,7 +80,7 @@ public class BaseGame extends Game {
                     int localIndexNext = localIndexCurrent - 1;
                     if ((localIndexCurrent >= 0 && localIndexCurrent < MainScreen.registeredTests.size()) && localIndexNext >= 0) {
                         try {
-                            Constructor localConstructor = ClassReflection.getConstructor(MainScreen.registeredTests.get(localIndexNext), BaseGame.class);
+                            Constructor localConstructor = ClassReflection.getConstructor(MainScreen.registeredTests.get(localIndexNext), TestsMenu.class);
                             setScreen((Screen) localConstructor.newInstance(this));
                         } catch (ReflectionException e) {
                             e.printStackTrace();
@@ -93,7 +93,7 @@ public class BaseGame extends Game {
                     int localIndexNext = localIndexCurrent + 1;
                     if ((localIndexCurrent >= 0 && localIndexCurrent < MainScreen.registeredTests.size()) && localIndexNext < MainScreen.registeredTests.size()) {
                         try {
-                            Constructor localConstructor = ClassReflection.getConstructor(MainScreen.registeredTests.get(localIndexNext), BaseGame.class);
+                            Constructor localConstructor = ClassReflection.getConstructor(MainScreen.registeredTests.get(localIndexNext), TestsMenu.class);
                             setScreen((Screen) localConstructor.newInstance(this));
                         } catch (ReflectionException e) {
                             e.printStackTrace();

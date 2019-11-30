@@ -1,18 +1,19 @@
-package com.payne.games.piemenu.genericTests;
+package com.payne.games.piemenu.visualTests;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.payne.games.piemenu.PieMenu;
 import com.payne.games.piemenu.PieWidget;
-import com.payne.games.piemenu.core.BaseGame;
 import com.payne.games.piemenu.core.BaseScreen;
+import com.payne.games.piemenu.core.TestsMenu;
 
 
-public class HitOutside extends BaseScreen {
+public class SelfContainedPieMenu extends BaseScreen {
     private PieWidget containerWidget;
 
-    public HitOutside(BaseGame game) {
+    public SelfContainedPieMenu(TestsMenu game) {
         super(game);
     }
 
@@ -29,17 +30,28 @@ public class HitOutside extends BaseScreen {
         style1.circumferenceColor = Color.BLACK;
         style1.separatorWidth = 2;
         style1.separatorColor = Color.BLACK;
-        containerWidget = new PieWidget(game.skin.getRegion("white"), style1, 200, 0.9f);
+        containerWidget = new PieWidget(game.skin.getRegion("white"), style1, 500, 0.5f);
         containerWidget.setName("MAIN");
 
+        PieMenu.PieMenuStyle style2 = new PieMenu.PieMenuStyle();
+        style2.hoverColor = Color.GREEN;
+        style2.selectedColor = Color.MAGENTA;
+        style2.backgroundColor = Color.BROWN;
         for (int i = 0; i < 5; i++) {
-            TextButton tmp = new TextButton("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", game.skin);
+            PieMenu tmp = new PieMenu(game.skin.getRegion("white"), style2, 110);
+            tmp.setName("menu " + i);
             containerWidget.addActor(tmp);
+            for (int j = 0; j < 5; j++)
+                tmp.addActor(new Label(i + " " + j, game.skin));
+//            tmp.setWidth(50);
+//            tmp.setHeight(50);
+
         }
 
 
         game.stage.addActor(containerWidget);
-//        containerWidget.setFillParent(true);
+//        containerWidget.setWidth(1600);
+        containerWidget.setFillParent(true);
     }
 
     @Override

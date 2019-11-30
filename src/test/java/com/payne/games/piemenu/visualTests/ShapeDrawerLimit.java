@@ -1,19 +1,19 @@
-package com.payne.games.piemenu.genericTests;
+package com.payne.games.piemenu.visualTests;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.payne.games.piemenu.PieMenu;
-import com.payne.games.piemenu.core.BaseGame;
 import com.payne.games.piemenu.core.BaseScreen;
+import com.payne.games.piemenu.core.TestsMenu;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class ShapeDrawerLimit extends BaseScreen {
     private PieMenu menu;
 
-    public ShapeDrawerLimit(BaseGame game) {
+    public ShapeDrawerLimit(TestsMenu game) {
         super(game);
     }
 
