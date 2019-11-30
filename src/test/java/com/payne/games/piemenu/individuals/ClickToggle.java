@@ -1,52 +1,29 @@
 package com.payne.games.piemenu.individuals;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
+import com.payne.games.piemenu.core.BaseGame;
+import com.payne.games.piemenu.core.BaseScreen;
 
 
-public class ClickToggle extends ApplicationAdapter {
-    private Skin skin;
-    private Stage stage;
-    private Texture tmpTex;
-    private Batch batch;
+public class ClickToggle extends BaseScreen {
     private PieMenu menu;
+
+    public ClickToggle(BaseGame game) {
+        super(game);
+    }
 
 
     @Override
-    public void create () {
-
-        /* Setting up the Stage. */
-        skin = new Skin(Gdx.files.internal("skin.json"));
-        batch = new PolygonSpriteBatch();
-        stage = new Stage(new ScreenViewport(), batch);
-        Gdx.input.setInputProcessor(stage);
-
-        /* Ideally, you would extract such a pixel from your Atlas instead. */
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(1,1,1,1);
-        pixmap.fill();
-        tmpTex = new Texture(pixmap);
-        pixmap.dispose();
-        TextureRegion whitePixel = new TextureRegion(tmpTex);
-
-
+    public void show() {
+        setScreenColor(.2f, .2f, .2f, 1);
 
         /* ====================================================================\
         |                  HERE BEGINS THE MORE SPECIFIC CODE                  |
@@ -54,9 +31,9 @@ public class ClickToggle extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("rael_pie.png"))); // image background!
-        style.selectedColor = new Color(1,.5f,.5f,.5f);
-        menu = new PieMenu(whitePixel, style, 80, 24f/80, 30) {
+        style.background = new TextureRegionDrawable(getTextureAutoDisposable("rael_pie.png")); // image background!
+        style.selectedColor = new Color(1, .5f, .5f, .5f);
+        menu = new PieMenu(game.skin.getRegion("white"), style, 80, 24f / 80, 30) {
             /* Since we are using Images, we want to resize them to fit within each sector. */
             @Override
             public void modifyActor(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
@@ -81,50 +58,28 @@ public class ClickToggle extends ApplicationAdapter {
 
         /* Populating the widget. */
         Array<Image> imgs = new Array<>();
-        imgs.add(new Image(new Texture(Gdx.files.internal("heart-drop.png"))));
-        imgs.add(new Image(new Texture(Gdx.files.internal("beer-stein.png"))));
-        imgs.add(new Image(new Texture(Gdx.files.internal("coffee-mug.png"))));
-        imgs.add(new Image(new Texture(Gdx.files.internal("gooey-daemon.png"))));
-        imgs.add(new Image(new Texture(Gdx.files.internal("jeweled-chalice.png"))));
-        imgs.add(new Image(new Texture(Gdx.files.internal("coffee-mug.png"))));
+        imgs.add(new Image(getTextureAutoDisposable("heart-drop.png")));
+        imgs.add(new Image(getTextureAutoDisposable("beer-stein.png")));
+        imgs.add(new Image(getTextureAutoDisposable("coffee-mug.png")));
+        imgs.add(new Image(getTextureAutoDisposable("gooey-daemon.png")));
+        imgs.add(new Image(getTextureAutoDisposable("jeweled-chalice.png")));
+        imgs.add(new Image(getTextureAutoDisposable("coffee-mug.png")));
         for (int i = 0; i < imgs.size; i++)
             menu.addActor(imgs.get(i));
     }
 
 
     @Override
-    public void render () {
-
-        /* Clearing the screen and filling up the background. */
-        Gdx.gl.glClearColor(.2f, .2f, .2f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        /* Updating and drawing the Stage. */
-        stage.act();
-        stage.draw();
-
-
-
+    public void updateInputPost(float delta) {
         /* ====================================================================\
         |                  HERE BEGINS THE MORE SPECIFIC CODE                  |
         \==================================================================== */
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
-            stage.addActor(menu);
+            game.stage.addActor(menu);
             menu.centerOnMouse();
             menu.resetSelection();
             menu.setVisible(true);
         }
-    }
-
-
-    @Override
-    public void dispose () {
-
-        /* Disposing is good practice! */
-        batch.dispose();
-        tmpTex.dispose();
-        stage.dispose();
-        skin.dispose();
     }
 }
