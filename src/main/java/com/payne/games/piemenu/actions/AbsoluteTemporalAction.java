@@ -2,11 +2,11 @@ package com.payne.games.piemenu.actions;
 
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.utils.Pool;
 
 /**
- * Base class for actions that transition over time using an absolute duration that varies according to a ratio.
+ * Base class for actions that transition over time using an absolute duration that varies
+ * according to a ratio.
  */
 public abstract class AbsoluteTemporalAction extends Action {
 
@@ -52,8 +52,8 @@ public abstract class AbsoluteTemporalAction extends Action {
     }
 
     /**
-     * Called the first time {@link #act(float)} is called. This is a good place to query the {@link #actor actor's} starting
-     * state.
+     * Called the first time {@link #act(float)} is called. This is a good place to query the
+     * {@link #actor actor's} starting state.
      */
     protected void begin() {
     }
@@ -67,10 +67,11 @@ public abstract class AbsoluteTemporalAction extends Action {
     /**
      * Called each frame.
      *
-     * @param percent The percentage of completion for this action, growing from 0 to 1 over the duration. If
-     *                {@link #setReverse(boolean) reversed}, this will shrink from 1 to 0.
+     * @param percent The percentage of completion for this action, growing from 0 to 1 over the
+     *                duration. If {@link #setReverse(boolean) reversed}, this will shrink
+     *                from 1 to 0.
      */
-    abstract protected void update(float percent);
+    protected abstract void update(float percent);
 
     /**
      * Skips to the end of the transition.
@@ -79,12 +80,14 @@ public abstract class AbsoluteTemporalAction extends Action {
         time = duration;
     }
 
+    @Override
     public void restart() {
         time = 0;
         began = false;
         complete = false;
     }
 
+    @Override
     public void reset() {
         super.reset();
         reverse = false;
@@ -136,7 +139,7 @@ public abstract class AbsoluteTemporalAction extends Action {
     }
 
     /**
-     * Returns true after {@link #act(float)} has been called where time >= duration.
+     * @return {@code true} after {@link #act(float)} has been called where time >= duration.
      */
     public boolean isComplete() {
         return complete;

@@ -28,8 +28,8 @@ public abstract class ConditionalAction extends Action {
     }
 
     /**
-     * Called the first time {@link #act(float)} is called. This is a good place to query the {@link #actor actor's} starting
-     * state.
+     * Called the first time {@link #act(float)} is called. This is a good place to query the
+     * {@link #actor actor's} starting state.
      */
     protected void begin() {
     }
@@ -41,7 +41,8 @@ public abstract class ConditionalAction extends Action {
     }
 
     /**
-     * @return true if the action is done. This method will not be called after the action is done.
+     * @return {@code true} if the action is done. This method will not be called after the action
+     * is done.
      */
     protected abstract boolean update();
 
@@ -52,7 +53,7 @@ public abstract class ConditionalAction extends Action {
     }
 
     /**
-     * Returns true after {@link #act(float)} has been called where time >= duration.
+     * @return {@code true} after {@link #act(float)} has been called where time >= duration.
      */
     public boolean isComplete() {
         return complete;

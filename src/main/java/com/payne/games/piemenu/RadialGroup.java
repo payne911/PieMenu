@@ -78,16 +78,20 @@ public class RadialGroup extends WidgetGroup {
      */
     protected float globalAlphaMultiplier = 1;
 
+    /**
+     * The angle value of how wide the Widget is currently open.<br>
+     * This will take intermediary values when the Widget is being animated
+     * as it opens or closes itself.
+     */
+    protected float visualAngle;
+    protected int visualActionOpenCount = 0;
+    protected int visualActionCloseCount = 0;
+    protected boolean visualAngleAutoUpdate = true;
 
     /* For internal use (optimization). */
     private float lastRadius = 0;
     protected static final float BUFFER = 1;
     private static Vector2 vector2 = new Vector2();
-
-    protected float visualAngle;
-    protected int visualActionOpenCount = 0;
-    protected int visualActionCloseCount = 0;
-    protected boolean visualAngleAutoUpdate = true;
 
 
     /** Used internally for the shared properties among constructors of RadialWidgets. */
@@ -760,14 +764,16 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * The visual angle, represents the current angle, used for animation, similar in concept to {@link ScrollPane#getVisualScrollX()} and {@link ScrollPane#getVisualScrollY()}
+     * The {@link #visualAngle visual angle}, represents the current angle, used for animation,
+     * similar in concept to {@link ScrollPane#getVisualScrollX()} and
+     * {@link ScrollPane#getVisualScrollY()}
      */
     public float getVisualAngle() {
         return visualAngle;
     }
 
     /**
-     * Called whenever the visual angle is changed.
+     * Called whenever the {@link #visualAngle visual angle} is changed.
      */
     public void setVisualAngle(float visualAngle) {
         if (visualAngle > totalDegreesDrawn || visualAngle < 0) {
@@ -780,15 +786,15 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * Sets the visual angle equal to the total angle. This can be used when setting the angle without
-     * animating.
+     * Sets the {@link #visualAngle visual angle} equal to the total angle. This can be used when
+     * setting the angle without animating.
      */
     public void updateVisualAngle() {
         visualAngle = totalDegreesDrawn;
     }
 
     public float getVisualAnglePercent() {
-        if (totalDegreesDrawn == 0) return 0;
+        if (totalDegreesDrawn == 0) return 0; // prevent division by 0
         return MathUtils.clamp(visualAngle / totalDegreesDrawn, 0, 1);
     }
 
