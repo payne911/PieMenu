@@ -81,7 +81,7 @@ project(":core") {
 
     dependencies {
         ...
-        api "com.github.payne911:PieMenu:$pieMenuVersion"
+        api "com.github.payne911:PieMenu:$pieMenuVersion"  // add this line
     }
 }
 ```
