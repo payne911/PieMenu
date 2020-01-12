@@ -28,6 +28,14 @@ import java.util.HashMap;
  * that is why you might end up not seeing the widget despite setting its
  * visibility to {@code true} if you haven't called the recommended line of code
  * provided above.
+ *
+ * @deprecated Once {@link com.badlogic.gdx.scenes.scene2d.Action Actions} are
+ * integrated into the library, this class will become obsolete. However,
+ * the implementation is very easy to use, so it might remain in the code base
+ * despite Actions being integrated. The reason behind the deprecation is mostly
+ * because the Animated classes are a hassle to maintain. It's thus more of a
+ * code-design decision. For users, this is still a very nice class to work with.
+ * @author Jérémi Grenier-Berthiaume (aka "payne")
  */
 @Deprecated
 public class AnimatedPieMenu extends PieMenu {

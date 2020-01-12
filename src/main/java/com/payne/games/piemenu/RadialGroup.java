@@ -229,7 +229,7 @@ public class RadialGroup extends WidgetGroup {
      * Here is an example:
      * <pre>
      * {@code
-     * RadialGroup myWidget = new RadialGroup(shapeDrawer, myStyle, 77) {
+     * RadialGroup myWidget = new RadialGroup(77) {
      *     public float getActorDistanceFromCenter(Actor actor) {
      *         // We want the Actors to be placed closer to the edge than the default value
      *         return getAmountOfChildren() > 1
@@ -259,7 +259,7 @@ public class RadialGroup extends WidgetGroup {
      * Here is an example:
      * <pre>
      * {@code
-     * RadialGroup myWidget = new RadialGroup(shapeDrawer, myStyle, 77) {
+     * RadialGroup myWidget = new RadialGroup(77) {
      *     public void modifyActor(Actor actor, float degreesPerChild, float actorDistanceFromCenter) {
      *         float size = getEstimatedRadiusAt(degreesPerChild, actorDistanceFromCenter);
      *         size *= 1.26f; // adjusting the returned value to our likes
