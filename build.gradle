@@ -19,7 +19,7 @@ apply from: 'publish.gradle'
 sourceCompatibility = 1.8
 
 def projectName = 'pie-menu'
-version '4.0.0'
+version '4.1.0'
 group 'com.payne.games'
 
 def gdxVersion = '1.9.10'
