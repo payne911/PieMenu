@@ -62,13 +62,13 @@ To use this in your gradle project, add the version number and jitpack repositor
 allprojects {
 
     ext {
-    	...
-        pieMenuVersion = '4.1.0'
+        ...
+        pieMenuVersion = '4.1.0'  // add this line
     }
     
     repositories {
-	...
-	maven { url 'https://jitpack.io' }
+        ...
+        maven { url 'https://jitpack.io' }
     }
 }
 ```
