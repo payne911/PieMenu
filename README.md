@@ -23,6 +23,7 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 * [Usage](#usage)
   * [Wiki](#wiki)
 * [Final word](#final-word)
+  * [Games showcases](#games-showcases)
   * [Contributing](#contributing)
   * [Thanks to](#thanks-to)
     * [Credits](#credits)
@@ -131,7 +132,14 @@ More specifically, you might be interested in:
 ---
 
 ## Final word
-Very well: you've made it this far in the README! If you ever end up integrating this library into your cool projects, feel free to send a Pull Request of a GIF showcasing this library and with the name of your game; just make sure it's pushed in [the ``media`` folder](https://github.com/payne911/PieMenu/tree/master/media)!
+Very well: you've made it this far in the README! If you ever end up integrating this library into your cool projects, feel free to send a Pull Request of a GIF showcasing this library and with the name of your game; just make sure it's pushed in [the ``media/games`` folder](https://github.com/payne911/PieMenu/tree/master/media/games)!
+
+### Games showcases
+Here are a few GIFs of games that have integrated this library.
+
+##### icefill's Compact Dungeon 2
+![CD2](https://github.com/payne911/PieMenu/blob/master/media/games/CompactDungeon2_icefill.gif?raw=true)
+
 
 ### Contributing
 If you feel like helping this library grow, make sure to check out [the Contributing](https://github.com/payne911/PieMenu/wiki/Contributing) Wiki page.
