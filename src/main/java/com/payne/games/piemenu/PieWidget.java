@@ -17,9 +17,9 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
  * A PieWidget aims at providing the user with a simple way to lay out
  * the contained Actors in a circular fashion. It uses a
  * {@link ShapeDrawer} to draw certain elements, when necessary.<br>
- * Basically, if you are not finding yourself happy with the results
- * coming from using a {@link PieWidgetStyle}, then you might want to
- * consider using a simple {@link RadialGroup}.
+ * Basically, if you do not care about having a {@link PieWidgetStyle
+ * Style} (i.e. background colors, borders and edges, etc.), then you
+ * might want to consider using a simple {@link RadialGroup}.
  *
  * @author Jérémi Grenier-Berthiaume (aka "payne")
  */
@@ -37,7 +37,7 @@ public class PieWidget extends RadialGroup {
     protected ShapeDrawer sd;
 
     /**
-     * The white pixel used to initialized a {@link ShapeDrawer}.
+     * The white pixel used to initialize a {@link ShapeDrawer}.
      */
     protected TextureRegion whitePixel;
 
@@ -713,7 +713,8 @@ public class PieWidget extends RadialGroup {
 
 
     /**
-     * @return the ShapeDrawer used to draw everything but the contained Actors.
+     * @return the {@link ShapeDrawer} used to draw everything but the contained Actors
+     * and the Drawables.
      */
     public ShapeDrawer getShapeDrawer() {
         return sd;

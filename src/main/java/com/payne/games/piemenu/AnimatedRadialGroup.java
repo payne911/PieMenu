@@ -1,17 +1,14 @@
 package com.payne.games.piemenu;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import java.util.HashMap;
 
 
 /**
- * An animated {@link PieMenu}.<br>
+ * An animated {@link RadialGroup}.<br>
  * A very simple folding/unfolding animation can be displayed whenever desired.<br>
  * Internally uses a {@link #currentAngle} attribute that is used for transitions
  * between states. Because of that, using {@link #setVisible(boolean)} might not
@@ -38,7 +35,7 @@ import java.util.HashMap;
  * @author Jérémi Grenier-Berthiaume (aka "payne")
  */
 @Deprecated
-public class AnimatedPieMenu extends PieMenu {
+public class AnimatedRadialGroup extends RadialGroup {
 
     /**
      * Duration of the animation.
@@ -58,41 +55,33 @@ public class AnimatedPieMenu extends PieMenu {
 
 
     /**
-     * See {@link AnimatedPieMenu} for a description.
+     * See {@link AnimatedRadialGroup} for a description.
      *
-     * @param whitePixel a 1x1 white pixel.
-     * @param style defines the way the widget looks like.
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     * @param preferredRadius the {@link #preferredRadius} that defines the
      *                        size of the widget.
      */
-    public AnimatedPieMenu(final TextureRegion whitePixel,
-                           PieMenuStyle style, float preferredRadius) {
-        super(whitePixel, style, preferredRadius);
+    public AnimatedRadialGroup(float preferredRadius) {
+        super(preferredRadius);
     }
 
     /**
-     * See {@link AnimatedPieMenu} for a description.
+     * See {@link AnimatedRadialGroup} for a description.
      *
-     * @param whitePixel a 1x1 white pixel.
-     * @param style defines the way the widget looks like.
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     * @param preferredRadius the {@link #preferredRadius} that defines the
      *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
      *                           starting from the center of the widget.
      */
-    public AnimatedPieMenu(final TextureRegion whitePixel,
-                           PieMenuStyle style, float preferredRadius,
-                               float innerRadiusPercent) {
-        super(whitePixel, style, preferredRadius, innerRadiusPercent);
+    public AnimatedRadialGroup(float preferredRadius,
+                             float innerRadiusPercent) {
+        super(preferredRadius, innerRadiusPercent);
     }
 
     /**
-     * See {@link AnimatedPieMenu} for a description.
+     * See {@link AnimatedRadialGroup} for a description.
      *
-     * @param whitePixel a 1x1 white pixel.
-     * @param style defines the way the widget looks like.
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     * @param preferredRadius the {@link #preferredRadius} that defines the
      *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
@@ -100,18 +89,15 @@ public class AnimatedPieMenu extends PieMenu {
      * @param startDegreesOffset the {@link #startDegreesOffset} that defines
      *                           how far from the origin the drawing begins.
      */
-    public AnimatedPieMenu(final TextureRegion whitePixel,
-                           PieMenuStyle style, float preferredRadius,
-                           float innerRadiusPercent, float startDegreesOffset) {
-        super(whitePixel, style, preferredRadius, innerRadiusPercent, startDegreesOffset);
+    public AnimatedRadialGroup(float preferredRadius,
+                             float innerRadiusPercent, float startDegreesOffset) {
+        super(preferredRadius, innerRadiusPercent, startDegreesOffset);
     }
 
     /**
-     * See {@link AnimatedPieMenu} for a description.
+     * See {@link AnimatedRadialGroup} for a description.
      *
-     * @param whitePixel a 1x1 white pixel.
-     * @param style defines the way the widget looks like.
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     * @param preferredRadius the {@link #preferredRadius} that defines the
      *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
@@ -122,157 +108,10 @@ public class AnimatedPieMenu extends PieMenu {
      *                          many degrees the widget will span, starting from
      *                          its {@link #startDegreesOffset}.
      */
-    public AnimatedPieMenu(final TextureRegion whitePixel,
-                           PieMenuStyle style, float preferredRadius,
-                           float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
-        super(whitePixel, style, preferredRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
+    public AnimatedRadialGroup(float preferredRadius,
+                             float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
+        super(preferredRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
     }
-
-    /**
-     * See {@link AnimatedPieMenu} for a description.
-     *
-     * @param whitePixel a 1x1 white pixel.
-     * @param skin defines the way the widget looks like.
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
-     *                        size of the widget.
-     */
-    public AnimatedPieMenu(final TextureRegion whitePixel,
-                           Skin skin, float preferredRadius) {
-        super(whitePixel, skin, preferredRadius);
-    }
-
-    /**
-     * See {@link AnimatedPieMenu} for a description.
-     *
-     * @param whitePixel a 1x1 white pixel.
-     * @param skin defines the way the widget looks like.
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
-     *                        size of the widget.
-     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
-     *                           the percentage of the radius that is cut off,
-     *                           starting from the center of the widget.
-     */
-    public AnimatedPieMenu(final TextureRegion whitePixel,
-                           Skin skin, float preferredRadius, float innerRadiusPercent) {
-        super(whitePixel, skin, preferredRadius, innerRadiusPercent);
-    }
-
-    /**
-     * See {@link AnimatedPieMenu} for a description.
-     *
-     * @param whitePixel a 1x1 white pixel.
-     * @param skin defines the way the widget looks like.
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
-     *                        size of the widget.
-     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
-     *                           the percentage of the radius that is cut off,
-     *                           starting from the center of the widget.
-     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
-     *                           how far from the origin the drawing begins.
-     */
-    public AnimatedPieMenu(final TextureRegion whitePixel,
-                           Skin skin, float preferredRadius, float innerRadiusPercent,
-                           float startDegreesOffset) {
-        super(whitePixel, skin, preferredRadius, innerRadiusPercent, startDegreesOffset);
-    }
-
-    /**
-     * See {@link AnimatedPieMenu} for a description.
-     *
-     * @param whitePixel a 1x1 white pixel.
-     * @param skin defines the way the widget looks like.
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
-     *                        size of the widget.
-     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
-     *                           the percentage of the radius that is cut off,
-     *                           starting from the center of the widget.
-     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
-     *                           how far from the origin the drawing begins.
-     * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
-     *                          many degrees the widget will span, starting from
-     *                          its {@link #startDegreesOffset}.
-     */
-    public AnimatedPieMenu(final TextureRegion whitePixel,
-                           Skin skin, float preferredRadius, float innerRadiusPercent,
-                           float startDegreesOffset, float totalDegreesDrawn) {
-        super(whitePixel, skin, preferredRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
-    }
-
-    /**
-     * See {@link AnimatedPieMenu} for a description.
-     *
-     * @param whitePixel a 1x1 white pixel.
-     * @param skin defines the way the widget looks like.
-     * @param style the name of the style to be extracted from the skin.
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
-     *                        size of the widget.
-     */
-    public AnimatedPieMenu(final TextureRegion whitePixel,
-                           Skin skin, String style, float preferredRadius) {
-        super(whitePixel, skin, style, preferredRadius);
-    }
-
-    /**
-     * See {@link AnimatedPieMenu} for a description.
-     *
-     * @param whitePixel a 1x1 white pixel.
-     * @param skin defines the way the widget looks like.
-     * @param style the name of the style to be extracted from the skin.
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
-     *                        size of the widget.
-     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
-     *                           the percentage of the radius that is cut off,
-     *                           starting from the center of the widget.
-     */
-    public AnimatedPieMenu(final TextureRegion whitePixel,
-                           Skin skin, String style, float preferredRadius,
-                               float innerRadiusPercent) {
-        super(whitePixel, skin, style, preferredRadius, innerRadiusPercent);
-    }
-
-    /**
-     * See {@link AnimatedPieMenu} for a description.
-     *
-     * @param whitePixel a 1x1 white pixel.
-     * @param skin defines the way the widget looks like.
-     * @param style the name of the style to be extracted from the skin.
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
-     *                        size of the widget.
-     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
-     *                           the percentage of the radius that is cut off,
-     *                           starting from the center of the widget.
-     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
-     *                           how far from the origin the drawing begins.
-     */
-    public AnimatedPieMenu(final TextureRegion whitePixel,
-                           Skin skin, String style, float preferredRadius,
-                           float innerRadiusPercent, float startDegreesOffset) {
-        super(whitePixel, skin, style, preferredRadius, innerRadiusPercent, startDegreesOffset);
-    }
-
-    /**
-     * See {@link AnimatedPieMenu} for a description.
-     *
-     * @param whitePixel a 1x1 white pixel.
-     * @param skin defines the way the widget looks like.
-     * @param style the name of the style to be extracted from the skin.
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
-     *                        size of the widget.
-     * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
-     *                           the percentage of the radius that is cut off,
-     *                           starting from the center of the widget.
-     * @param startDegreesOffset the {@link #startDegreesOffset} that defines
-     *                           how far from the origin the drawing begins.
-     * @param totalDegreesDrawn the {@link #totalDegreesDrawn} that defines how
-     *                          many degrees the widget will span, starting from
-     *                          its {@link #startDegreesOffset}.
-     */
-    public AnimatedPieMenu(final TextureRegion whitePixel,
-                           Skin skin, String style, float preferredRadius,
-                           float innerRadiusPercent, float startDegreesOffset, float totalDegreesDrawn) {
-        super(whitePixel, skin, style, preferredRadius, innerRadiusPercent, startDegreesOffset, totalDegreesDrawn);
-    }
-
 
 
 
@@ -312,6 +151,7 @@ public class AnimatedPieMenu extends PieMenu {
             originalColors.clear();
         }
     }
+
 
     /**
      * Gets the widget to transition into an opening animation from its
@@ -412,13 +252,6 @@ public class AnimatedPieMenu extends PieMenu {
             invalidate();
         }
     }
-
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        drawWithShapeDrawer(batch, parentAlpha, currentAngle);
-        drawMe(batch, parentAlpha);
-    }
-
 
 
 
