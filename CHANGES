@@ -1,4 +1,6 @@
-UPCOMING [4.1.0]
+[4.1.0]
+- Added `AnimatedRadialGroup`
+- Minor fixes in documentation
 - Updated `ShapeDrawer` version to `v2.1.0`.
 
 [4.0.0]
