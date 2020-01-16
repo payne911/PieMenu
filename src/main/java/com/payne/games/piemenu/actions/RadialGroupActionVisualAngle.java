@@ -35,7 +35,8 @@ public class RadialGroupActionVisualAngle extends AbsoluteTemporalAction {
         this.endAngle = angle;
     }
 
-    public RadialGroupActionVisualAngle(RadialGroup radialGroup, float angle, float duration, Interpolation interpolation) {
+    public RadialGroupActionVisualAngle(RadialGroup radialGroup, float angle, float duration,
+            Interpolation interpolation) {
         super(duration, interpolation);
         this.radialGroup = radialGroup;
         this.endAngle = angle;
@@ -57,6 +58,7 @@ public class RadialGroupActionVisualAngle extends AbsoluteTemporalAction {
 
     @Override
     protected void update(float percent) {
-        radialGroup.setVisualAngle(MathUtils.clamp(startAngle + (endAngle - startAngle) * percent, 0f, radialGroup.getTotalDegreesDrawn()));
+        radialGroup.setVisualAngle(MathUtils.clamp(startAngle +
+                (endAngle - startAngle) * percent, 0f, radialGroup.getTotalDegreesDrawn()));
     }
 }

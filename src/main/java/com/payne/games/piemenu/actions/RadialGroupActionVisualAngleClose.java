@@ -12,7 +12,8 @@ public class RadialGroupActionVisualAngleClose extends RadialGroupActionVisualAn
         super(radialGroup, 0f, duration);
     }
 
-    public RadialGroupActionVisualAngleClose(RadialGroup radialGroup, float duration, Interpolation interpolation) {
+    public RadialGroupActionVisualAngleClose(RadialGroup radialGroup, float duration,
+            Interpolation interpolation) {
         super(radialGroup, 0f, duration, interpolation);
     }
 

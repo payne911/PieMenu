@@ -3,7 +3,6 @@ package com.payne.games.piemenu.actions;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.payne.games.piemenu.RadialGroup;
-
 import java.util.HashMap;
 
 public class RadialGroupActionColorBasic extends ConditionalAction {
@@ -52,7 +51,8 @@ public class RadialGroupActionColorBasic extends ConditionalAction {
                 originalColors.put(localActor, new Color(localActor.getColor()));
             }
             Color localColor = originalColors.get(localActor);
-            localActor.setColor(localColor.r, localColor.g, localColor.b, localColor.a * localOpeningPercentage);
+            localActor.setColor(localColor.r, localColor.g, localColor.b,
+                    localColor.a * localOpeningPercentage);
         }
 
         if (radialGroup.getVisualActionOpenCount() + radialGroup.getVisualActionCloseCount() > 0) {
