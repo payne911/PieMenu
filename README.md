@@ -151,7 +151,7 @@ If you feel like helping this library grow, make sure to check out [the Contribu
 * [TEttinger](https://github.com/tommyettinger)
 * Albert Pétoncle
 
-For their sustained help through the libGDX discord channel. Their extensive knowledge was greatly appreciated.
+For their sustained help through [the libGDX Discord channel](https://discord.gg/6pgDK9F). Their extensive knowledge was greatly appreciated.
 
 #### Credits
 I used some images from [Game-Icons.net](https://game-icons.net/), more specifically the 5 icons displayed when clicking the "Toggle Radial" button. To be even more specific, the credits go to [Lorc](http://lorcblog.blogspot.com/). Those are under the [CC BY 3.0 license](https://creativecommons.org/licenses/by/3.0/) license.
