@@ -145,7 +145,7 @@ Here are a few GIFs of games that have integrated this library.
 If you feel like helping this library grow, make sure to check out [the Contributing](https://github.com/payne911/PieMenu/wiki/Contributing) Wiki page.
 
 ### Thanks to
-* [EarlyGrey](https://github.com/earlygrey) (PieMenu is actually entirely dependent on his library: [ShapeDrawer](https://github.com/earlygrey/shapedrawer))
+* [EarlyGrey](https://github.com/earlygrey) (PieMenu is actually partly dependent on his library: [ShapeDrawer](https://github.com/earlygrey/shapedrawer))
 * [raeleus](https://github.com/raeleus)
 * [mgsx](https://github.com/mgsx-dev)
 * [TEttinger](https://github.com/tommyettinger)
