@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Constructor;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.payne.games.piemenu.Demonstration;
-import com.payne.games.piemenu.listedExamples.ActionMenu;
 import com.payne.games.piemenu.listedExamples.ButtonBound;
 import com.payne.games.piemenu.listedExamples.ButtonToggle;
 import com.payne.games.piemenu.listedExamples.ClickDrag;
@@ -51,7 +50,6 @@ public class MainScreen extends BaseScreen {
                     ShapeDrawerLimit.class,
                     TableWidgets.class,
 
-                    ActionMenu.class,
                     ButtonBound.class,
                     ButtonToggle.class,
                     ClickDrag.class,
