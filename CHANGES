@@ -1,3 +1,7 @@
+[4.2.0]
+- Events (Highlight/Selection/etc.) are now Pooled.
+- Added a Testing Menu so that Contributors can more easily test their implementations.
+
 [4.1.0]
 - Added `AnimatedRadialGroup`
 - Minor fixes in documentation
