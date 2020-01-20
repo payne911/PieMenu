@@ -80,7 +80,8 @@ public class RadialGroup extends WidgetGroup {
 
     /**
      * The angle value of how wide the Widget is currently open.<br>
-     * This will take intermediary values when the Widget is being animated
+     * This will take intermediary values when the Widget is being animated with Actions
+     * (eg {@link com.payne.games.piemenu.actions.RadialGroupActionVisualAngleOpen})
      * as it opens or closes itself.
      */
     protected float visualAngle;
@@ -92,6 +93,19 @@ public class RadialGroup extends WidgetGroup {
     private float lastRadius = 0;
     protected static final float BUFFER = 1;
     private static Vector2 vector2 = new Vector2();
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /** Used internally for the shared properties among constructors of RadialWidgets. */
@@ -786,8 +800,8 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * Sets the {@link #visualAngle visual angle} equal to the total angle. This can be used when
-     * setting the angle without animating.
+     * Sets the {@link #visualAngle visual angle} equal to the total angle.
+     * This can be used when setting the angle without animating.
      */
     public void updateVisualAngle() {
         visualAngle = totalDegreesDrawn;
