@@ -17,7 +17,6 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 ## Table of Content
 * [Demo](#demo)
   * [Basic widgets](#basic-widgets)
-    * [Controls](#controls)
   * [Custom-animated widgets](#custom-animated-widgets)
 * [Including in Project](#including-in-project)
 * [Usage](#usage)
@@ -36,7 +35,7 @@ First, let us demonstrate what you might be able to get out of this library (tho
 ### Basic widgets
 ![early_demo](https://raw.githubusercontent.com/payne911/PieMenu/master/media/early_demo.gif)
 
-#### Controls
+#### Online Demo's Controls
 **An [online demo](https://payne911.github.io/PieMenu/) is available.** The controls are:
 * ``RIGHT-CLICK`` : opens a PieMenu meant for selection through dragging (don't release the right-click until you're done with your selection). It was configured to let you preview the selection's effect.
 * ``MIDDLE-CLICK`` : opens a PieMenu meant for "normal" selection. You can release the button and select as you wish with a left-click.
