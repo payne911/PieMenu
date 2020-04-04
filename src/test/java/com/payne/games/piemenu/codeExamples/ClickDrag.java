@@ -30,8 +30,8 @@ public class ClickDrag extends ApplicationAdapter {
 
     /* For the demonstration's purposes. Not actually necessary. */
     private float red   = .25f;
-    private float blue  = .75f;
     private float green = .25f;
+    private float blue  = .75f;
 
 
     @Override
@@ -75,25 +75,25 @@ public class ClickDrag extends ApplicationAdapter {
             @Override
             public void onHighlightChange(int highlightedIndex) {
                 switch(highlightedIndex) {
-                    case 0:
-                        red   = .25f;
-                        blue  = .75f;
-                        green = .25f;
-                        break;
-                    case 1:
+                    case 0: // Red
                         red   = .75f;
-                        blue  = .25f;
                         green = .25f;
-                        break;
-                    case 2:
-                        red   = .25f;
                         blue  = .25f;
+                        break;
+                    case 1: // Green
+                        red   = .25f;
                         green = .75f;
+                        blue  = .25f;
+                        break;
+                    case 2: // Blue
+                        red   = .25f;
+                        green = .25f;
+                        blue  = .75f;
                         break;
                     default:
                         red   = .75f;
-                        blue  = .75f;
                         green = .75f;
+                        blue  = .75f;
                         break;
                 }
             }
@@ -108,12 +108,12 @@ public class ClickDrag extends ApplicationAdapter {
         });
 
         /* Populating the widget. */
-        Label blue = new Label("blue", skin);
-        menu.addActor(blue);
         Label red = new Label("red", skin);
         menu.addActor(red);
         Label green = new Label("green", skin);
         menu.addActor(green);
+        Label blue = new Label("blue", skin);
+        menu.addActor(blue);
     }
 
 

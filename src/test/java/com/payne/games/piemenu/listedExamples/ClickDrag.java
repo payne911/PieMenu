@@ -49,24 +49,16 @@ public class ClickDrag extends BaseScreen {
             public void onHighlightChange(int highlightedIndex) {
                 switch (highlightedIndex) {
                     case 0:
-                        screenColorRed = .25f;
-                        screenColorBlue = .75f;
-                        screenColorGreen = .25f;
+                        setScreenColor(.75f, .25f, .25f, 1); // Red
                         break;
                     case 1:
-                        screenColorRed = .75f;
-                        screenColorBlue = .25f;
-                        screenColorGreen = .25f;
+                        setScreenColor(.25f, .75f, .25f, 1); // Green
                         break;
                     case 2:
-                        screenColorRed = .25f;
-                        screenColorBlue = .25f;
-                        screenColorGreen = .75f;
+                        setScreenColor(.25f, .25f, .75f, 1); // Blue
                         break;
-                    default:
-                        screenColorRed = .75f;
-                        screenColorBlue = .75f;
-                        screenColorGreen = .75f;
+                    default: // Just in case...
+                        setScreenColor(.75f, .75f, .75f, 1);
                         break;
                 }
             }
@@ -81,12 +73,12 @@ public class ClickDrag extends BaseScreen {
         });
 
         /* Populating the widget. */
-        Label blue = new Label("blue", game.skin);
-        menu.addActor(blue);
         Label red = new Label("red", game.skin);
         menu.addActor(red);
         Label green = new Label("green", game.skin);
         menu.addActor(green);
+        Label blue = new Label("blue", game.skin);
+        menu.addActor(blue);
     }
 
 
