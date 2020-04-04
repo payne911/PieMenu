@@ -523,6 +523,7 @@ public class RadialGroup extends WidgetGroup {
      * Centers the Widget on the current position of the mouse.
      */
     public void centerOnMouse() {
+        // todo: does not work with different Viewports ? (found by 'evilentity')
         setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), Align.center);
     }
 
@@ -530,6 +531,7 @@ public class RadialGroup extends WidgetGroup {
      * Positions the Widget's center right in the middle of the current screen size.
      */
     public void centerOnScreen() {
+        // todo: does not work with different Viewports ? (found by 'evilentity')
         setPosition(Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f, Align.center);
     }
 
@@ -593,8 +595,10 @@ public class RadialGroup extends WidgetGroup {
      *                              (slices, lines, drawables, etc.).
      */
     public void setGlobalAlphaMultiplier(float globalAlphaMultiplier) {
+        float reversedMultiplier = 1/this.globalAlphaMultiplier;
         this.globalAlphaMultiplier = globalAlphaMultiplier;
-        setColor(getColor().r, getColor().g, getColor().b, getColor().a * globalAlphaMultiplier);
+        float adjustedMultiplier = reversedMultiplier * globalAlphaMultiplier;
+        setColor(getColor().r, getColor().g, getColor().b, getColor().a * adjustedMultiplier);
     }
 
     /**
