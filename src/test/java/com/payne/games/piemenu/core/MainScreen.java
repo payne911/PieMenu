@@ -18,6 +18,7 @@ import com.payne.games.piemenu.listedExamples.ClickDrag;
 import com.payne.games.piemenu.listedExamples.ClickToggle;
 import com.payne.games.piemenu.listedExamples.CustomAnimation;
 import com.payne.games.piemenu.listedExamples.KeyMap;
+import com.payne.games.piemenu.listedExamples.NestedClickDrag;
 import com.payne.games.piemenu.listedExamples.Permanent;
 import com.payne.games.piemenu.listedExamples.RadialButtons;
 import com.payne.games.piemenu.visualTests.CenterOnActor;
@@ -35,7 +36,7 @@ import java.util.List;
 
 public class MainScreen extends BaseScreen {
 
-    // todo: this list should be populated automatically (so as to respect the OCP principle)
+    // todo: this list should be populated automatically (so as to respect the OC principle)
     public static final List<Class<? extends BaseScreen>> registeredTests = new ArrayList<>(
             Arrays.asList(
                     Demonstration.class,
@@ -56,6 +57,7 @@ public class MainScreen extends BaseScreen {
                     ClickToggle.class,
                     CustomAnimation.class,
                     KeyMap.class,
+                    NestedClickDrag.class,
                     Permanent.class,
                     RadialButtons.class
             ));
