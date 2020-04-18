@@ -17,12 +17,12 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 ## Table of Content
 * [Demo](#demo)
   * [Basic widgets](#basic-widgets)
-    * [Controls](#controls)
   * [Custom-animated widgets](#custom-animated-widgets)
 * [Including in Project](#including-in-project)
 * [Usage](#usage)
   * [Wiki](#wiki)
 * [Final word](#final-word)
+  * [Games showcases](#games-showcases)
   * [Contributing](#contributing)
   * [Thanks to](#thanks-to)
     * [Credits](#credits)
@@ -35,7 +35,7 @@ First, let us demonstrate what you might be able to get out of this library (tho
 ### Basic widgets
 ![early_demo](https://raw.githubusercontent.com/payne911/PieMenu/master/media/early_demo.gif)
 
-#### Controls
+#### Online Demo's Controls
 **An [online demo](https://payne911.github.io/PieMenu/) is available.** The controls are:
 * ``RIGHT-CLICK`` : opens a PieMenu meant for selection through dragging (don't release the right-click until you're done with your selection). It was configured to let you preview the selection's effect.
 * ``MIDDLE-CLICK`` : opens a PieMenu meant for "normal" selection. You can release the button and select as you wish with a left-click.
@@ -68,7 +68,7 @@ allprojects {
     
     repositories {
         ...
-        maven { url 'https://jitpack.io' }
+        maven { url 'https://jitpack.io' }  // add this line if it isn't there
     }
 }
 ```
@@ -131,19 +131,26 @@ More specifically, you might be interested in:
 ---
 
 ## Final word
-Very well: you've made it this far in the README! If you ever end up integrating this library into your cool projects, feel free to send a Pull Request of a GIF showcasing this library and with the name of your game; just make sure it's pushed in [the ``media`` folder](https://github.com/payne911/PieMenu/tree/master/media)!
+Very well: you've made it this far in the README! If you ever end up integrating this library into your cool projects, feel free to send a Pull Request of a GIF showcasing this library and with the name of your game; just make sure it's pushed in [the ``media/games`` folder](https://github.com/payne911/PieMenu/tree/master/media/games)!
+
+### Games showcases
+Here are a few GIFs of games that have integrated this library.
+
+##### icefill's Compact Dungeon 2
+![CD2](https://github.com/payne911/PieMenu/blob/master/media/games/CompactDungeon2_icefill.gif?raw=true)
+
 
 ### Contributing
 If you feel like helping this library grow, make sure to check out [the Contributing](https://github.com/payne911/PieMenu/wiki/Contributing) Wiki page.
 
 ### Thanks to
-* [EarlyGrey](https://github.com/earlygrey) (PieMenu is actually entirely dependent on his library: [ShapeDrawer](https://github.com/earlygrey/shapedrawer))
+* [EarlyGrey](https://github.com/earlygrey) (PieMenu is actually partly dependent on his library: [ShapeDrawer](https://github.com/earlygrey/shapedrawer))
 * [raeleus](https://github.com/raeleus)
 * [mgsx](https://github.com/mgsx-dev)
 * [TEttinger](https://github.com/tommyettinger)
 * Albert Pétoncle
 
-For their sustained help through the libGDX discord channel. Their extensive knowledge was greatly appreciated.
+For their sustained help through [the libGDX Discord channel](https://discord.gg/6pgDK9F). Their extensive knowledge was greatly appreciated.
 
 #### Credits
 I used some images from [Game-Icons.net](https://game-icons.net/), more specifically the 5 icons displayed when clicking the "Toggle Radial" button. To be even more specific, the credits go to [Lorc](http://lorcblog.blogspot.com/). Those are under the [CC BY 3.0 license](https://creativecommons.org/licenses/by/3.0/) license.

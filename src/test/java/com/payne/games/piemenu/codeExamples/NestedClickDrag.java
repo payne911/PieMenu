@@ -21,12 +21,13 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
 
 
-public class ClickDrag extends ApplicationAdapter {
+public class NestedClickDrag extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
     private Texture tmpTex;
     private Batch batch;
     private PieMenu menu;
+    private PieMenu child;
 
     /* For the demonstration's purposes. Not actually necessary. */
     private float red   = .25f;
@@ -57,35 +58,75 @@ public class ClickDrag extends ApplicationAdapter {
         |                  HERE BEGINS THE MORE SPECIFIC CODE                  |
         \==================================================================== */
 
-        /* Setting up and creating the widget. */
+        /* Setting up and creating the main widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.separatorWidth = 2;
-        style.backgroundColor = new Color(1,1,1,.1f);
-        style.separatorColor = new Color(.1f,.1f,.1f,1);
-        style.downColor = new Color(.5f,.5f,.5f,1);
-        style.sliceColor = new Color(.33f,.33f,.33f,1);
-        menu = new PieMenu(whitePixel, style, 80);
+        style.circumferenceWidth = 2;
+        style.backgroundColor = new Color(1, 1, 1, .1f);
+        style.separatorColor = new Color(.1f, .1f, .1f, 1);
+        style.downColor = new Color(.5f, .5f, .5f, 1);
+        style.sliceColor = new Color(.33f, .33f, .33f, 1);
+        menu = new PieMenu(whitePixel, style, 150, .2f);
 
-        /* Customizing the behavior. */
+        /* Setting up and creating the child menu widget. */
+        PieMenu.PieMenuStyle style2 = new PieMenu.PieMenuStyle();
+        style2.separatorWidth = 2;
+        style2.circumferenceWidth = 2;
+        style2.backgroundColor = new Color(1, .8f, 1, .1f);
+        style2.separatorColor = new Color(.1f, .1f, .1f, 1);
+        style2.downColor = new Color(.5f, .5f, .5f, 1);
+        style2.sliceColor = new Color(.33f, .33f, .33f, 1);
+        child = new PieMenu(whitePixel, style2, 100, .2f);
+
+        /* Customizing the behaviors. */
+        menu.setMiddleCancel(true);
         menu.setInfiniteSelectionRange(true);
-        menu.setSelectionButton(Input.Buttons.RIGHT); // right-click for interactions with the widget
+        menu.setSelectionButton(Input.Buttons.RIGHT); // right-click for the first (main) menu
+        child.setVisible(false);
+        child.setMiddleCancel(true);
+        child.setInfiniteSelectionRange(true);
+        child.setSelectionButton(Input.Buttons.LEFT); // left-click for the child
 
         /* Setting up listeners. */
-        menu.addListener(new PieMenu.PieMenuCallbacks() {
+        menu.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                /* When canceling a selection (release in the middle). */
+                if (hasCanceledSelection()) {
+                    removeMenu(menu);
+                    return;
+                }
+
+                /* On selection. */
+                menu.setGlobalAlphaMultiplier(.3f);
+                stage.addActor(child);
+                child.centerOnMouse();
+                child.setVisible(true);
+            }
+        });
+        child.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                removeMenu(menu);
+                removeMenu(child);
+            }
+        });
+        child.addListener(new PieMenu.PieMenuCallbacks() {
             @Override
             public void onHighlightChange(int highlightedIndex) {
                 switch(highlightedIndex) {
-                    case 0: // Red
+                    case 0:
                         red   = .75f;
                         green = .25f;
                         blue  = .25f;
                         break;
-                    case 1: // Green
+                    case 1:
                         red   = .25f;
                         green = .75f;
                         blue  = .25f;
                         break;
-                    case 2: // Blue
+                    case 2:
                         red   = .25f;
                         green = .25f;
                         blue  = .75f;
@@ -98,22 +139,24 @@ public class ClickDrag extends ApplicationAdapter {
                 }
             }
         });
-        menu.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("ChangeListener - selected index: " + menu.getSelectedIndex());
-                menu.setVisible(false);
-                menu.remove();
-            }
-        });
 
-        /* Populating the widget. */
+        /* Populating the main menu. */
+        Label foo = new Label("foo", skin);
+        menu.addActor(foo);
+        Label bar = new Label("bar", skin);
+        menu.addActor(bar);
+        Label pie = new Label("pie", skin);
+        menu.addActor(pie);
+        Label bob = new Label("bob", skin);
+        menu.addActor(bob);
+
+        /* Populating the child menu. */
         Label red = new Label("red", skin);
-        menu.addActor(red);
+        child.addActor(red);
         Label green = new Label("green", skin);
-        menu.addActor(green);
+        child.addActor(green);
         Label blue = new Label("blue", skin);
-        menu.addActor(blue);
+        child.addActor(blue);
     }
 
 
@@ -121,7 +164,7 @@ public class ClickDrag extends ApplicationAdapter {
     public void render () {
 
         /* Clearing the screen and filling up the background. */
-        Gdx.gl.glClearColor(red, green, blue, 1); // updated with the menu
+        Gdx.gl.glClearColor(red, green, blue, 1); // updated with the child menu callback
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         /* Updating and drawing the Stage. */
@@ -134,11 +177,13 @@ public class ClickDrag extends ApplicationAdapter {
         |                  HERE BEGINS THE MORE SPECIFIC CODE                  |
         \==================================================================== */
 
-        if (Gdx.input.isButtonJustPressed(menu.getSelectionButton())) {
+        boolean childIsNotVisible = !child.isVisible();
+        if (childIsNotVisible && Gdx.input.isButtonJustPressed(menu.getSelectionButton())) {
             stage.addActor(menu);
             menu.centerOnMouse();
             menu.setVisible(true);
-            transferInteraction(stage, menu);
+            menu.setGlobalAlphaMultiplier(1);
+            transferInteraction(stage, menu); // allows drag-selection
         }
     }
 
@@ -159,6 +204,15 @@ public class ClickDrag extends ApplicationAdapter {
         stage.addTouchFocus(widget.getPieMenuListener(), widget, widget, 0, widget.getSelectionButton());
     }
 
+    private void removeMenu(PieMenu menu) {
+        menu.setVisible(false);
+        menu.resetSelection();
+        menu.remove();
+    }
+
+    private boolean hasCanceledSelection() {
+        return menu.getSelectedIndex() == PieMenu.NO_SELECTION;
+    }
 
 
     @Override

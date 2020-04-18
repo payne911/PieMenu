@@ -14,37 +14,76 @@ import com.payne.games.piemenu.core.BaseScreen;
 import com.payne.games.piemenu.core.TestsMenu;
 
 
-public class ClickDrag extends BaseScreen {
+public class NestedClickDrag extends BaseScreen {
     private PieMenu menu;
+    private PieMenu child;
 
-    public ClickDrag(TestsMenu game) {
+    public NestedClickDrag(TestsMenu game) {
         super(game);
     }
 
 
     @Override
     public void show() {
-        setScreenColor(.25f, .25f, .75f, 1f);
+        setScreenColor(.25f, .25f, .75f, 1f); // start Blue
 
         /* ====================================================================\
         |                  HERE BEGINS THE MORE SPECIFIC CODE                  |
         \==================================================================== */
 
-        /* Setting up and creating the widget. */
+        /* Setting up and creating the main widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.separatorWidth = 2;
+        style.circumferenceWidth = 2;
         style.backgroundColor = new Color(1, 1, 1, .1f);
         style.separatorColor = new Color(.1f, .1f, .1f, 1);
         style.downColor = new Color(.5f, .5f, .5f, 1);
         style.sliceColor = new Color(.33f, .33f, .33f, 1);
-        menu = new PieMenu(game.skin.getRegion("white"), style, 80);
+        menu = new PieMenu(game.skin.getRegion("white"), style, 150, .2f);
 
-        /* Customizing the behavior. */
+        /* Setting up and creating the child menu widget. */
+        PieMenu.PieMenuStyle style2 = new PieMenu.PieMenuStyle();
+        style2.separatorWidth = 2;
+        style2.circumferenceWidth = 2;
+        style2.backgroundColor = new Color(1, .8f, 1, .1f);
+        style2.separatorColor = new Color(.1f, .1f, .1f, 1);
+        style2.downColor = new Color(.5f, .5f, .5f, 1);
+        style2.sliceColor = new Color(.33f, .33f, .33f, 1);
+        child = new PieMenu(game.skin.getRegion("white"), style2, 100, .2f);
+        child.setVisible(false);
+
+        /* Customizing the behaviors. */
+        menu.setMiddleCancel(true);
         menu.setInfiniteSelectionRange(true);
         menu.setSelectionButton(Input.Buttons.RIGHT); // right-click for interactions with the widget
+        child.setMiddleCancel(true);
+        child.setInfiniteSelectionRange(true);
+        child.setSelectionButton(Input.Buttons.LEFT); // left-click for the child
 
         /* Setting up listeners. */
-        menu.addListener(new PieMenu.PieMenuCallbacks() {
+        menu.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                if (hasCanceledSelection()) {
+                    removeMenu(menu);
+                    return;
+                }
+
+                menu.setGlobalAlphaMultiplier(.3f);
+                game.stage.addActor(child);
+                child.centerOnMouse();
+                child.setVisible(true);
+            }
+        });
+        child.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                removeMenu(menu);
+                removeMenu(child);
+            }
+        });
+        child.addListener(new PieMenu.PieMenuCallbacks() {
             @Override
             public void onHighlightChange(int highlightedIndex) {
                 switch (highlightedIndex) {
@@ -63,24 +102,25 @@ public class ClickDrag extends BaseScreen {
                 }
             }
         });
-        menu.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("ChangeListener - selected index: " + menu.getSelectedIndex());
-                menu.setVisible(false);
-                menu.remove();
-            }
-        });
 
-        /* Populating the widget. */
+        /* Populating the main menu. */
+        Label foo = new Label("foo", game.skin);
+        menu.addActor(foo);
+        Label bar = new Label("bar", game.skin);
+        menu.addActor(bar);
+        Label pie = new Label("pie", game.skin);
+        menu.addActor(pie);
+        Label bob = new Label("bob", game.skin);
+        menu.addActor(bob);
+
+        /* Populating the child menu. */
         Label red = new Label("red", game.skin);
-        menu.addActor(red);
+        child.addActor(red);
         Label green = new Label("green", game.skin);
-        menu.addActor(green);
+        child.addActor(green);
         Label blue = new Label("blue", game.skin);
-        menu.addActor(blue);
+        child.addActor(blue);
     }
-
 
     @Override
     public void updateInputPost(float delta) {
@@ -88,11 +128,13 @@ public class ClickDrag extends BaseScreen {
         |                  HERE BEGINS THE MORE SPECIFIC CODE                  |
         \==================================================================== */
 
-        if (Gdx.input.isButtonJustPressed(menu.getSelectionButton())) {
+        boolean childIsNotVisible = !child.isVisible();
+        if (childIsNotVisible && Gdx.input.isButtonJustPressed(menu.getSelectionButton())) {
             game.stage.addActor(menu);
             menu.centerOnMouse();
             menu.setVisible(true);
-            transferInteraction(game.stage, menu);
+            menu.setGlobalAlphaMultiplier(1);
+            transferInteraction(game.stage, menu); // allows drag-selection
         }
     }
 
@@ -111,5 +153,15 @@ public class ClickDrag extends BaseScreen {
         if (widget == null) throw new IllegalArgumentException("widget cannot be null.");
         if (widget.getPieMenuListener() == null) throw new IllegalArgumentException("inputListener cannot be null.");
         stage.addTouchFocus(widget.getPieMenuListener(), widget, widget, 0, widget.getSelectionButton());
+    }
+
+    private void removeMenu(PieMenu menu) {
+        menu.setVisible(false);
+        menu.resetSelection();
+        menu.remove();
+    }
+
+    private boolean hasCanceledSelection() {
+        return menu.getSelectedIndex() == PieMenu.NO_SELECTION;
     }
 }

@@ -13,7 +13,7 @@ import com.payne.games.piemenu.core.BaseScreen;
 import com.payne.games.piemenu.core.TestsMenu;
 
 public class ButtonToggle extends BaseScreen {
-    private AnimatedPieWidget radGroup;
+    private AnimatedPieWidget widget;
 
     public ButtonToggle(TestsMenu game) {
         super(game);
@@ -40,12 +40,12 @@ public class ButtonToggle extends BaseScreen {
         style.circumferenceWidth = 2;
         style.circumferenceColor = Color.BLACK;
         style.separatorColor = style.circumferenceColor;
-        radGroup = new AnimatedPieWidget(game.skin.getRegion("white"), style, 110, 50f / 110, 315, 270);
+        widget = new AnimatedPieWidget(game.skin.getRegion("white"), style, 110, 50f / 110, 315, 270);
 
         /* Populating the widget. */
         for (int i = 0; i < 8; i++) {
             Label label = new Label(Integer.toString(i), game.skin);
-            radGroup.addActor(label);
+            widget.addActor(label);
         }
 
         /* Setting up the demo-button. */
@@ -53,15 +53,15 @@ public class ButtonToggle extends BaseScreen {
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                radGroup.toggleVisibility(.9f); // 0.9 seconds animation
-                radGroup.setPosition(textButton.getX(Align.center),
+                widget.toggleVisibility(.9f); // 0.9 seconds animation
+                widget.setPosition(textButton.getX(Align.center),
                         textButton.getY(Align.center) - 5, Align.center);
             }
         });
         root.add(textButton).expand().bottom();
 
         /* Including the Widget in the Stage. */
-        game.stage.addActor(radGroup);
-        radGroup.setVisible(false);
+        game.stage.addActor(widget);
+        widget.setVisible(false);
     }
 }
