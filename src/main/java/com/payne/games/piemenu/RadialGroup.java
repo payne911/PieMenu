@@ -520,17 +520,32 @@ public class RadialGroup extends WidgetGroup {
     }
 
     /**
-     * Centers the Widget on the current position of the mouse.
+     * Centers the Widget on the current position of the mouse.<br>
+     * If there are no {@link com.badlogic.gdx.scenes.scene2d.Stage Stage}
+     * associated with the Widget, this is not guaranteed to work.
      */
     public void centerOnMouse() {
-        setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), Align.center);
+        if (getStage() != null) {
+            getStage().screenToStageCoordinates(vector2.set(Gdx.input.getX(), Gdx.input.getY()));
+        } else { // edge-case fallback
+            vector2.set(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+        }
+        setPosition(vector2.x, vector2.y, Align.center);
     }
 
     /**
-     * Positions the Widget's center right in the middle of the current screen size.
+     * Positions the Widget's center in the middle of the screen.<br>
+     * If there are no {@link com.badlogic.gdx.scenes.scene2d.Stage Stage}
+     * associated with the Widget, this is not guaranteed to work.
      */
     public void centerOnScreen() {
-        setPosition(Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f, Align.center);
+        if (getStage() != null) {
+            getStage().screenToStageCoordinates(
+                    vector2.set(Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f));
+        } else { // edge-case fallback
+            vector2.set(Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f);
+        }
+        setPosition(vector2.x, vector2.y, Align.center);
     }
 
     /**
@@ -570,7 +585,7 @@ public class RadialGroup extends WidgetGroup {
 
 
     /**
-     * @return The amount of Actors that are currently contained in the Widget.
+     * @return the amount of (first-layer) Actors that are currently contained in the Widget.
      */
     public int getAmountOfChildren() {
         return getChildren().size;
@@ -593,8 +608,10 @@ public class RadialGroup extends WidgetGroup {
      *                              (slices, lines, drawables, etc.).
      */
     public void setGlobalAlphaMultiplier(float globalAlphaMultiplier) {
+        float reversedMultiplier = 1/this.globalAlphaMultiplier;
         this.globalAlphaMultiplier = globalAlphaMultiplier;
-        setColor(getColor().r, getColor().g, getColor().b, getColor().a * globalAlphaMultiplier);
+        float adjustedMultiplier = reversedMultiplier * globalAlphaMultiplier;
+        setColor(getColor().r, getColor().g, getColor().b, getColor().a * adjustedMultiplier);
     }
 
     /**

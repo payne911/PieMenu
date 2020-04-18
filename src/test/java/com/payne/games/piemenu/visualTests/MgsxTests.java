@@ -1,10 +1,6 @@
-package com.payne.games.piemenu.genericTests;
+package com.payne.games.piemenu.visualTests;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,94 +8,62 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.payne.games.piemenu.PieMenu;
+import com.payne.games.piemenu.core.BaseScreen;
+import com.payne.games.piemenu.core.TestsMenu;
 
 
-public class MgsxTests extends ApplicationAdapter {
+public class MgsxTests extends BaseScreen {
     final int SIZE = 40;
-    Skin skin;
-    PolygonSpriteBatch batch;
-    Stage stage;
+
+    public MgsxTests(TestsMenu game) {
+        super(game);
+    }
 
     @Override
-    public void create() {
-        skin = new Skin(Gdx.files.internal("skin.json"));
-        batch = new PolygonSpriteBatch();
-        stage = new Stage(new ScreenViewport(), batch);
-        Gdx.input.setInputProcessor(stage);
+    public void show() {
+        setScreenColor(.2f, .2f, .7f, 1);
+        game.enableDebug();
 
-        SettingsPOC poc = new SettingsPOC(stage, skin);
-        stage.addActor(poc);
+        SettingsPOC poc = new SettingsPOC(game.stage, game.skin);
+        game.stage.addActor(poc);
 
 
 //        Group group = new Group();
-//        PieMenu menu = new PieMenu(skin.getRegion("white"), PieMenuUtils.getStyle(), SIZE, .2f);
-//        fillMenu(menu, skin, "A", "D", "E");
+//        PieMenu menu = new PieMenu(game.skin.getRegion("white"), PieMenuUtils.getStyle(), SIZE, .2f);
+//        fillMenu(menu, game.skin, "A", "D", "E");
 //        group.addActor(menu);
 //        menu.pack();
 //        group.setPosition(100, 100);
 //        addListeners(menu);
-//        stage.addActor(group);
+//        game.stage.addActor(group);
 
 
 //        Group group2 = new Group();
-//        PieMenu menu2 = new PieMenu(skin.getRegion("white"), PieMenuUtils.getStyle(), SIZE, .2f);
-//        fillMenu(menu2, skin, "A", "D", "E");
+//        PieMenu menu2 = new PieMenu(game.skin.getRegion("white"), PieMenuUtils.getStyle(), SIZE, .2f);
+//        fillMenu(menu2, game.skin, "A", "D", "E");
 //        group2.addActor(menu2);
 //        menu2.setPieMenuListener(new InputListener());
 //        menu.pack();
-//        stage.addActor(group2);
+//        game.stage.addActor(group2);
 
 
-//        PieMenu menu3 = new PieMenu(skin.getRegion("white"), PieMenuUtils.getStyle(), SIZE, .2f);
-//        fillMenu(menu3, skin, "A", "D", "E");
+//        PieMenu menu3 = new PieMenu(game.skin.getRegion("white"), PieMenuUtils.getStyle(), SIZE, .2f);
+//        fillMenu(menu3, game.skin, "A", "D", "E");
 //        menu3.pack();
 //        menu3.setPosition(200, 200);
 //        addListeners(menu3);
-//        stage.addActor(menu3);
-
-        stage.setDebugAll(true);
+//        game.stage.addActor(menu3);
     }
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
-
-    @Override
-    public void render() {
-
-        /* Clearing the screen and filling up the background. */
-        Gdx.gl.glClearColor(.2f,.2f,.7f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        /* Updating and drawing the Stage. */
-        stage.act();
-        stage.draw();
-    }
-
-    @Override
-    public void dispose() {
-
-        /* Disposing is good practice! */
-        skin.dispose();
-        batch.dispose();
-        stage.dispose();
-    }
-
-
-
-
-
 
     private void fillMenu(PieMenu menu, Skin skin, String... labels) {
-        for(String label : labels){
+        for (String label : labels) {
             menu.addActor(new Label(label, skin));
         }
     }
 
     int name = 0;
+
     private void addListeners(PieMenu menu) {
 
         menu.setName(Integer.toString(name++));
@@ -217,11 +181,8 @@ public class MgsxTests extends ApplicationAdapter {
     }
 
 
-
-
-
     public static class PieMenuUtils {
-        public static PieMenu.PieMenuStyle getStyle(){
+        public static PieMenu.PieMenuStyle getStyle() {
             PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
             style.backgroundColor = Color.BROWN;
             style.selectedColor = Color.ORANGE;

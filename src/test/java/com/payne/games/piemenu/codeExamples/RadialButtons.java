@@ -1,8 +1,7 @@
-package com.payne.games.piemenu.individuals;
+package com.payne.games.piemenu.codeExamples;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
@@ -13,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.payne.games.piemenu.PieMenu;
 import com.payne.games.piemenu.RadialGroup;
 
 
@@ -44,12 +42,7 @@ public class RadialButtons extends ApplicationAdapter {
         |                  HERE BEGINS THE MORE SPECIFIC CODE                  |
         \==================================================================== */
 
-        /* Setting up and creating the widget. */
-        PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.backgroundColor = new Color(1,1,1,.3f);
-        style.selectedColor = new Color(.7f,.3f,.5f,1);
-        style.sliceColor = new Color(0,.7f,0,1);
-        style.alternateSliceColor = new Color(.7f,0,0,1);
+        /* Creating the widget. */
         menu = new RadialGroup(200, .7f);
 
         /* Populating the widget. */

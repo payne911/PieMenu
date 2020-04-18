@@ -511,8 +511,8 @@ public class PieWidget extends RadialGroup {
 
     protected void drawChild(Vector2 vector2, int index, float startAngle, float radian) {
         propagateAlpha(sd, getColor(index));
-        sd.arc(vector2.x, vector2.y, (getCurrentRadius()+ getInnerRadiusLength())/2,
-                startAngle, radian, getCurrentRadius()- getInnerRadiusLength());
+        sd.arc(vector2.x, vector2.y, (getCurrentRadius() + getInnerRadiusLength())/2,
+                startAngle, radian, getCurrentRadius() - getInnerRadiusLength());
 
         /* Circumferences */
         drawChildCircumference(vector2, startAngle, radian, getCurrentRadius() - style.circumferenceWidth/2);
@@ -624,10 +624,9 @@ public class PieWidget extends RadialGroup {
          * The color used by the separating lines between each item.<br>
          * It is recommended mostly for the case where you are not defining an
          * {@link #alternateSliceColor}.<br>
-         * If you do not define a {@link #separatorWidth} along with this value,
-         * no lines will be visible.
+         * Defaults to black.
          */
-        public Color separatorColor;
+        public Color separatorColor = new Color(0,0,0,1);
 
         /**
          * <i>Recommended. Optional.</i><br>
@@ -652,16 +651,16 @@ public class PieWidget extends RadialGroup {
          * applied along the partial circumference.<br>
          * If you have set a non-zero {@link #innerRadiusPercent} value, this will
          * also apply to the "inner radius" of your Widget.<br>
-         * If you do not define a {@link #circumferenceWidth} along with this
-         * value, no circumference will be visible.
+         * Defaults to black.
+         * @see #circumferenceWidth
          */
-        public Color circumferenceColor;
+        public Color circumferenceColor = new Color(0,0,0,1);
 
         /**
          * <i>Recommended. Optional.</i><br>
          * Determines how wide the lines that separate each slice will be.<br>
          * If no {@link #separatorColor} was provided along with this value,
-         * no lines will be drawn.
+         * the default color will be black.
          */
         public float separatorWidth;
 
@@ -669,7 +668,7 @@ public class PieWidget extends RadialGroup {
          * <i>Optional.</i><br>
          * Determines how wide the circumference line will be.<br>
          * If no {@link #circumferenceColor} was provided along with this value,
-         * no circumference will be drawn.
+         * the default color will be black.
          */
         public float circumferenceWidth;
 

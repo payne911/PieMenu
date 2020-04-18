@@ -1,8 +1,7 @@
-package com.payne.games.piemenu.individuals;
+package com.payne.games.piemenu.codeExamples;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -16,22 +15,21 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.payne.games.piemenu.AnimatedPieMenu;
 import com.payne.games.piemenu.PieMenu;
 
 
-public class ClickDrag extends ApplicationAdapter {
+public class ButtonBound extends ApplicationAdapter {
     private Skin skin;
     private Stage stage;
     private Texture tmpTex;
     private Batch batch;
-    private PieMenu menu;
-
-    /* For the demonstration's purposes. Not actually necessary. */
-    private float red   = .25f;
-    private float blue  = .75f;
-    private float green = .25f;
+    private AnimatedPieMenu menu;
 
 
     @Override
@@ -42,6 +40,12 @@ public class ClickDrag extends ApplicationAdapter {
         batch = new PolygonSpriteBatch();
         stage = new Stage(new ScreenViewport(), batch);
         Gdx.input.setInputProcessor(stage);
+
+        /* Adding a Table. */
+        Table root = new Table();
+        root.setFillParent(true);
+        root.defaults().padBottom(150);
+        stage.addActor(root);
 
         /* Ideally, you would extract such a pixel from your Atlas instead. */
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -59,87 +63,59 @@ public class ClickDrag extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.separatorWidth = 2;
-        style.backgroundColor = new Color(1,1,1,.1f);
-        style.separatorColor = new Color(.1f,.1f,.1f,1);
-        style.downColor = new Color(.5f,.5f,.5f,1);
-        style.sliceColor = new Color(.33f,.33f,.33f,1);
-        menu = new PieMenu(whitePixel, style, 80);
+        style.backgroundColor = new Color(1,1,1,.3f);
+        style.selectedColor = new Color(.7f,.3f,.5f,1);
+        style.sliceColor = new Color(0,.7f,0,1);
+        style.alternateSliceColor = new Color(.7f,0,0,1);
+        menu = new AnimatedPieMenu(whitePixel, style, 130, 50f/130, 180, 320);
 
         /* Customizing the behavior. */
         menu.setInfiniteSelectionRange(true);
-        menu.setSelectionButton(Input.Buttons.RIGHT); // right-click for interactions with the widget
 
-        /* Setting up listeners. */
-        menu.addListener(new PieMenu.PieMenuCallbacks() {
+        /* Populating the widget. */
+        for (int i = 0; i < 5; i++) {
+            Label label = new Label(Integer.toString(i), skin);
+            menu.addActor(label);
+        }
+
+        /* Setting up the demo-button. */
+        final TextButton textButton = new TextButton("Drag Pie",  skin);
+        textButton.addListener(new ClickListener() {
+            /*
+            In our particular case, we want to NOT use a ChangeListener because
+            else the user would have to release his mouse-click before seeing
+            the menu, which goes against our current goal of obtaining a
+            "drag-selection" menu.
+            */
             @Override
-            public void onHighlightChange(int highlightedIndex) {
-                switch(highlightedIndex) {
-                    case 0:
-                        red   = .25f;
-                        blue  = .75f;
-                        green = .25f;
-                        break;
-                    case 1:
-                        red   = .75f;
-                        blue  = .25f;
-                        green = .25f;
-                        break;
-                    case 2:
-                        red   = .25f;
-                        blue  = .25f;
-                        green = .75f;
-                        break;
-                    default:
-                        red   = .75f;
-                        blue  = .75f;
-                        green = .75f;
-                        break;
-                }
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                menu.resetSelection();
+                menu.centerOnActor(textButton);
+                menu.animateOpening(.4f);
+                transferInteraction(stage, menu);
+                return true;
             }
         });
+        root.add(textButton).expand().bottom();
+
+        /* Adding a selection-listener. */
         menu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("ChangeListener - selected index: " + menu.getSelectedIndex());
-                menu.setVisible(false);
-                menu.remove();
+                menu.transitionToClosing(.4f);
+                int index = menu.getSelectedIndex();
+                if(!menu.isValidIndex(index)) {
+                    textButton.setText("Drag Pie");
+                    return;
+                }
+                Actor child = menu.getChild(index);
+                textButton.setText(((Label)child).getText().toString());
             }
         });
 
-        /* Populating the widget. */
-        Label blue = new Label("blue", skin);
-        menu.addActor(blue);
-        Label red = new Label("red", skin);
-        menu.addActor(red);
-        Label green = new Label("green", skin);
-        menu.addActor(green);
-    }
-
-
-    @Override
-    public void render () {
-
-        /* Clearing the screen and filling up the background. */
-        Gdx.gl.glClearColor(red, green, blue, 1); // updated with the menu
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        /* Updating and drawing the Stage. */
-        stage.act();
-        stage.draw();
-
-
-
-        /* ====================================================================\
-        |                  HERE BEGINS THE MORE SPECIFIC CODE                  |
-        \==================================================================== */
-
-        if (Gdx.input.isButtonJustPressed(menu.getSelectionButton())) {
-            stage.addActor(menu);
-            menu.centerOnMouse();
-            menu.setVisible(true);
-            transferInteraction(stage, menu);
-        }
+        /* Including the Widget in the Stage. */
+        stage.addActor(menu);
+        menu.setVisible(false);
     }
 
     /**
@@ -160,14 +136,26 @@ public class ClickDrag extends ApplicationAdapter {
     }
 
 
+    @Override
+    public void render () {
+
+        /* Clearing the screen and filling up the background. */
+        Gdx.gl.glClearColor(.2f, .2f, .2f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        /* Updating and drawing the Stage. */
+        stage.act();
+        stage.draw();
+    }
+
 
     @Override
     public void dispose () {
 
         /* Disposing is good practice! */
+        stage.dispose();
         batch.dispose();
         tmpTex.dispose();
-        stage.dispose();
         skin.dispose();
     }
 }

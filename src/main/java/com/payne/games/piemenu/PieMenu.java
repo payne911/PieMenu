@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Pools;
 
@@ -33,26 +34,31 @@ public class PieMenu extends PieWidget {
     private InputListener pieMenuListener;
 
     /**
+     * Used to denote a non-selected index, or canceled selection, for example.
+     */
+    public static final int NO_SELECTION = -1;
+
+    /**
      * The index that is used as a fallback value whenever a processed
      * user-input does not map to a valid child index value.<br>
      * This value can be negative, if you want nothing to be the default.
      */
-    private int defaultIndex = -1;
+    private int defaultIndex = NO_SELECTION;
 
     /**
      * Index of the currently selected item.
      */
-    private int selectedIndex = defaultIndex;
+    private int selectedIndex = NO_SELECTION;
 
     /**
      * Index of the currently highlighted item.
      */
-    private int highlightedIndex = defaultIndex;
+    private int highlightedIndex = NO_SELECTION;
 
     /**
      * Index of the currently highlighted item.
      */
-    private int hoveredIndex = -1;
+    private int hoveredIndex = NO_SELECTION;
 
     /**
      * Determines whether or not selection should only happen if the mouse is
@@ -62,12 +68,13 @@ public class PieMenu extends PieWidget {
 
 
     /**
-     * Determines whether or not releasing a click within the inner-radius
-     * should cancel the selection.<br>
-     * If {@code true}, a click released in the middle will trigger a selection
-     * of the {@link #defaultIndex}.<br>
-     * Only applies for the case where you have activated the
-     * {@link #infiniteSelectionRange} flag.
+     * Determines whether or not releasing a click within the {@link #innerRadiusPercent
+     * inner-radius} should "cancel" the selection.
+     * If {@code true}, a click released in the middle will trigger a selection of the
+     * {@link #defaultIndex}.<br>
+     * As a corollary, this means that the {@link ChangeListener#changed(ChangeEvent, Actor)}
+     * will still be called, no matter the value given to this variable.<br>
+     * Only applies for the case where you have activated the {@link #infiniteSelectionRange} flag.
      */
     private boolean middleCancel = false;
 
@@ -369,7 +376,7 @@ public class PieMenu extends PieWidget {
      * (if you had set it up).
      */
     public void resetHover() {
-        hoveredIndex = -1;
+        hoveredIndex = NO_SELECTION;
     }
 
     @Override
@@ -550,7 +557,7 @@ public class PieMenu extends PieWidget {
          *
          * @param style a Style to copy the parameters from.
          */
-        public PieMenuStyle(PieMenu.PieMenuStyle style) {
+        public PieMenuStyle(PieMenuStyle style) {
             super(style);
             this.selectedColor = new Color(style.selectedColor);
             this.downColor = new Color(style.downColor);
@@ -589,8 +596,12 @@ public class PieMenu extends PieWidget {
 
         selectedIndex = newIndex;
         highlightedIndex = newIndex;
-        if (newIndex != oldHighlightedIndex)
-            fire(new PieMenuHighlightChangeEvent(newIndex));
+        if (newIndex != oldHighlightedIndex) {
+            PieMenuHighlightChangeEvent highlightChangeEvent = Pools.obtain(PieMenuHighlightChangeEvent.class);
+            highlightChangeEvent.newIndex = newIndex;
+            fire(highlightChangeEvent);
+            Pools.free(highlightChangeEvent);
+        }
 
         ChangeListener.ChangeEvent changeEvent = Pools.obtain(ChangeListener.ChangeEvent.class);
         if (fire(changeEvent)) {
@@ -630,7 +641,10 @@ public class PieMenu extends PieWidget {
         if(newIndex != highlightedIndex) {
             highlightedIndex = newIndex;
             resetHover();
-            fire(new PieMenuHighlightChangeEvent(newIndex));
+            PieMenuHighlightChangeEvent highlightChangeEvent = Pools.obtain(PieMenuHighlightChangeEvent.class);
+            highlightChangeEvent.newIndex = newIndex;
+            fire(highlightChangeEvent);
+            Pools.free(highlightChangeEvent);
         }
     }
 
@@ -665,7 +679,10 @@ public class PieMenu extends PieWidget {
         newIndex = mapIndex(newIndex);
         if(newIndex != hoveredIndex) {
             hoveredIndex = newIndex;
-            fire(new PieMenuHoverChangeEvent(newIndex));
+            PieMenuHoverChangeEvent hoverChangeEvent = Pools.obtain(PieMenuHoverChangeEvent.class);
+            hoverChangeEvent.newIndex = newIndex;
+            fire(hoverChangeEvent);
+            Pools.free(hoverChangeEvent);
         }
     }
 
@@ -780,7 +797,7 @@ public class PieMenu extends PieWidget {
 
             /* Reset the hover only when the mouse exits the PieMenu. */
             if(toActor != pieMenu && (toActor == null || !(toActor.isDescendantOf(pieMenu))))
-                pieMenu.hoverIndex(-1);
+                pieMenu.hoverIndex(NO_SELECTION);
             super.exit(event, x, y, pointer, toActor);
         }
     }
@@ -789,16 +806,20 @@ public class PieMenu extends PieWidget {
     private static class PieMenuHighlightChangeEvent extends Event {
         private int newIndex;
 
-        public PieMenuHighlightChangeEvent(int newIndex) {
-            this.newIndex = newIndex;
+        @Override
+        public void reset() {
+            super.reset();
+            newIndex = NO_SELECTION;
         }
     }
 
     private static class PieMenuHoverChangeEvent extends Event {
         private int newIndex;
 
-        public PieMenuHoverChangeEvent(int newIndex) {
-            this.newIndex = newIndex;
+        @Override
+        public void reset() {
+            super.reset();
+            newIndex = NO_SELECTION;
         }
     }
 
@@ -920,20 +941,26 @@ public class PieMenu extends PieWidget {
     }
 
     /**
-     * Determines whether or not releasing a click within the inner-radius
-     * should cancel the selection.
-     * If {@code true} a release in the middle, even if {@link #infiniteSelectionRange}
-     * is set to {@code true}, will trigger a selection of the {@link #defaultIndex}.
+     * Determines whether or not releasing a click within the {@link #innerRadiusPercent
+     * inner-radius} should "cancel" the selection.
+     * If {@code true}, a click released in the middle will trigger a selection of the
+     * {@link #defaultIndex}.<br>
+     * As a corollary, this means that the {@link ChangeListener#changed(ChangeEvent, Actor)}
+     * will still be called, no matter the value given to this variable.<br>
+     * Only applies for the case where you have activated the {@link #infiniteSelectionRange} flag.
      */
     public boolean isMiddleCancel() {
         return middleCancel;
     }
 
     /**
-     * Determines whether or not releasing a click within the inner-radius
-     * should cancel the selection.
-     * If {@code true} a release in the middle, even if {@link #infiniteSelectionRange}
-     * is set to {@code true}, will trigger a selection of the {@link #defaultIndex}.
+     * Determines whether or not releasing a click within the {@link #innerRadiusPercent
+     * inner-radius} should "cancel" the selection.
+     * If {@code true}, a click released in the middle will trigger a selection of the
+     * {@link #defaultIndex}.<br>
+     * As a corollary, this means that the {@link ChangeListener#changed(ChangeEvent, Actor)}
+     * will still be called, no matter the value given to this variable.<br>
+     * Only applies for the case where you have activated the {@link #infiniteSelectionRange} flag.
      */
     public void setMiddleCancel(boolean middleCancel) {
         this.middleCancel = middleCancel;

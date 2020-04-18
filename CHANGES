@@ -1,6 +1,17 @@
+[4.2.0]
+- Fixed a bug related to the `globalAlphaMultiplier` attribute.
+- Fixed a bug related to `centerOn` methods and some Viewports.
+- Performance improvement: Events (Callbacks/Highlight/Selection/etc.) are now Pooled.
+- Added a default Color (black) for the following `PieWidgetStyle` attributes: `separatorColor` and `circumferenceColor`.
+- Added a Testing Menu so that Contributors can more easily test their implementations.
+- Added the `NO_SELECTION` constant in `PieMenu`.
+- Added a new "code example": `NestedClickDrag`.
+- Minor JavaDoc tweaks and improvements.
+- Updated `ShapeDrawer` version to `v2.3.0`.
+
 [4.1.0]
-- Added `AnimatedRadialGroup`
-- Minor fixes in documentation
+- Added `AnimatedRadialGroup`.
+- Minor fixes in documentation.
 - Updated `ShapeDrawer` version to `v2.1.0`.
 
 [4.0.0]
