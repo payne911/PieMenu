@@ -64,12 +64,12 @@ allprojects {
 
     ext {
         ...
-        pieMenuVersion = '4.1.0'  // add this line
+        pieMenuVersion = '4.2.0'  // add this line
     }
     
     repositories {
         ...
-        maven { url 'https://jitpack.io' }
+        maven { url 'https://jitpack.io' }  // add this line if it isn't there
     }
 }
 ```
