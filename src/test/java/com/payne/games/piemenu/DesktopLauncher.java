@@ -2,7 +2,7 @@ package com.payne.games.piemenu;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.payne.games.piemenu.core.TestsMenu;
+import com.payne.games.piemenu.testMenu.core.TestsMenu;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
