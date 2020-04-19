@@ -1,3 +1,6 @@
+[4.3.0]
+- ...
+
 [4.2.0]
 - Fixed a bug related to the `globalAlphaMultiplier` attribute.
 - Fixed a bug related to `centerOn` methods and some Viewports.
