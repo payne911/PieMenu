@@ -1,5 +1,5 @@
 [4.3.0]
-- ...
+- Minor JavaDoc tweaks.
 
 [4.2.0]
 - Fixed a bug related to the `globalAlphaMultiplier` attribute.

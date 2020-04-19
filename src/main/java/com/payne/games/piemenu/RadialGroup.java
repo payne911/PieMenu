@@ -31,6 +31,7 @@ public class RadialGroup extends WidgetGroup {
 
     /**
      * <i>Optional.</i><br>
+     * <b>Defaults at 0.</b><br>
      * If provided, the {@link PieWidgetStyle#sliceColor} will only fill
      * the region defined between the {@link #preferredRadius} and its percentage
      * value coming from this.<br>
@@ -50,6 +51,7 @@ public class RadialGroup extends WidgetGroup {
 
     /**
      * <i>Optional.</i><br>
+     * <b>Defaults at 0.</b><br>
      * Considers that angles start at 0 along the x-axis and increment up
      * to 360 in a counter-clockwise fashion.<br>
      * Defines how far from that origin the {@link #totalDegreesDrawn} will
@@ -61,8 +63,8 @@ public class RadialGroup extends WidgetGroup {
     protected float startDegreesOffset;
 
     /**
-     * <i>Required.</i><br>
-     * If not defined, will be initialized to 360 by default.<br>
+     * <i>Optional.</i><br>
+     * <b>Defaults at 360.</b><br>
      * Determines the total amount of degrees into which the contained
      * Actors will be spread.<br>
      * For example, if {@code startDegreesOffset = 0} and

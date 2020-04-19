@@ -621,10 +621,10 @@ public class PieWidget extends RadialGroup {
 
         /**
          * <i>Recommended. Optional.</i><br>
+         * <b>Defaults to black.</b><br>
          * The color used by the separating lines between each item.<br>
          * It is recommended mostly for the case where you are not defining an
-         * {@link #alternateSliceColor}.<br>
-         * Defaults to black.
+         * {@link #alternateSliceColor}.
          */
         public Color separatorColor = new Color(0,0,0,1);
 
@@ -646,18 +646,18 @@ public class PieWidget extends RadialGroup {
 
         /**
          * <i>Optional.</i><br>
+         * <b>Defaults to black.</b><br>
          * The color used for the line that defines the circumference of the
          * Widget. If the Widget is not a complete a circle, this will only be
          * applied along the partial circumference.<br>
          * If you have set a non-zero {@link #innerRadiusPercent} value, this will
-         * also apply to the "inner radius" of your Widget.<br>
-         * Defaults to black.
+         * also apply to the "inner radius" of your Widget.
          * @see #circumferenceWidth
          */
         public Color circumferenceColor = new Color(0,0,0,1);
 
         /**
-         * <i>Recommended. Optional.</i><br>
+         * <i>Optional.</i><br>
          * Determines how wide the lines that separate each slice will be.<br>
          * If no {@link #separatorColor} was provided along with this value,
          * the default color will be black.
