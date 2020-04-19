@@ -1,5 +1,5 @@
 # Tests
-Welcome! You were look for tests? Here they are!
+Welcome! You were looking for tests? Here they are!
 
 Depending on whether you are someone which is trying to figure out how to integrate a PieMenu into your game (aka an [Integrator](#integrators)), or someone which is trying to help this library grow (aka a [Contributor](#contributors)), you've come to the right place.
 
