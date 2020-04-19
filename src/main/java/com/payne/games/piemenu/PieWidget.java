@@ -591,7 +591,8 @@ public class PieWidget extends RadialGroup {
             throw new IllegalArgumentException("circumferenceWidth cannot be negative.");
 
         if(style.sliceColor == null && style.alternateSliceColor != null)
-            throw new IllegalArgumentException("sliceColor must also be specified if you are defining alternateSliceColor. " +
+            throw new IllegalArgumentException(
+                    "sliceColor must also be specified if you are defining alternateSliceColor. " +
                     "You can however only specify the sliceColor, if you want.");
     }
 
