@@ -1,4 +1,4 @@
-package com.payne.games.piemenu.visualTests;
+package com.payne.games.piemenu.testMenu.otherTests;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,8 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.payne.games.piemenu.PieWidget;
-import com.payne.games.piemenu.core.BaseScreen;
-import com.payne.games.piemenu.core.TestsMenu;
+import com.payne.games.piemenu.testMenu.core.BaseScreen;
+import com.payne.games.piemenu.testMenu.core.TestsMenu;
 
 
 public class CenterOnActor extends BaseScreen {

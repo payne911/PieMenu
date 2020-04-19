@@ -1,4 +1,4 @@
-package com.payne.games.piemenu.visualTests;
+package com.payne.games.piemenu.testMenu.otherTests;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -7,8 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.payne.games.piemenu.PieMenu;
-import com.payne.games.piemenu.core.BaseScreen;
-import com.payne.games.piemenu.core.TestsMenu;
+import com.payne.games.piemenu.testMenu.core.BaseScreen;
+import com.payne.games.piemenu.testMenu.core.TestsMenu;
 
 
 public class TableWidgets extends BaseScreen {

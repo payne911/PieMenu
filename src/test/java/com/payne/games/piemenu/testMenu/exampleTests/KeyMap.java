@@ -1,4 +1,4 @@
-package com.payne.games.piemenu.listedExamples;
+package com.payne.games.piemenu.testMenu.exampleTests;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -14,8 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.payne.games.piemenu.PieMenu;
-import com.payne.games.piemenu.core.BaseScreen;
-import com.payne.games.piemenu.core.TestsMenu;
+import com.payne.games.piemenu.testMenu.core.BaseScreen;
+import com.payne.games.piemenu.testMenu.core.TestsMenu;
 import java.util.HashSet;
 
 

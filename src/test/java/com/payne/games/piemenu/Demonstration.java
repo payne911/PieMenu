@@ -17,8 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.payne.games.piemenu.core.BaseScreen;
-import com.payne.games.piemenu.core.TestsMenu;
+import com.payne.games.piemenu.testMenu.core.BaseScreen;
+import com.payne.games.piemenu.testMenu.core.TestsMenu;
 
 public class Demonstration extends BaseScreen {
     private AnimatedPieMenu dragPie;
