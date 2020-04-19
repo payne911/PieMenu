@@ -1,4 +1,4 @@
-package com.payne.games.piemenu.listedExamples;
+package com.payne.games.piemenu.testMenu.exampleTests;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
@@ -18,8 +18,8 @@ import com.payne.games.piemenu.PieMenu.PieMenuStyle;
 import com.payne.games.piemenu.actions.RadialGroupActionColorBasic;
 import com.payne.games.piemenu.actions.RadialGroupActionVisualAngleClose;
 import com.payne.games.piemenu.actions.RadialGroupActionVisualAngleOpen;
-import com.payne.games.piemenu.core.BaseScreen;
-import com.payne.games.piemenu.core.TestsMenu;
+import com.payne.games.piemenu.testMenu.core.BaseScreen;
+import com.payne.games.piemenu.testMenu.core.TestsMenu;
 
 
 public class ActionMenu extends BaseScreen {
