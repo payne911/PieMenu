@@ -1,4 +1,4 @@
-package com.payne.games.piemenu;
+package com.payne.games.piemenu.testMenu.otherTests;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -17,6 +17,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.payne.games.piemenu.AnimatedPieMenu;
+import com.payne.games.piemenu.AnimatedPieWidget;
+import com.payne.games.piemenu.PieMenu;
+import com.payne.games.piemenu.PieWidget.PieWidgetStyle;
 import com.payne.games.piemenu.testMenu.core.BaseScreen;
 import com.payne.games.piemenu.testMenu.core.TestsMenu;
 
@@ -75,7 +79,7 @@ public class Demonstration extends BaseScreen {
     private void setUpRadialWidget(Table root) {
 
         /* Setting up and creating the widget. */
-        PieWidget.PieWidgetStyle style = new PieWidget.PieWidgetStyle();
+        PieWidgetStyle style = new PieWidgetStyle();
         style.backgroundColor = new Color(1, 1, 1, 1);
         style.sliceColor = new Color(.4f, .4f, .4f, 1);
         style.alternateSliceColor = new Color(.6f, 0, 0, 1);
