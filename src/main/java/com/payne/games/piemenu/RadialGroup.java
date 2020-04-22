@@ -83,6 +83,7 @@ public class RadialGroup extends WidgetGroup {
     /* For internal use (optimization). */
     private float lastRadius = 0;
     protected static final float BUFFER = 1;
+    protected static final float HALF = 1f / 2;
     private static Vector2 vector2 = new Vector2();
 
 
@@ -317,13 +318,12 @@ public class RadialGroup extends WidgetGroup {
         updateOrigin(); // for rotations to happen around the actual center
 
         float degreesPerChild = totalDegreesDrawn / getAmountOfChildren();
-        float half = 1f / 2;
 
         for (int i = 0; i < getAmountOfChildren(); i++) {
             Actor actor = getChildren().get(i);
             float dist = getActorDistanceFromCenter(actor);
             vector2.set(dist, 0);
-            vector2.rotate(degreesPerChild*(i + half) + startDegreesOffset);
+            vector2.rotate(degreesPerChild*(i + HALF) + startDegreesOffset);
             modifyActor(actor, degreesPerChild, dist); // overridden by user
             actor.setPosition(vector2.x + getWidth()/2, vector2.y + getHeight()/2, Align.center);
         }

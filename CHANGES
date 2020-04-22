@@ -1,5 +1,6 @@
 [4.3.0]
 - Non-breaking refactor of the deprecated `Animated` classes.
+- Minor optimization for `layout()` function.
 - Minor JavaDoc tweaks.
 
 [4.2.0]
