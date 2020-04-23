@@ -83,7 +83,7 @@ public class RadialGroup extends WidgetGroup {
     /* For internal use (optimization). */
     private float lastRadius = 0;
     protected static final float BUFFER = 1;
-    protected static final float HALF = 1f / 2;
+    protected static final float HALF = .5f;
     private static Vector2 vector2 = new Vector2();
 
 
