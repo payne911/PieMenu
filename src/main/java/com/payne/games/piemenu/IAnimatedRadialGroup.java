@@ -13,6 +13,8 @@ import java.util.Map;
  */
 interface IAnimatedRadialGroup {
 
+    float HALF = .5f;
+
     /**
      * Used by the interface as a way of accessing the implementation that uses it.
      * It's a hack to help achieve the goal of {@link IAnimatedRadialGroup this
@@ -137,13 +139,12 @@ interface IAnimatedRadialGroup {
         boolean notAnimated = !isCurrentlyAnimated() && !getOriginalColors().isEmpty();
         float openingPercentage = getCurrentAngle() / getSelf().totalDegreesDrawn;
         float degreesPerChild = getCurrentAngle() / getSelf().getAmountOfChildren();
-        float half = 1f / 2;
 
         for (int i = 0; i < getSelf().getAmountOfChildren(); i++) {
             Actor actor = getSelf().getChildren().get(i);
             float dist = getSelf().getActorDistanceFromCenter(actor);
             getVector2().set(dist, 0);
-            getVector2().rotate(degreesPerChild*(i + half) + getSelf().startDegreesOffset);
+            getVector2().rotate(degreesPerChild*(i + HALF) + getSelf().startDegreesOffset);
             getSelf().modifyActor(actor, degreesPerChild, dist); // overridden by user
             actor.setPosition(
                     getVector2().x + getSelf().getWidth()/2,
@@ -162,6 +163,7 @@ interface IAnimatedRadialGroup {
                 actor.setColor(getOriginalColors().get(actor));
             }
         }
+
         if (notAnimated) {
             getOriginalColors().clear();
         }
