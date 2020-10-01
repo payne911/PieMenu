@@ -1,4 +1,4 @@
-![Pie Menu logo](https://raw.githubusercontent.com/payne911/PieMenu/master/pie_menu_logo.png "Logo Title Text 1")
+![Pie Menu logo](pie_menu_logo.png "Logo Title Text 1")
 
 # PieMenu
 [![jitpack](https://jitpack.io/v/payne911/PieMenu.svg)](https://jitpack.io/#payne911/PieMenu)
@@ -33,7 +33,7 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 First, let us demonstrate what you might be able to get out of this library (those are just examples and the variety of possiblities is much larger, if not endless).
 
 ### Basic widgets
-![early_demo](https://raw.githubusercontent.com/payne911/PieMenu/master/media/early_demo.gif)
+![early_demo](media/early_demo.gif)
 
 #### Online Demo's Controls
 **An [online demo](https://payne911.github.io/PieMenu/) is available.** The controls are:
@@ -49,7 +49,8 @@ If you want to check out the same demo, but within a `desktop` setup, check out 
 
 ### Custom-animated widgets
 You can also create your own animations:
-![custom_animation](https://github.com/payne911/PieMenu/blob/master/media/custom_animation.gif?raw=true)
+
+![custom_animation](media/custom_animation.gif)
 
 It's surprisingly easy. Check out [the Animated Widget wiki page](https://github.com/payne911/PieMenu/wiki/Animated-widget/) to find out!
 
@@ -125,8 +126,8 @@ And *voilà*!
 This library offers you many types of behaviors related to pie-menus. Many of those are well-documented in the Wiki (with description, code and gif), so make sure to check it out.
 
 More specifically, you might be interested in:
-* [Complete examples of code](https://github.com/payne911/PieMenu/wiki/Examples), along with textual descriptions of the expected behavior
-* [Understanding how to customize](https://github.com/payne911/PieMenu/wiki/Customizing-the-widget) your widget's look and behavior.
+* **[Complete examples of code](https://github.com/payne911/PieMenu/wiki/Examples)**, along with textual descriptions of the expected behavior
+* **[Understanding how to customize](https://github.com/payne911/PieMenu/wiki/Customizing-the-widget)** your widget's look and behavior.
 
 ---
 
@@ -137,7 +138,7 @@ Very well: you've made it this far in the README! If you ever end up integrating
 Here are a few GIFs of games that have integrated this library.
 
 ##### icefill's Compact Dungeon 2
-![CD2](https://github.com/payne911/PieMenu/blob/master/media/games/CompactDungeon2_icefill.gif?raw=true)
+![CD2](media/games/CompactDungeon2_icefill.gif)
 
 
 ### Contributing

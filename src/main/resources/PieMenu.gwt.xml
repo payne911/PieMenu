@@ -3,4 +3,6 @@
 <module>
 	<source path="com/payne/games/piemenu" />
 	<inherits name="space.earlygrey.shapedrawer" />
+	<!-- Required to declare PieMenu because of the Pools using reflection (which messes with GWT) -->
+	<extend-configuration-property name="gdx.reflect.include" value="com.payne.games.piemenu.PieMenu" />
 </module>

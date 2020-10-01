@@ -1,7 +1,9 @@
 [4.3.0]
-- Non-breaking refactor of the deprecated `Animated` classes.
+- Fixed the pooled classes (`PieMenuHighlightChangeEvent` and `PieMenuHoverChangeEvent`) not working on the GWT platform.
+- The `Animated` classes aren't classified as deprecated anymore. It was confusing at best.
 - Minor optimization for `layout()` function.
 - Minor JavaDoc tweaks.
+- Non-breaking refactor of the `Animated` classes.
 
 [4.2.0]
 - Fixed a bug related to the `globalAlphaMultiplier` attribute.

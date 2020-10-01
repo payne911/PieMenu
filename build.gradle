@@ -53,8 +53,8 @@ repositories {
 }
 
 dependencies {
-    api group: 'com.badlogicgames.gdx', name: 'gdx', version: gdxVersion
-    api group: 'space.earlygrey', name: 'shapedrawer', version: shapedrawerVersion
-    testImplementation group: 'com.badlogicgames.gdx', name: 'gdx-backend-lwjgl', version: gdxVersion
-    testImplementation group: 'com.badlogicgames.gdx', name: 'gdx-platform', version: gdxVersion, classifier: 'natives-desktop'
+    api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    api "space.earlygrey:shapedrawer:$shapedrawerVersion"
+    testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+    testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }

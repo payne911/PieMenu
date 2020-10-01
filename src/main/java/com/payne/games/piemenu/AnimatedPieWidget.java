@@ -29,13 +29,8 @@ import java.util.Map;
  * visibility to {@code true} if you haven't called the recommended line of code
  * provided above.
  *
- * @deprecated Once {@link com.badlogic.gdx.scenes.scene2d.Action Actions} are
- * integrated into the library, this class will become obsolete. However,
- * the implementation is very easy to use, so it might remain in the code base
- * despite Actions being integrated.
  * @author Jérémi Grenier-Berthiaume (aka "payne")
  */
-@Deprecated
 public class AnimatedPieWidget extends PieWidget implements IAnimatedPieWidget {
 
     /**
