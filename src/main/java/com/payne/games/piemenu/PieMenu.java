@@ -803,6 +803,10 @@ public class PieMenu extends PieWidget {
     }
 
 
+    /**
+     * You shouldn't interact with this class. It has been made {@code public} for the purpose
+     * of GWT-reflection compatibility.
+     */
     public static class PieMenuHighlightChangeEvent extends Event {
         public int newIndex;
 
@@ -813,6 +817,10 @@ public class PieMenu extends PieWidget {
         }
     }
 
+    /**
+     * You shouldn't interact with this class. It has been made {@code public} for the purpose
+     * of GWT-reflection compatibility.
+     */
     public static class PieMenuHoverChangeEvent extends Event {
         public int newIndex;
 
