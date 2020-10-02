@@ -19,6 +19,10 @@ www-test/
 .gwt-tmp/
 *.symbolMap
 
+### GWT (personal)
+docs/WEB-INF/deploy/html/rpcPolicyManifest/manifest.txt
+docs/WEB-INF/libs/
+
 ## Android Studio and Intellij and Android in general
 android/libs/armeabi/
 android/libs/armeabi-v7a/
