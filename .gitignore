@@ -17,6 +17,7 @@ html/war/WEB-INF/classes/
 gwt-unitCache/
 www-test/
 .gwt-tmp/
+*.symbolMap
 
 ## Android Studio and Intellij and Android in general
 android/libs/armeabi/
@@ -91,7 +92,3 @@ Thumbs.db
 !/ios-moe/xcode/*.xcodeproj/xcshareddata
 !/ios-moe/xcode/*.xcodeproj/project.pbxproj
 /ios-moe/xcode/native/
-
-
-# Personal
-*.symbolMap
