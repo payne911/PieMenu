@@ -17,6 +17,11 @@ html/war/WEB-INF/classes/
 gwt-unitCache/
 www-test/
 .gwt-tmp/
+*.symbolMap
+
+### GWT (personal)
+docs/WEB-INF/deploy/html/rpcPolicyManifest/manifest.txt
+docs/WEB-INF/libs/
 
 ## Android Studio and Intellij and Android in general
 android/libs/armeabi/
@@ -91,7 +96,3 @@ Thumbs.db
 !/ios-moe/xcode/*.xcodeproj/xcshareddata
 !/ios-moe/xcode/*.xcodeproj/project.pbxproj
 /ios-moe/xcode/native/
-
-
-# Personal
-*.symbolMap

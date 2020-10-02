@@ -1,4 +1,4 @@
-package com.payne.games.piemenu;
+package com.payne.games.piemenu.testMenu.otherTests;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -17,6 +17,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.payne.games.piemenu.AnimatedPieMenu;
+import com.payne.games.piemenu.AnimatedPieWidget;
+import com.payne.games.piemenu.PieMenu;
+import com.payne.games.piemenu.PieWidget.PieWidgetStyle;
 import com.payne.games.piemenu.testMenu.core.BaseScreen;
 import com.payne.games.piemenu.testMenu.core.TestsMenu;
 
@@ -55,12 +59,8 @@ public class Demonstration extends BaseScreen {
                 "S: toggle the permanent pie\n" +
                 "C: change style of Middle-click Pie\n" +
                 "L: less items in certain menus\n" +
-                "M: more pies in certain menus\n" +
-                "Middle-click / Right-click: try it out!\n" +
-                "The Left Pie is an AnimatedPieMenu \n" +
-                "which is deprecated\n" +
-                "The Middle Pie is using Actions for \n" +
-                "animations (using interpolation)", game.skin)).colspan(2).padTop(25);
+                "M: more items in certain menus\n" +
+                "Middle-click / Right-click: try it out!\n", game.skin)).colspan(2).padTop(25);
         root.row().padBottom(150).uniform();
 
         /* Adding the demo widgets. */
@@ -75,7 +75,7 @@ public class Demonstration extends BaseScreen {
     private void setUpRadialWidget(Table root) {
 
         /* Setting up and creating the widget. */
-        PieWidget.PieWidgetStyle style = new PieWidget.PieWidgetStyle();
+        PieWidgetStyle style = new PieWidgetStyle();
         style.backgroundColor = new Color(1, 1, 1, 1);
         style.sliceColor = new Color(.4f, .4f, .4f, 1);
         style.alternateSliceColor = new Color(.6f, 0, 0, 1);
@@ -186,11 +186,12 @@ public class Demonstration extends BaseScreen {
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.separatorWidth = 2;
+        style.circumferenceWidth = 2;
         style.backgroundColor = new Color(1, 1, 1, .1f);
         style.separatorColor = new Color(.1f, .1f, .1f, 1);
         style.downColor = new Color(.5f, .5f, .5f, 1);
         style.sliceColor = new Color(.33f, .33f, .33f, 1);
-        rightMousePie = new PieMenu(game.skin.getRegion("white"), style, 80);
+        rightMousePie = new PieMenu(game.skin.getRegion("white"), style, 80, 0, 90);
 
         /* Customizing the behavior. */
         rightMousePie.setInfiniteSelectionRange(true);
@@ -373,5 +374,11 @@ public class Demonstration extends BaseScreen {
                     middleMousePie.getStyle() == midStyle1
                             ? midStyle1InnerRadius : midStyle2InnerRadius);
         }
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        permaPie.setPosition(Gdx.graphics.getWidth() / 2f, 0, Align.center);
     }
 }

@@ -33,11 +33,12 @@ public class ClickDrag extends BaseScreen {
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.separatorWidth = 2;
+        style.circumferenceWidth = 2;
         style.backgroundColor = new Color(1, 1, 1, .1f);
         style.separatorColor = new Color(.1f, .1f, .1f, 1);
         style.downColor = new Color(.5f, .5f, .5f, 1);
         style.sliceColor = new Color(.33f, .33f, .33f, 1);
-        menu = new PieMenu(game.skin.getRegion("white"), style, 80);
+        menu = new PieMenu(game.skin.getRegion("white"), style, 80, 0, 90);
 
         /* Customizing the behavior. */
         menu.setInfiniteSelectionRange(true);

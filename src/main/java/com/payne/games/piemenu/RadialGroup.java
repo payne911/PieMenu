@@ -31,6 +31,7 @@ public class RadialGroup extends WidgetGroup {
 
     /**
      * <i>Optional.</i><br>
+     * <b>Defaults at 0.</b><br>
      * If provided, the {@link PieWidgetStyle#sliceColor} will only fill
      * the region defined between the {@link #preferredRadius} and its percentage
      * value coming from this.<br>
@@ -50,6 +51,7 @@ public class RadialGroup extends WidgetGroup {
 
     /**
      * <i>Optional.</i><br>
+     * <b>Defaults at 0.</b><br>
      * Considers that angles start at 0 along the x-axis and increment up
      * to 360 in a counter-clockwise fashion.<br>
      * Defines how far from that origin the {@link #totalDegreesDrawn} will
@@ -61,8 +63,8 @@ public class RadialGroup extends WidgetGroup {
     protected float startDegreesOffset;
 
     /**
-     * <i>Required.</i><br>
-     * If not defined, will be initialized to 360 by default.<br>
+     * <i>Optional.</i><br>
+     * <b>Defaults at 360.</b><br>
      * Determines the total amount of degrees into which the contained
      * Actors will be spread.<br>
      * For example, if {@code startDegreesOffset = 0} and
@@ -81,6 +83,7 @@ public class RadialGroup extends WidgetGroup {
     /* For internal use (optimization). */
     private float lastRadius = 0;
     protected static final float BUFFER = 1;
+    protected static final float HALF = .5f;
     private static Vector2 vector2 = new Vector2();
 
 
@@ -315,13 +318,12 @@ public class RadialGroup extends WidgetGroup {
         updateOrigin(); // for rotations to happen around the actual center
 
         float degreesPerChild = totalDegreesDrawn / getAmountOfChildren();
-        float half = 1f / 2;
 
         for (int i = 0; i < getAmountOfChildren(); i++) {
             Actor actor = getChildren().get(i);
             float dist = getActorDistanceFromCenter(actor);
             vector2.set(dist, 0);
-            vector2.rotate(degreesPerChild*(i + half) + startDegreesOffset);
+            vector2.rotate(degreesPerChild*(i + HALF) + startDegreesOffset);
             modifyActor(actor, degreesPerChild, dist); // overridden by user
             actor.setPosition(vector2.x + getWidth()/2, vector2.y + getHeight()/2, Align.center);
         }
