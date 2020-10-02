@@ -803,8 +803,8 @@ public class PieMenu extends PieWidget {
     }
 
 
-    private static class PieMenuHighlightChangeEvent extends Event {
-        private int newIndex;
+    public static class PieMenuHighlightChangeEvent extends Event {
+        public int newIndex;
 
         @Override
         public void reset() {
@@ -813,8 +813,8 @@ public class PieMenu extends PieWidget {
         }
     }
 
-    private static class PieMenuHoverChangeEvent extends Event {
-        private int newIndex;
+    public static class PieMenuHoverChangeEvent extends Event {
+        public int newIndex;
 
         @Override
         public void reset() {
