@@ -509,7 +509,14 @@ public class RadialGroup extends WidgetGroup {
     public boolean isWithinInnerRadius(float x, float y) {
         float distance = pow2(x) + pow2(y);
         float innerRadSquared = pow2(getInnerRadiusLength());
-        return distance < innerRadSquared;
+
+        float clickAngle = MathUtils.radiansToDegrees * MathUtils.atan2(y, x);
+        if (clickAngle < 0) {
+            clickAngle = 360 + clickAngle;
+        }
+
+        return (distance < innerRadSquared) &&
+                (clickAngle > startDegreesOffset && clickAngle < totalDegreesDrawn + startDegreesOffset);
     }
 
     /**
