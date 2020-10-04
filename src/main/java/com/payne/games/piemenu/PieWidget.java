@@ -19,7 +19,9 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
  * {@link ShapeDrawer} to draw certain elements, when necessary.<br>
  * Basically, if you do not care about having a {@link PieWidgetStyle
  * Style} (i.e. background colors, borders and edges, etc.), then you
- * might want to consider using a simple {@link RadialGroup}.
+ * might want to consider using a simple {@link RadialGroup}.<br>
+ * However, if you're looking for a way to include callbacks and events,
+ * then you definitely want to take a look at {@link PieMenu}.
  *
  * @author Jérémi Grenier-Berthiaume (aka "payne")
  */
