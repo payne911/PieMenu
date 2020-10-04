@@ -35,8 +35,8 @@ public class RadialGroup extends WidgetGroup {
      * If provided, the {@link PieWidgetStyle#sliceColor} will only fill
      * the region defined between the {@link #preferredRadius} and its percentage
      * value coming from this.<br>
-     * For example, having a {@link #preferredRadius} of 80 and a
-     * {@link #innerRadiusPercent} of 0.5 will mean that the inner-radius will
+     * For example, having a {@link #preferredRadius} of 80 and an
+     * {@code innerRadiusPercent} of 0.5 will mean that the inner-radius will
      * stand at 40 pixels from the center.<br>
      * A hole will be left into the middle of the Widget, like a doughnut, and
      * if a {@link PieWidgetStyle#background} or a
@@ -84,7 +84,7 @@ public class RadialGroup extends WidgetGroup {
     private float lastRadius = 0;
     protected static final float BUFFER = 1;
     protected static final float HALF = .5f;
-    private static Vector2 vector2 = new Vector2();
+    private static final Vector2 vector2 = new Vector2();
 
 
 
@@ -97,7 +97,7 @@ public class RadialGroup extends WidgetGroup {
     /**
      * See {@link RadialGroup} for a description.
      *
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     * @param preferredRadius the {@link #preferredRadius} that defines the
      *                        size of the widget.
      */
     public RadialGroup(float preferredRadius) {
@@ -108,7 +108,7 @@ public class RadialGroup extends WidgetGroup {
     /**
      * See {@link RadialGroup} for a description.
      *
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     * @param preferredRadius the {@link #preferredRadius} that defines the
      *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
@@ -122,7 +122,7 @@ public class RadialGroup extends WidgetGroup {
     /**
      * See {@link RadialGroup} for a description.
      *
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     * @param preferredRadius the {@link #preferredRadius} that defines the
      *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
@@ -139,7 +139,7 @@ public class RadialGroup extends WidgetGroup {
     /**
      * See {@link RadialGroup} for a description.
      *
-     * @param preferredRadius the {@link #preferredRadius} that defines the 
+     * @param preferredRadius the {@link #preferredRadius} that defines the
      *                        size of the widget.
      * @param innerRadiusPercent the {@link #innerRadiusPercent} that defines
      *                           the percentage of the radius that is cut off,
@@ -207,7 +207,7 @@ public class RadialGroup extends WidgetGroup {
 
     @Override
     public void addActor(Actor actor) {
-        // todo: this might not need to be Overriden
+        // todo: this might not need to be Overridden
         if(actor == null) throw new IllegalArgumentException("actor cannot be null.");
         super.addActor(actor);
         invalidate();
@@ -428,8 +428,8 @@ public class RadialGroup extends WidgetGroup {
      *
      * @param x x-coordinate in the Stage.
      * @param y y-coordinate in the Stage.
-     * @return a normalized angle of the position of the cursor
-     *         relative to the origin (i.e. middle) of the widget
+     * @return a normalized angle of the input position relative to the origin
+     *         (i.e. middle) of the widget.
      */
     public float angleAtStage(float x, float y) {
         localToStageCoordinates(vector2.set(getWidth()/2, getHeight()/2));
