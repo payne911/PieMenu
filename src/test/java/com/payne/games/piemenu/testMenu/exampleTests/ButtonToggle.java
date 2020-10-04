@@ -38,7 +38,6 @@ public class ButtonToggle extends BaseScreen {
         style.sliceColor = new Color(1, 1, 1, .2f);
         style.separatorWidth = 2;
         style.circumferenceWidth = 2;
-        style.circumferenceColor = Color.BLACK;
         style.separatorColor = style.circumferenceColor;
         widget = new AnimatedPieWidget(game.skin.getRegion("white"), style, 110, 50f / 110, 315, 270);
 

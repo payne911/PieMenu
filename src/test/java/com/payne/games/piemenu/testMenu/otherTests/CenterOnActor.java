@@ -32,9 +32,7 @@ public class CenterOnActor extends BaseScreen {
 //        style1.sliceColor = Color.ORANGE;
 //        style1.alternateSliceColor = new Color(.8f, .5f, .2f, 1);
         style1.circumferenceWidth = 2;
-        style1.circumferenceColor = Color.BLACK;
         style1.separatorWidth = 2;
-        style1.separatorColor = Color.BLACK;
         widget = new PieWidget(game.skin.getRegion("white"), style1, 200, 0.9f);
 
         for (int i = 0; i < 4; i++) {

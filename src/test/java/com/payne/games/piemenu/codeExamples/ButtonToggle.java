@@ -64,7 +64,6 @@ public class ButtonToggle extends ApplicationAdapter {
         style.sliceColor = new Color(1,1,1,.2f);
         style.separatorWidth = 2;
         style.circumferenceWidth = 2;
-        style.circumferenceColor = Color.BLACK;
         style.separatorColor = style.circumferenceColor;
         radGroup = new AnimatedPieWidget(whitePixel, style, 110, 50f/110, 315, 270);
 
