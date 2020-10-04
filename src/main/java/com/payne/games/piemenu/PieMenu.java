@@ -41,7 +41,7 @@ public class PieMenu extends PieWidget {
     /**
      * The index that is used as a fallback value whenever a processed
      * user-input does not map to a valid child index value.<br>
-     * This value can be negative, if you want nothing to be the default.
+     * Default is {@link #NO_SELECTION} ({@value #NO_SELECTION}).
      */
     private int defaultIndex = NO_SELECTION;
 
@@ -1008,6 +1008,7 @@ public class PieMenu extends PieWidget {
      * If negative, it means nothing gets selected by default.
      *
      * @see #defaultIndex
+     * @see #NO_SELECTION
      * @return the index that is used as a fallback value whenever a processed
      *         user-input does not map to a valid child index value.
      */
@@ -1023,6 +1024,7 @@ public class PieMenu extends PieWidget {
      * {@link #selectedIndex} and {@link #highlightedIndex} are set to that new
      * value, but only the selection's {@link ChangeListener} will be triggered.
      *
+     * @see #NO_SELECTION
      * @see #isValidIndex(int)
      * @see #mapIndex(int)
      * @param defaultIndex the desired default value.
