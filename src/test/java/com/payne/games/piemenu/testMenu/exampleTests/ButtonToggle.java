@@ -35,7 +35,8 @@ public class ButtonToggle extends BaseScreen {
 
         /* Setting up and creating the widget. */
         PieWidget.PieWidgetStyle style = new PieWidget.PieWidgetStyle();
-        style.sliceColor = new Color(1, 1, 1, .2f);
+        style.backgroundColor = new Color(.4f, .2f, .6f, .6f);
+        style.sliceColor = new Color(1, 1, 1, .35f);
         style.separatorWidth = 2;
         style.circumferenceWidth = 2;
         style.separatorColor = style.circumferenceColor;
@@ -48,7 +49,7 @@ public class ButtonToggle extends BaseScreen {
         }
 
         /* Setting up the demo-button. */
-        final TextButton textButton = new TextButton("Toggle", game.skin);
+        final TextButton textButton = new TextButton("Toggle Button", game.skin);
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
