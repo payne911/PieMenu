@@ -2,7 +2,7 @@
 - Fixed `RadialGroup#isWithinInnerRadius` so that it takes into account the `totalDegreesDrawn`.
 - Added `RadialGroup#isWithinDrawnAngle`.
 - Added `RadialGroup#isInnerRadiusBlockingPropagation`.
-- (NOT BACKWARD-COMPATIBLE) Added a new flag: `hitThroughInnerRadius`. Default value: `false`. This changes the way `PieWidget#hit` behaves: it isn't based on the presence of a background or background color anymore. If you need your `hit` to reach Actors behind your `innerRadius`, set this value to `true`.
+- (NOT BACKWARD-COMPATIBLE) Added a new flag: `hitThroughInnerRadius` (for `PieWidget`). Default value: `false`. This changes the way `PieWidget#hit` behaves: it isn't based on the presence of a background or background color anymore. If you need your `hit` to reach Actors behind your `innerRadius`, set this value to `true`.
 - (NOT BACKWARD-COMPATIBLE) Renamed `PieWidget#isBackgroundHit` to `PieWidget#isInnerRadiusBlockingPropagation`. This is a more appropriate (less misleading) method name based on the new behavior described in the last point.
 - Minor optimizations for `#findChildIndexAtStage` (in both `RadialGroup` and `PieMenu`).
 - Minor JavaDoc tweaks.
