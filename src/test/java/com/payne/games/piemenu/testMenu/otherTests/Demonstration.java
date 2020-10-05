@@ -38,7 +38,7 @@ public class Demonstration extends BaseScreen {
     private Color backgroundColor = new Color(1, 1, 1, .2f);
     private int dragPieAmount = 0;
     private int permaPieAmount = 0;
-    private int radialAmount = 0;
+    private int widgetAmount = 0;
     private final int INITIAL_CHILDREN_AMOUNT = 5;
 
     public Demonstration(TestsMenu game) {
@@ -67,12 +67,12 @@ public class Demonstration extends BaseScreen {
         setUpButtonDragPieMenu(root);
         setUpRightMousePieMenu();
         setUpMiddleMousePieMenu();
-        setUpRadialWidget(root);
+        setUpPieWidget(root);
         setUpPermaPieMenu();
     }
 
 
-    private void setUpRadialWidget(Table root) {
+    private void setUpPieWidget(Table root) {
 
         /* Setting up and creating the widget. */
         PieWidgetStyle style = new PieWidgetStyle();
@@ -83,7 +83,7 @@ public class Demonstration extends BaseScreen {
 
         /* Populating the widget. */
         for (int i = 0; i < INITIAL_CHILDREN_AMOUNT; i++) {
-            Label label = new Label(Integer.toString(radialAmount++), game.skin);
+            Label label = new Label(Integer.toString(widgetAmount++), game.skin);
             widget.addActor(label);
         }
 
@@ -297,7 +297,7 @@ public class Demonstration extends BaseScreen {
 
         /* Setting up and creating the widget. */
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
-        style.circumferenceWidth = 1;
+        style.circumferenceWidth = 2;
         style.backgroundColor = backgroundColor;
         style.downColor = new Color(.5f, .5f, .5f, 1);
         style.sliceColor = new Color(.33f, .33f, .33f, 1);
@@ -335,12 +335,12 @@ public class Demonstration extends BaseScreen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             dragPie.addActor(new Label(Integer.toString(dragPieAmount++), game.skin));
             permaPie.addActor(new Label(Integer.toString(permaPieAmount++), game.skin));
-            widget.addActor(new Label(Integer.toString(radialAmount++), game.skin));
+            widget.addActor(new Label(Integer.toString(widgetAmount++), game.skin));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             dragPieAmount = 0;
             permaPieAmount = 0;
-            radialAmount = 0;
+            widgetAmount = 0;
             dispose();
             show();
         }
