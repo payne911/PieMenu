@@ -35,12 +35,14 @@ public class ButtonToggle extends BaseScreen {
 
         /* Setting up and creating the widget. */
         PieWidget.PieWidgetStyle style = new PieWidget.PieWidgetStyle();
-        style.backgroundColor = new Color(.4f, .2f, .6f, .6f);
         style.sliceColor = new Color(1, 1, 1, .35f);
         style.separatorWidth = 2;
         style.circumferenceWidth = 2;
         style.separatorColor = style.circumferenceColor;
         widget = new AnimatedPieWidget(game.skin.getRegion("white"), style, 110, 50f / 110, 315, 270);
+
+        /* Customizing the behavior. */
+        widget.setHitThroughInnerRadius(true);
 
         /* Populating the widget. */
         for (int i = 0; i < 8; i++) {

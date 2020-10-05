@@ -348,7 +348,7 @@ public class RadialGroup extends WidgetGroup {
      * @param touchable if {@code true}, hit detection will respect the
      *                  {@link #setTouchable(Touchable) touchability}.
      * @return deepest child's hit at (x,y). Else, the widget itself if it's
-     *         the background. Else null.
+     *         the background. Else {@code null}.
      */
     @Override
     public Actor hit(float x, float y, boolean touchable) {
@@ -372,39 +372,39 @@ public class RadialGroup extends WidgetGroup {
             return this;
 
         /* And ultimately whether some background element is hit. */
-        if(isBackgroundHit(x,y))
+        if(isInnerRadiusBlockingPropagation(x,y))
             return this;
 
         return null;
     }
 
     /**
-     * Determines whether or not the background is being hit.
+     * Determines whether or not the {@link #innerRadiusPercent inner radius}
+     * blocks the propagation of the {@link #hit(float, float, boolean)}.
      *
      * @see #hit(float, float, boolean)
      * @param x x-coordinate relative to the bottom-left of the widget.
      * @param y y-coordinate relative to the bottom-left of the widget.
-     * @return {@code true} only if some background element of the widget
-     *         is being hit. (For example, if there are no background
-     *         image or color, then this always returns {@code false}.)
+     * @return {@code true} only if a call to {@link #hit(float, float, boolean)}
+     *         would be allowed to reach an Actor positioned directly below the
+     *         {@link #innerRadiusPercent inner radius}.
      */
-    public boolean isBackgroundHit(float x, float y) {
+    public boolean isInnerRadiusBlockingPropagation(float x, float y) {
         return false;
     }
 
     /**
      * Given a coordinate, find the index of the child (if any).
      *
-     * @param x x-coordinate in the Stage.
-     * @param y y-coordinate in the Stage.
+     * @param x x-coordinate in the Stage, relative to the bottom left of the attached actor.
+     * @param y y-coordinate in the Stage, relative to the bottom left of the attached actor.
      * @return The index of the child at that coordinate.
      *         If there are no child there, the amount of children is returned.
      */
     public int findChildIndexAtStage(float x, float y) {
-        int childIndex = findIndexFromAngle(angleAtStage(x,y));
         stageToLocalCoordinates(vector2.set(x,y));
         return isWithinRadii(vector2.x - getWidth()/2, vector2.y - getHeight()/2)
-                ? childIndex
+                ? findIndexFromAngle(angleAtStage(x,y))
                 : getAmountOfChildren(); // "getAmountOfChildren" is equivalent to "invalid"
     }
 
@@ -426,8 +426,8 @@ public class RadialGroup extends WidgetGroup {
      * the widget. The rotation and {@link #startDegreesOffset} of the widget
      * are automatically taken in count. The output is normalized.
      *
-     * @param x x-coordinate in the Stage.
-     * @param y y-coordinate in the Stage.
+     * @param x x-coordinate in the Stage, relative to the bottom left of the attached actor.
+     * @param y y-coordinate in the Stage, relative to the bottom left of the attached actor.
      * @return a normalized angle of the input position relative to the origin
      *         (i.e. middle) of the widget.
      */
@@ -488,7 +488,8 @@ public class RadialGroup extends WidgetGroup {
      *
      * @param x x-coordinate relative to the center of the widget.
      * @param y y-coordinate relative to the center of the widget.
-     * @return 'true' only if the coordinates fall within the widget's radii.
+     * @return {@code true} only if the coordinates fall within the widget's
+     *         radii.
      */
     public boolean isWithinRadii(float x, float y) {
         float distance = pow2(x) + pow2(y);
@@ -503,13 +504,29 @@ public class RadialGroup extends WidgetGroup {
      *
      * @param x x-coordinate relative to the center of the widget.
      * @param y y-coordinate relative to the center of the widget.
-     * @return 'true' only if the coordinates fall within the widget's
-     *         inner radius.
+     * @return {@code true} only if the coordinates fall within the widget's
+     *         {@link #innerRadiusPercent inner radius}.
+     *
      */
     public boolean isWithinInnerRadius(float x, float y) {
         float distance = pow2(x) + pow2(y);
         float innerRadSquared = pow2(getInnerRadiusLength());
-        return distance < innerRadSquared;
+        return (distance < innerRadSquared) && isWithinDrawnAngle(x, y);
+    }
+
+    /**
+     * Checks whether or not the input coordinate is in between the
+     * {@link #startDegreesOffset} and its {@link #totalDegreesDrawn},
+     * accounting for rotations and stage position.
+     *
+     * @param x x-coordinate relative to the center of the widget.
+     * @param y y-coordinate relative to the center of the widget.
+     * @return {@code true} only if the input coordinate is at an
+     *         angle in between the drawn start and finish.
+     */
+    public boolean isWithinDrawnAngle(float x, float y) {
+        float inputAngle = MathUtils.radiansToDegrees * MathUtils.atan2(y, x) - startDegreesOffset;
+        return normalizeAngle(inputAngle) < totalDegreesDrawn;
     }
 
     /**

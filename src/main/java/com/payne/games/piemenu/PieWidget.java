@@ -43,6 +43,13 @@ public class PieWidget extends RadialGroup {
      */
     protected TextureRegion whitePixel;
 
+    /**
+     * Determines whether or not a click event should propagate through an
+     * {@link #innerRadiusPercent inner radius} (despite the presence or not
+     * of a {@link PieWidgetStyle#backgroundColor}, for example).
+     */
+    protected boolean hitThroughInnerRadius = false;
+
 
     /* For internal use (optimization). */
     protected static final Color TRANSPARENT = new Color(0,0,0,0);
@@ -361,10 +368,9 @@ public class PieWidget extends RadialGroup {
     }
 
     @Override
-    public boolean isBackgroundHit(float x, float y) {
-        if(style.background == null && style.backgroundColor == null)
-            return false;
-        return isWithinInnerRadius(x - getWidth()/2, y - getHeight()/2);
+    public boolean isInnerRadiusBlockingPropagation(float x, float y) {
+        return !hitThroughInnerRadius
+                && isWithinInnerRadius(x - getWidth() / 2, y - getHeight() / 2);
     }
 
     @Override
@@ -713,6 +719,27 @@ public class PieWidget extends RadialGroup {
     =============================== GETTERS/SETTERS ============================
      */
 
+
+    /**
+     * @see #hitThroughInnerRadius
+     * @return {@code true} only if a {@link #hit(float, float, boolean)} would
+     *         return an Actor placed below the {@link #innerRadiusPercent inner
+     *         radius}.
+     */
+    public boolean isHitThroughInnerRadius() {
+        return hitThroughInnerRadius;
+    }
+
+    /**
+     * @see #hitThroughInnerRadius
+     * @param hitThroughInnerRadius set to {@code true} only if you want a call to
+     *                              {@link #hit(float, float, boolean)} to find an
+     *                              Actor placed below the {@link #innerRadiusPercent
+     *                              inner radius}.
+     */
+    public void setHitThroughInnerRadius(boolean hitThroughInnerRadius) {
+        this.hitThroughInnerRadius = hitThroughInnerRadius;
+    }
 
     /**
      * @return the {@link ShapeDrawer} used to draw everything but the contained Actors
