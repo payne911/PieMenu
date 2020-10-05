@@ -103,7 +103,6 @@ public class MgsxTests extends BaseScreen {
 //            style.hoverColor = Color.GREEN;
 //            style.selectedColor = Color.ORANGE;
 //            style.separatorWidth = 1;
-//            style.separatorColor = Color.BLACK;
             PieMenu menu;
             Table table;
 

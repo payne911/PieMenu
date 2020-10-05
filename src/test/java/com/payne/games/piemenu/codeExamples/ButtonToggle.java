@@ -27,7 +27,7 @@ public class ButtonToggle extends ApplicationAdapter {
     private Stage stage;
     private Texture tmpTex;
     private Batch batch;
-    private AnimatedPieWidget radGroup;
+    private AnimatedPieWidget widget;
 
 
     @Override
@@ -61,34 +61,33 @@ public class ButtonToggle extends ApplicationAdapter {
 
         /* Setting up and creating the widget. */
         PieWidget.PieWidgetStyle style = new PieWidget.PieWidgetStyle();
-        style.sliceColor = new Color(1,1,1,.2f);
+        style.sliceColor = new Color(1,1,1,.35f);
         style.separatorWidth = 2;
         style.circumferenceWidth = 2;
-        style.circumferenceColor = Color.BLACK;
         style.separatorColor = style.circumferenceColor;
-        radGroup = new AnimatedPieWidget(whitePixel, style, 110, 50f/110, 315, 270);
+        widget = new AnimatedPieWidget(whitePixel, style, 110, 50f/110, 315, 270);
 
         /* Populating the widget. */
         for (int i = 0; i < 8; i++) {
             Label label = new Label(Integer.toString(i), skin);
-            radGroup.addActor(label);
+            widget.addActor(label);
         }
 
         /* Setting up the demo-button. */
-        final TextButton textButton = new TextButton("Toggle",  skin);
+        final TextButton textButton = new TextButton("Toggle Button",  skin);
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                radGroup.toggleVisibility(.9f); // 0.9 seconds animation
-                radGroup.setPosition(textButton.getX(Align.center),
+                widget.toggleVisibility(.9f); // 0.9 seconds animation
+                widget.setPosition(textButton.getX(Align.center),
                         textButton.getY(Align.center) - 5, Align.center);
             }
         });
         root.add(textButton).expand().bottom();
 
         /* Including the Widget in the Stage. */
-        stage.addActor(radGroup);
-        radGroup.setVisible(false);
+        stage.addActor(widget);
+        widget.setVisible(false);
     }
 
 

@@ -25,6 +25,8 @@ import com.payne.games.piemenu.testMenu.otherTests.Demonstration;
 import com.payne.games.piemenu.testMenu.otherTests.DifferentActorsWidget;
 import com.payne.games.piemenu.testMenu.otherTests.HitInfiniteMiddle;
 import com.payne.games.piemenu.testMenu.otherTests.HitOutside;
+import com.payne.games.piemenu.testMenu.otherTests.InnerRadiusMenu;
+import com.payne.games.piemenu.testMenu.otherTests.InnerRadiusWidget;
 import com.payne.games.piemenu.testMenu.otherTests.MgsxTests;
 import com.payne.games.piemenu.testMenu.otherTests.RotatingFillParentWidget;
 import com.payne.games.piemenu.testMenu.otherTests.SelfContainedPieMenu;
@@ -45,6 +47,8 @@ public class MainScreen extends BaseScreen {
                     DifferentActorsWidget.class,
                     HitInfiniteMiddle.class,
                     HitOutside.class,
+                    InnerRadiusWidget.class,
+                    InnerRadiusMenu.class,
                     MgsxTests.class,
                     RotatingFillParentWidget.class,
                     SelfContainedPieMenu.class,
