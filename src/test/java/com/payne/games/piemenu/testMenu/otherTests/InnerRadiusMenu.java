@@ -9,14 +9,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import com.payne.games.piemenu.PieWidget;
+import com.payne.games.piemenu.PieMenu;
 import com.payne.games.piemenu.testMenu.core.BaseScreen;
 import com.payne.games.piemenu.testMenu.core.TestsMenu;
 
-public class InnerRadiiWidget extends BaseScreen {
-    private PieWidget menu;
+public class InnerRadiusMenu extends BaseScreen {
+    private PieMenu menu;
 
-    public InnerRadiiWidget(TestsMenu game) {
+    public InnerRadiusMenu(TestsMenu game) {
         super(game);
     }
 
@@ -35,19 +35,47 @@ public class InnerRadiiWidget extends BaseScreen {
         \==================================================================== */
 
         /* Setting up and creating the widget. */
-        PieWidget.PieWidgetStyle style = new PieWidget.PieWidgetStyle();
-        style.backgroundColor = new Color(.4f, .2f, .6f, .6f);
-        style.sliceColor = new Color(1, 1, 1, .35f);
+        PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.separatorWidth = 2;
         style.circumferenceWidth = 2;
-        style.separatorColor = style.circumferenceColor;
-        menu = new PieWidget(game.skin.getRegion("white"), style, 110, 50f / 110, 315, 270);
+        style.backgroundColor = new Color(1, 1, 1, .1f);
+        style.separatorColor = new Color(.1f, .1f, .1f, 1);
+        style.downColor = new Color(.5f, .5f, .5f, 1);
+        style.sliceColor = new Color(.33f, .33f, .33f, 1);
+        menu = new PieMenu(game.skin.getRegion("white"), style, 110, 50f / 110, 315, 270);
+
+        /* Customizing the behavior. */
+        menu.setInfiniteSelectionRange(true);
+        menu.setMiddleCancel(true);
 
         /* Populating the widget. */
-        for (int i = 0; i < 8; i++) {
-            Label label = new Label(Integer.toString(i), game.skin);
-            menu.addActor(label);
-        }
+        Label red = new Label("red", game.skin);
+        menu.addActor(red);
+        Label green = new Label("green", game.skin);
+        menu.addActor(green);
+        Label blue = new Label("blue", game.skin);
+        menu.addActor(blue);
+
+        /* Setting up listeners. */
+        menu.addListener(new PieMenu.PieMenuCallbacks() {
+            @Override
+            public void onHighlightChange(int highlightedIndex) {
+                switch (highlightedIndex) {
+                    case 0:
+                        setScreenColor(.75f, .25f, .25f, 1); // Red
+                        break;
+                    case 1:
+                        setScreenColor(.25f, .75f, .25f, 1); // Green
+                        break;
+                    case 2:
+                        setScreenColor(.25f, .25f, .75f, 1); // Blue
+                        break;
+                    default: // Just in case...
+                        setScreenColor(.75f, .75f, .75f, 1);
+                        break;
+                }
+            }
+        });
 
         /* Setting up the demo-button. */
         final TextButton textButton = new TextButton("Toggle Button", game.skin);
