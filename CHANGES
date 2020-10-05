@@ -1,5 +1,11 @@
-[4.4.0]
-NOTHING YET
+[5.0.0]
+- Fixed `RadialGroup#isWithinInnerRadius` so that it takes into account the `totalDegreesDrawn`.
+- Added `RadialGroup#isWithinDrawnAngle`.
+- Added `RadialGroup#isInnerRadiusBlockingPropagation`.
+- (NOT BACKWARD-COMPATIBLE) Added a new flag: `hitThroughInnerRadius`. Default value: `false`. This changes the way `PieWidget#hit` behaves: it isn't based on the presence of a background or background color anymore. If you need your `hit` to reach Actors behind your `innerRadius`, set this value to `true`.
+- (NOT BACKWARD-COMPATIBLE) Renamed `PieWidget#isBackgroundHit` to `PieWidget#isInnerRadiusBlockingPropagation`. This is a more appropriate (less misleading) method name based on the new behavior described in the last point.
+- Minor optimizations for `#findChildIndexAtStage` (in both `RadialGroup` and `PieMenu`).
+- Minor JavaDoc tweaks.
 
 [4.3.0]
 - Fixed the pooled classes (`PieMenuHighlightChangeEvent` and `PieMenuHoverChangeEvent`) not working on the GWT platform.
@@ -7,7 +13,6 @@ NOTHING YET
 - Micro-optimization for the `layout()` function.
 - Minor JavaDoc tweaks.
 - Non-breaking refactor of the `Animated` classes (extracted interfaces to reduce code duplication).
-- Updated the WebDemo to use `v4.3.0` and tweaked some settings to make it much cleaner.
 
 [4.2.0]
 - Fixed a bug related to the `globalAlphaMultiplier` attribute.
