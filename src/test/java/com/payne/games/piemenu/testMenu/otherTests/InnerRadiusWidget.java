@@ -14,7 +14,7 @@ import com.payne.games.piemenu.testMenu.core.BaseScreen;
 import com.payne.games.piemenu.testMenu.core.TestsMenu;
 
 public class InnerRadiusWidget extends BaseScreen {
-    private PieWidget menu;
+    private PieWidget widget;
 
     public InnerRadiusWidget(TestsMenu game) {
         super(game);
@@ -41,12 +41,15 @@ public class InnerRadiusWidget extends BaseScreen {
         style.separatorWidth = 2;
         style.circumferenceWidth = 2;
         style.separatorColor = style.circumferenceColor;
-        menu = new PieWidget(game.skin.getRegion("white"), style, 110, 50f / 110, 315, 270);
+        widget = new PieWidget(game.skin.getRegion("white"), style, 110, 50f / 110, 315, 270);
+
+        /* Customizing the behavior. */
+        widget.setHitThroughInnerRadius(false);
 
         /* Populating the widget. */
         for (int i = 0; i < 8; i++) {
             Label label = new Label(Integer.toString(i), game.skin);
-            menu.addActor(label);
+            widget.addActor(label);
         }
 
         /* Setting up the demo-button. */
@@ -54,23 +57,23 @@ public class InnerRadiusWidget extends BaseScreen {
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                menu.setPosition(textButton.getX(Align.center),
+                widget.setPosition(textButton.getX(Align.center),
                         textButton.getY(Align.center) - 5, Align.center);
-                menu.setVisible(!menu.isVisible());
+                widget.setVisible(!widget.isVisible());
             }
         });
         root.add(textButton).expand().bottom();
 
         /* Including the Widget in the Stage. */
-        game.stage.addActor(menu);
-        menu.setVisible(false);
+        game.stage.addActor(widget);
+        widget.setVisible(false);
     }
 
     @Override
     public void updateInputPost(float delta) {
         if (Gdx.input.isKeyPressed(Keys.SPACE)) {
-            menu.rotateBy(Gdx.graphics.getDeltaTime() * 100);
-            System.out.println(menu.getRotation());
+            widget.rotateBy(Gdx.graphics.getDeltaTime() * 100);
+            System.out.println(widget.getRotation());
         }
     }
 }

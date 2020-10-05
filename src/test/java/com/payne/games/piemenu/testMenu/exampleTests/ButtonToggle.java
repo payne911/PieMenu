@@ -41,9 +41,6 @@ public class ButtonToggle extends BaseScreen {
         style.separatorColor = style.circumferenceColor;
         widget = new AnimatedPieWidget(game.skin.getRegion("white"), style, 110, 50f / 110, 315, 270);
 
-        /* Customizing the behavior. */
-        widget.setHitThroughInnerRadius(true);
-
         /* Populating the widget. */
         for (int i = 0; i < 8; i++) {
             Label label = new Label(Integer.toString(i), game.skin);

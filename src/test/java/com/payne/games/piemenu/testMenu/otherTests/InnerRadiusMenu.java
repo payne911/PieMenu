@@ -38,7 +38,7 @@ public class InnerRadiusMenu extends BaseScreen {
         PieMenu.PieMenuStyle style = new PieMenu.PieMenuStyle();
         style.separatorWidth = 2;
         style.circumferenceWidth = 2;
-        style.backgroundColor = new Color(1, 1, 1, .1f);
+        style.backgroundColor = new Color(1, 1, 1, .3f);
         style.separatorColor = new Color(.1f, .1f, .1f, 1);
         style.downColor = new Color(.5f, .5f, .5f, 1);
         style.sliceColor = new Color(.33f, .33f, .33f, 1);
@@ -46,7 +46,6 @@ public class InnerRadiusMenu extends BaseScreen {
 
         /* Customizing the behavior. */
         menu.setInfiniteSelectionRange(true);
-        menu.setMiddleCancel(true);
 
         /* Populating the widget. */
         Label red = new Label("red", game.skin);

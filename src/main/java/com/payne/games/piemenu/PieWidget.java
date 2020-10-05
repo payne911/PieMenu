@@ -48,7 +48,7 @@ public class PieWidget extends RadialGroup {
      * {@link #innerRadiusPercent inner radius} (despite the presence or not
      * of a {@link PieWidgetStyle#backgroundColor}, for example).
      */
-    protected boolean hitThroughInnerRadius = false;
+    protected boolean hitThroughInnerRadius = true;
 
 
     /* For internal use (optimization). */
