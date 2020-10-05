@@ -381,18 +381,17 @@ public class PieMenu extends PieWidget {
 
     @Override
     public int findChildIndexAtStage(float x, float y) {
-        int childIndex = findIndexFromAngle(angleAtStage(x,y));
         stageToLocalCoordinates(vector2.set(x,y));
         if(infiniteSelectionRange) {
             if(middleCancel)
                 return isWithinInnerRadius(vector2.x - getWidth()/2, vector2.y - getHeight()/2)
                         ? getAmountOfChildren() // "getAmountOfChildren" is equivalent to "invalid"
-                        : childIndex;
+                        : findIndexFromAngle(angleAtStage(x,y));
             else
-                return childIndex;
+                return findIndexFromAngle(angleAtStage(x,y));
         }
         return isWithinRadii(vector2.x - getWidth()/2, vector2.y - getHeight()/2)
-                ? childIndex
+                ? findIndexFromAngle(angleAtStage(x,y))
                 : getAmountOfChildren(); // "getAmountOfChildren" is equivalent to "invalid"
     }
 
