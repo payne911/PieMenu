@@ -74,7 +74,7 @@ public class ButtonToggle extends ApplicationAdapter {
         }
 
         /* Setting up the demo-button. */
-        final TextButton textButton = new TextButton("Toggle Button",  skin);
+        final TextButton textButton = new TextButton("Toggle",  skin);
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

@@ -48,7 +48,7 @@ public class ButtonToggle extends BaseScreen {
         }
 
         /* Setting up the demo-button. */
-        final TextButton textButton = new TextButton("Toggle Button", game.skin);
+        final TextButton textButton = new TextButton("Toggle", game.skin);
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
