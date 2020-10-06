@@ -48,7 +48,7 @@ You can also create your own animations:
 
 ![custom_animation](media/custom_animation.gif)
 
-It's surprisingly easy. Check out [the Animated Widget wiki page](wiki/Animated-widget/) to find out!
+It's surprisingly easy. Check out [the Animated Widget wiki page](https://github.com/payne911/PieMenu/wiki/Animated-widget/) to find out!
 
 ---
 
