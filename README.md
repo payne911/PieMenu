@@ -18,7 +18,7 @@ In terms of User Interface, circular context menu "are faster and more reliable 
 * [Demo](#demo)
   * [Basic widgets](#basic-widgets)
   * [Custom-animated widgets](#custom-animated-widgets)
-* [Including in Project](#including-in-project)
+* [Including in your project](#including-in-your-project)
 * [Usage](#usage)
   * [Wiki](#wiki)
 * [Final word](#final-word)
@@ -52,7 +52,7 @@ It's surprisingly easy. Check out [the Animated Widget wiki page](https://github
 
 ---
 
-## Including in Project
+## Including in your project
 To use this in your gradle project, add the version number and jitpack repository information to your root `build.gradle` file:
 
 ```groovy
@@ -85,7 +85,7 @@ project(":core") {
 
 See the [jitpack website](https://jitpack.io/#payne911/PieMenu) for more info.
 
-**If you plan on releasing your project with an html module ("HTML5/GWT"), check out the [Wiki page on integrating gwt](https://github.com/payne911/PieMenu/wiki/GWT-integration).**
+**If you plan on releasing your project with an `html` ("HTML5/GWT") or `android` module, check out the [Wiki page on integration](https://github.com/payne911/PieMenu/wiki/Integrating-this-library).**
 
 ---
 
