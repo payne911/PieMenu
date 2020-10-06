@@ -1,4 +1,4 @@
-![Pie Menu logo](pie_menu_logo.png "Logo Title Text 1")
+![Pie Menu logo](pie_menu_logo.png "Pie Menu library logo")
 
 # PieMenu
 [![jitpack](https://jitpack.io/v/payne911/PieMenu.svg)](https://jitpack.io/#payne911/PieMenu)
@@ -41,14 +41,14 @@ The trickier controls are:
 * ``RIGHT-CLICK`` : opens a PieMenu meant for selection through dragging (don't release the right-click until you're done with your selection). It was configured to let you preview the selection's effect.
 * ``MIDDLE-CLICK`` : opens a PieMenu meant for "normal" selection. You can release the button and select as you wish with a left-click.
 
-If you want to check out the same demo, but within a `desktop` setup, check out [the Demonstration class](https://github.com/payne911/PieMenu/blob/master/src/test/java/com/payne/games/piemenu/testMenu/otherTests/Demonstration.java). 
+If you want to check out the same demo, but within a `desktop` setup, check out [the Demonstration class](src/test/java/com/payne/games/piemenu/testMenu/otherTests/Demonstration.java). 
 
 ### Custom-animated widgets
 You can also create your own animations:
 
 ![custom_animation](media/custom_animation.gif)
 
-It's surprisingly easy. Check out [the Animated Widget wiki page](https://github.com/payne911/PieMenu/wiki/Animated-widget/) to find out!
+It's surprisingly easy. Check out [the Animated Widget wiki page](wiki/Animated-widget/) to find out!
 
 ---
 
@@ -85,7 +85,7 @@ project(":core") {
 
 See the [jitpack website](https://jitpack.io/#payne911/PieMenu) for more info.
 
-**If you plan on releasing your project with an `html` ("HTML5/GWT") or `android` module, check out the [Wiki page on integration](https://github.com/payne911/PieMenu/wiki/Integrating-this-library).**
+**If you plan on releasing your project with an `html` ("HTML5/GWT") or `android` module, check out the [Wiki page on integration](wiki/Integrating-this-library).**
 
 ---
 
@@ -118,12 +118,14 @@ stage.addActor(menu);
 
 And *voilà*!
 
-### [Wiki](https://github.com/payne911/PieMenu/wiki)
+### [Wiki](wiki)
 This library offers you many types of behaviors related to pie-menus. Many of those are well-documented in the Wiki (with description, code and gif), so make sure to check it out.
 
 More specifically, you might be interested in:
-* **[Complete examples of code](https://github.com/payne911/PieMenu/wiki/Examples)**, along with textual descriptions of the expected behavior
-* **[Understanding how to customize](https://github.com/payne911/PieMenu/wiki/Customizing-the-widget)** your widget's look and behavior.
+* **[Complete examples of code](wiki/Examples)**, along with textual descriptions of the expected behavior
+* **[Understanding how to customize](wiki/Customizing-the-widget)** your widget's look and behavior.
+
+![Configuration infographic](media/style_infographic.png "Explaining the configurations in an image")
 
 ---
 
