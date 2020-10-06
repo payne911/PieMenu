@@ -85,7 +85,7 @@ project(":core") {
 
 See the [jitpack website](https://jitpack.io/#payne911/PieMenu) for more info.
 
-**If you plan on releasing your project with an `html` ("HTML5/GWT") or `android` module, check out the [Wiki page on integration](wiki/Integrating-this-library).**
+**If you plan on releasing your project with an `html` ("HTML5/GWT") or `android` module, check out the [Wiki page on integration](https://github.com/payne911/PieMenu/wiki/Integrating-this-library).**
 
 ---
 
@@ -118,12 +118,12 @@ stage.addActor(menu);
 
 And *voilà*!
 
-### [Wiki](wiki)
+### [Wiki](https://github.com/payne911/PieMenu/wiki)
 This library offers you many types of behaviors related to pie-menus. Many of those are well-documented in the Wiki (with description, code and gif), so make sure to check it out.
 
 More specifically, you might be interested in:
-* **[Complete examples of code](wiki/Examples)**, along with textual descriptions of the expected behavior
-* **[Understanding how to customize](wiki/Customizing-the-widget)** your widget's look and behavior.
+* **[Complete examples of code](https://github.com/payne911/PieMenu/wiki/Examples)**, along with textual descriptions of the expected behavior
+* **[Understanding how to customize](https://github.com/payne911/PieMenu/wiki/Customizing-the-widget)** your widget's look and behavior.
 
 ![Configuration infographic](media/style_infographic.png "Explaining the configurations in an image")
 
