@@ -3,7 +3,7 @@
 # PieMenu
 [![JitPack Latest Release Version](https://jitpack.io/v/payne911/PieMenu.svg)](https://jitpack.io/#payne911/PieMenu)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/payne911/PieMenu/blob/master/LICENSE)
-[![GitHub All Releases Downloads](https://img.shields.io/github/downloads/payne911/PieMenu/total?style=social)](https://github.com/payne911/PieMenu/releases)
+[![GitHub All Releases Downloads](https://img.shields.io/github/downloads/payne911/PieMenu/total)](https://github.com/payne911/PieMenu/releases)
 
 ---
 
