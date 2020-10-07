@@ -4,7 +4,7 @@
 [![JitPack Latest Release Version](https://jitpack.io/v/payne911/PieMenu.svg)](https://jitpack.io/#payne911/PieMenu)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/payne911/PieMenu/blob/master/LICENSE)
 [![GitHub All Releases Downloads](https://img.shields.io/github/downloads/payne911/PieMenu/total?logo=github)](https://github.com/payne911/PieMenu/releases)
-![Lines of code](https://img.shields.io/tokei/lines/github/payne911/PieMenu?label=LOC)
+![Lines of code](https://img.shields.io/tokei/lines/github/payne911/PieMenu?cacheSeconds=2000000&label=LOC)
 
 ---
 
