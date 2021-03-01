@@ -140,6 +140,9 @@ Here are a few GIFs of games that have integrated this library.
 ##### icefill's Compact Dungeon 2
 ![CD2](media/games/CompactDungeon2_icefill.gif)
 
+##### donpommelo's Hadal Calm
+![HC](media/games/HadalCalm_donpommelo.gif)
+
 
 ### Contributing
 If you feel like helping this library grow, make sure to check out [the Contributing](https://github.com/payne911/PieMenu/wiki/Contributing) Wiki page.
