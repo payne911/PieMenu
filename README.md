@@ -137,10 +137,10 @@ Very well: you've made it this far in the README! If you ever end up integrating
 ### Games showcases
 Here are a few GIFs of games that have integrated this library.
 
-##### icefill's Compact Dungeon 2
+##### [Transfinite Dungeon](https://store.steampowered.com/app/1290750/Transfinite_Dungeon/), by icefill
 ![CD2](media/games/CompactDungeon2_icefill.gif)
 
-##### donpommelo's Hadal Calm
+##### [Hadal Calm](https://donpommelo.itch.io/hadal-calm), by donpommelo
 ![HC](media/games/HadalCalm_donpommelo.gif)
 
 
