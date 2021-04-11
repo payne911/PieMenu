@@ -10,11 +10,11 @@
 
 A library to obtain a circular WidgetGroup within [libGDX](https://libgdx.badlogicgames.com/), an open-source game development application framework written in Java.
 
-Aims at providing users with the so-called `RadialGroup`: it is a simple container that places its children `Actors` in a circular fashion.
+It aims at providing users with the so-called `RadialGroup`: a simple container that places its children `Actors` in a circular fashion.
 
 The more interesting feature might be the `PieMenu` class : it wraps the `RadialGroup` with a bunch of functionalities that allow assigning callback functions to listeners on the highlight and selection of items within the Group.
 
-In terms of User Interface, circular context menu "are faster and more reliable to select from than linear menus, because selection depends on direction instead of distance." ([Wikipedia source](https://en.wikipedia.org/wiki/Pie_menu#Comparison_with_other_interaction_techniques)). That is the whole motivation behind this library.
+In terms of User Interface, circular context menu "are faster and more reliable to select from than linear menus, because selection depends on direction instead of distance" ([Wikipedia source](https://en.wikipedia.org/wiki/Pie_menu#Comparison_with_other_interaction_techniques)). That is the whole motivation behind this library.
 
 ## Table of Content
 * [Demo](#demo)
