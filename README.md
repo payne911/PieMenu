@@ -109,12 +109,13 @@ menu.addListener(new ChangeListener() {
 });
 
 /* Populating the widget. */
-for (int i = 0; i < 8; i++) {
+final int PIE_SLICES = 8;
+for (int i = 0; i < PIE_SLICES; i++) {
     Label label = new Label(Integer.toString(i), skin);
     menu.addActor(label);
 }
 
-/* Including the Widget in the Stage. */
+/* Including the widget in the Stage. */
 stage.addActor(menu);
 ```
 
