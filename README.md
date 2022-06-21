@@ -153,7 +153,7 @@ If you feel like helping this library grow, make sure to check out [the Contribu
 
 ### Thanks to
 * [EarlyGrey](https://github.com/earlygrey) (PieMenu is actually partly dependent on his library: [ShapeDrawer](https://github.com/earlygrey/shapedrawer))
-* [raeleus](https://github.com/raeleus)
+* [raeleus](https://github.com/raeleus) (for the logo of the library)
 * [mgsx](https://github.com/mgsx-dev)
 * [TEttinger](https://github.com/tommyettinger)
 * Albert Pétoncle
@@ -167,4 +167,4 @@ Also, [raeleus](https://github.com/raeleus) made the background image for the "m
 
 The structure and build scripts of this repository were strongly inspired by [RafaSKB](https://github.com/rafaskb)'s [typing-label](https://github.com/rafaskb/typing-label) library.
 
-Parts of this README were lazily copied and adapted from EarlyGrey's library (with his agreement). Cheers!
+Parts of this `README` were lazily copied and adapted from [EarlyGrey's library](https://github.com/earlygrey/shapedrawer) (with his agreement). Cheers!
